@@ -1,32 +1,28 @@
-import { IconArticle, IconBrandGithub, IconHome, IconLinkedin, IconMail, IconWorld } from '@/components/icons';
+import { IconArticle, IconBrandGithub, IconBrandLinkedin, IconHome, IconMail, IconWorld } from '@/components/icons';
 
-export const DATA = {
-  name: 'Dillion Verma',
-  initials: 'DV',
+import { ModeToggle } from '@/components/common';
+
+export default {
+  name: 'Lupin Nguyen',
+  initials: 'LN',
   url: 'https://dillion.io',
-  location: 'San Francisco, CA',
+  location: 'Ho Chi Minh, Vietnam',
   locationLink: 'https://www.google.com/maps/place/sanfrancisco',
+  greetings: ['Hi', 'Hello', 'Howdy', 'Hey there'],
   description:
     'Software Engineer turned Entrepreneur. I love building things and helping people. Very active on Twitter.',
   summary:
     'At the end of 2022, I quit my job as a software engineer to go fulltime into building and scaling my own SaaS businesses. In the past, [I pursued a double degree in computer science and business](/#education), [interned at big tech companies in Silicon Valley](https://www.youtube.com/watch?v=d-LJ2e5qKdE), and [competed in over 21 hackathons for fun](/#hackathons). I also had the pleasure of being a part of the first ever in-person cohort of buildspace called [buildspace sf1](https://buildspace.so/sf1).',
-  avatarUrl: '/me.png',
-  skills: [
-    'React',
-    'Next.js',
-    'Typescript',
-    'Node.js',
-    'Python',
-    'Go',
-    'Postgres',
-    'Docker',
-    'Kubernetes',
-    'Java',
-    'C++'
-  ],
+  avatarUrl: '/me.jpg',
+  skills: ['React', 'Next.js', 'Typescript', 'Node.js', 'Python'],
   navbar: [
-    { href: '/', icon: IconHome, label: 'Home' },
-    { href: '/blog', icon: IconArticle, label: 'Blog' }
+    { title: 'Home', icon: <IconHome />, href: '#' },
+
+    { title: 'Blogs', icon: <IconArticle />, href: '#' },
+    { title: 'GitHub', icon: <IconBrandGithub />, href: 'https://github.com/anywaylupin' },
+    { title: 'Linkedin', icon: <IconBrandLinkedin />, href: 'https://www.linkedin.com/in/lupinnguyen' },
+    { title: 'Send Email', icon: <IconMail />, href: 'mailto:lupin.nguyen@outlook.com' },
+    { title: 'Theme', icon: <ModeToggle />, href: '' }
   ],
   contact: {
     email: 'hello@example.com',
@@ -42,7 +38,7 @@ export const DATA = {
       LinkedIn: {
         name: 'LinkedIn',
         url: 'https://dub.sh/dillion-linkedin',
-        icon: IconLinkedin,
+        icon: IconBrandLinkedin,
 
         navbar: true
       },
@@ -616,4 +612,4 @@ export const DATA = {
       ]
     }
   ]
-} as const;
+};

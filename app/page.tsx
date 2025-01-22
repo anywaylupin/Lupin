@@ -1,67 +1,137 @@
-import Image from 'next/image';
+import { Badge, BlurFade } from '@/components/ui';
+
+import Markdown from 'react-markdown';
+import resume from '@/data/resume';
+import { Header, ProjectCard, ResumeCard } from '@/components/common';
+import { BLUR_FADE_DELAY } from '@/lib/constants';
+import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20">
-      <main className="row-start-2 flex flex-col items-center gap-8 sm:items-start">
-        <Image className="dark:invert" src="/next.svg" alt="Next.js logo" width={180} height={38} priority />
-        <ol className="list-inside list-decimal text-center font-[family-name:var(--font-geist-mono)] text-sm sm:text-left">
-          <li className="mb-2">
-            Get started by editing{' '}
-            <code className="rounded bg-black/[.05] px-1 py-0.5 font-semibold dark:bg-white/[.06]">app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <>
+      <Header />
 
-        <div className="flex flex-col items-center gap-4 sm:flex-row">
-          <a
-            className="flex h-10 items-center justify-center gap-2 rounded-full border border-solid border-transparent bg-foreground px-4 text-sm text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] sm:h-12 sm:px-5 sm:text-base"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image className="dark:invert" src="/vercel.svg" alt="Vercel logomark" width={20} height={20} />
-            Deploy now
-          </a>
-          <a
-            className="flex h-10 items-center justify-center rounded-full border border-solid border-black/[.08] px-4 text-sm transition-colors hover:border-transparent hover:bg-[#f2f2f2] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] sm:h-12 sm:min-w-44 sm:px-5 sm:text-base"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+      <main className="flex max-w-2xl flex-col gap-10">
+        <section id="about">
+          <BlurFade delay={BLUR_FADE_DELAY * 3}>
+            <h2 className="text-xl font-bold">About</h2>
+          </BlurFade>
+          <BlurFade delay={BLUR_FADE_DELAY * 4}>
+            <Markdown className="prose text-muted-foreground dark:prose-invert max-w-full text-pretty font-sans text-sm">
+              {resume.summary}
+            </Markdown>
+          </BlurFade>
+        </section>
+        <section id="work">
+          <div className="flex min-h-0 flex-col gap-y-3">
+            <BlurFade delay={BLUR_FADE_DELAY * 5}>
+              <h2 className="text-xl font-bold">Work Experience</h2>
+            </BlurFade>
+            {resume.work.map((work, id) => (
+              <BlurFade key={work.company} delay={BLUR_FADE_DELAY * 6 + id * 0.05}>
+                <ResumeCard
+                  key={work.company}
+                  logoUrl={work.logoUrl}
+                  altText={work.company}
+                  title={work.company}
+                  subtitle={work.title}
+                  href={work.href}
+                  badges={work.badges}
+                  period={`${work.start} - ${work.end ?? 'Present'}`}
+                  description={work.description}
+                />
+              </BlurFade>
+            ))}
+          </div>
+        </section>
+        <section id="education">
+          <div className="flex min-h-0 flex-col gap-y-3">
+            <BlurFade delay={BLUR_FADE_DELAY * 7}>
+              <h2 className="text-xl font-bold">Education</h2>
+            </BlurFade>
+            {resume.education.map((education, id) => (
+              <BlurFade key={education.school} delay={BLUR_FADE_DELAY * 8 + id * 0.05}>
+                <ResumeCard
+                  key={education.school}
+                  href={education.href}
+                  logoUrl={education.logoUrl}
+                  altText={education.school}
+                  title={education.school}
+                  subtitle={education.degree}
+                  period={`${education.start} - ${education.end}`}
+                />
+              </BlurFade>
+            ))}
+          </div>
+        </section>
+        <section id="skills">
+          <div className="flex min-h-0 flex-col gap-y-3">
+            <BlurFade delay={BLUR_FADE_DELAY * 9}>
+              <h2 className="text-xl font-bold">Skills</h2>
+            </BlurFade>
+            <div className="flex flex-wrap gap-1">
+              {resume.skills.map((skill, id) => (
+                <BlurFade key={skill} delay={BLUR_FADE_DELAY * 10 + id * 0.05}>
+                  <Badge key={skill}>{skill}</Badge>
+                </BlurFade>
+              ))}
+            </div>
+          </div>
+        </section>
+        <section id="projects">
+          <div className="w-full space-y-12 py-12">
+            <BlurFade delay={BLUR_FADE_DELAY * 11}>
+              <div className="flex flex-col items-center justify-center space-y-4 text-center">
+                <div className="space-y-2">
+                  <div className="bg-foreground text-background inline-block rounded-lg px-3 py-1 text-sm">
+                    My Projects
+                  </div>
+                  <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Check out my latest work</h2>
+                  <p className="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                    I&apos;ve worked on a variety of projects, from simple websites to complex web applications. Here
+                    are a few of my favorites.
+                  </p>
+                </div>
+              </div>
+            </BlurFade>
+            <div className="mx-auto grid max-w-[800px] grid-cols-1 gap-3 sm:grid-cols-2">
+              {resume.projects.map((project, id) => (
+                <BlurFade key={project.title} delay={BLUR_FADE_DELAY * 12 + id * 0.05}>
+                  <ProjectCard
+                    href={project.href}
+                    key={project.title}
+                    title={project.title}
+                    description={project.description}
+                    dates={project.dates}
+                    tags={project.technologies}
+                    image={project.image}
+                    video={project.video}
+                    links={project.links}
+                  />
+                </BlurFade>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="contact">
+          <div className="grid w-full items-center justify-center gap-4 px-4 py-12 text-center md:px-6">
+            <BlurFade delay={BLUR_FADE_DELAY * 16}>
+              <div className="space-y-3">
+                <div className="bg-foreground text-background inline-block rounded-lg px-3 py-1 text-sm">Contact</div>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Get in Touch</h2>
+                <p className="text-muted-foreground mx-auto max-w-[600px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  Want to chat? Just shoot me a dm{' '}
+                  <Link href={resume.contact.social.GitHub.url} className="text-blue-500 hover:underline">
+                    with a direct question on twitter
+                  </Link>{' '}
+                  and I&apos;ll respond whenever I can. I will ignore all soliciting.
+                </p>
+              </div>
+            </BlurFade>
+          </div>
+        </section>
       </main>
-      <footer className="row-start-3 flex flex-wrap items-center justify-center gap-6">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src="/file.svg" alt="File icon" width={16} height={16} />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src="/window.svg" alt="Window icon" width={16} height={16} />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src="/globe.svg" alt="Globe icon" width={16} height={16} />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+    </>
   );
 }

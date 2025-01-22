@@ -10,13 +10,9 @@ import { IconLayoutNavbarCollapse } from '../icons';
 
 type FloatingDockItem = { title: string; icon: React.ReactNode; href: string };
 
-type FloatingDockProps = {
-  items: FloatingDockItem[];
-  className?: string;
-  mobileClassName?: string;
-};
+type FloatingDockProps = { items: FloatingDockItem[]; className?: string; mobileClassName?: string };
 
-export const FloatingDock = ({ items, className, mobileClassName }: FloatingDockProps) => {
+const FloatingDock = ({ items, className, mobileClassName }: FloatingDockProps) => {
   return (
     <>
       <FloatingDockDesktop items={items} className={className} />
@@ -71,12 +67,13 @@ const FloatingDockDesktop = ({ items, className }: FloatingDockProps) => {
       onMouseMove={(e) => mouseX.set(e.pageX)}
       onMouseLeave={() => mouseX.set(Infinity)}
       className={cn(
-        'mx-auto hidden h-14 items-center gap-4 rounded-2xl bg-white p-4 dark:bg-neutral-900 md:flex',
+        'mx-auto hidden h-14 items-center rounded-2xl bg-white px-4 py-8 dark:bg-neutral-900 md:flex',
         className
       )}
+      layout
     >
       {items.map((item) => (
-        <li key={item.title}>
+        <li key={item.title} className="p-2">
           <IconContainer mouseX={mouseX} {...item} />
         </li>
       ))}
@@ -115,6 +112,7 @@ const IconContainer = ({ mouseX, title, icon, href }: FloatingDockItem & { mouse
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         className="relative flex aspect-square items-center justify-center rounded-full hover:bg-gray-50 dark:hover:bg-neutral-800"
+        layout
       >
         <AnimatePresence>
           {hovered && (
@@ -122,16 +120,23 @@ const IconContainer = ({ mouseX, title, icon, href }: FloatingDockItem & { mouse
               initial={{ opacity: 0, y: 1, x: '-50%' }}
               animate={{ opacity: 1, y: 0, x: '-50%' }}
               exit={{ opacity: 0, y: 2, x: '-50%' }}
-              className="absolute -top-8 left-1/2 w-fit -translate-x-1/2 whitespace-pre rounded-md border border-neutral-200 bg-white px-2 py-0.5 text-xs text-black dark:border-neutral-900 dark:bg-neutral-800 dark:text-white"
+              className="absolute -top-8 left-1/2 w-fit -translate-x-1/2 whitespace-pre rounded-md border border-neutral-200 bg-white px-2 py-0.5 text-xs font-semibold text-black dark:border-neutral-900 dark:bg-neutral-800 dark:text-white md:text-sm"
+              layout
             >
               {title}
             </motion.div>
           )}
         </AnimatePresence>
-        <motion.div style={{ width: widthIcon, height: heightIcon }} className="flex items-center justify-center">
+        <motion.div
+          style={{ width: widthIcon, height: heightIcon }}
+          className="flex items-center justify-center"
+          layout
+        >
           {icon}
         </motion.div>
       </motion.div>
     </Link>
   );
 };
+
+export { FloatingDock };
