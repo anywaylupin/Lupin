@@ -1,12 +1,14 @@
-import { Avatar, AvatarFallback, AvatarImage, BlurFade, TextGenerateEffect } from '../ui';
 import Image from 'next/image';
-import resume from '@/data/resume';
-import { getRandom } from '@/lib/utils';
-import { BLUR_FADE_DELAY } from '@/lib/constants';
 
-const message = `${getRandom(resume.greetings)}, I'm ${resume.name.split(' ')[0]} `;
+import resume from '@/data/resume';
+import { BLUR_FADE_DELAY } from '@/lib/constants';
+import { getRandom } from '@/lib/utils';
+
+import { Avatar, AvatarFallback, AvatarImage, BlurFade, TextGenerateEffect } from '../ui';
 
 export const Header = () => {
+  const message = `${getRandom(resume.greetings)}, I'm ${resume.name.split(' ')[0]} `;
+
   return (
     <header id="hero" className="flex w-full max-w-2xl justify-between gap-2">
       <div className="flex flex-1 flex-col gap-1.5">

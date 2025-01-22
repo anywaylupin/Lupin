@@ -1,4 +1,5 @@
 import resume from '@/data/resume';
+
 import { FloatingDock } from '../ui';
 
 export const Navbar = () => {

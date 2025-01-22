@@ -6,9 +6,9 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { Navbar, ThemeProvider } from '@/components/common';
 import { cn } from '@/lib/utils';
 
-const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
+const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'], display: 'swap' });
 
-const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
+const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'], display: 'swap' });
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -21,8 +21,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body
         className={cn(
           'flex min-h-screen flex-col items-center gap-10 px-6 py-12 antialiased sm:py-24',
+          geistMono.variable,
           geistSans.variable,
-          geistMono.variable
+          geistSans.className
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>

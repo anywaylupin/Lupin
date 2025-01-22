@@ -1,10 +1,9 @@
-import { Badge, BlurFade } from '@/components/ui';
-
 import Markdown from 'react-markdown';
+
+import { ExperienceCard, Header, ProjectCard } from '@/components/common';
+import { Badge, BlurFade } from '@/components/ui';
 import resume from '@/data/resume';
-import { Header, ProjectCard, ResumeCard } from '@/components/common';
 import { BLUR_FADE_DELAY } from '@/lib/constants';
-import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -17,53 +16,21 @@ export default function Home() {
             <h2 className="text-xl font-bold">About</h2>
           </BlurFade>
           <BlurFade delay={BLUR_FADE_DELAY * 4}>
-            <Markdown className="prose text-muted-foreground dark:prose-invert max-w-full text-pretty font-sans text-sm">
+            <Markdown className="prose dark:prose-invert max-w-full text-pretty text-sm text-muted-foreground">
               {resume.summary}
             </Markdown>
           </BlurFade>
         </section>
+
         <section id="work">
           <div className="flex min-h-0 flex-col gap-y-3">
             <BlurFade delay={BLUR_FADE_DELAY * 5}>
               <h2 className="text-xl font-bold">Work Experience</h2>
             </BlurFade>
-            {resume.work.map((work, id) => (
-              <BlurFade key={work.company} delay={BLUR_FADE_DELAY * 6 + id * 0.05}>
-                <ResumeCard
-                  key={work.company}
-                  logoUrl={work.logoUrl}
-                  altText={work.company}
-                  title={work.company}
-                  subtitle={work.title}
-                  href={work.href}
-                  badges={work.badges}
-                  period={`${work.start} - ${work.end ?? 'Present'}`}
-                  description={work.description}
-                />
-              </BlurFade>
-            ))}
+            <ExperienceCard />
           </div>
         </section>
-        <section id="education">
-          <div className="flex min-h-0 flex-col gap-y-3">
-            <BlurFade delay={BLUR_FADE_DELAY * 7}>
-              <h2 className="text-xl font-bold">Education</h2>
-            </BlurFade>
-            {resume.education.map((education, id) => (
-              <BlurFade key={education.school} delay={BLUR_FADE_DELAY * 8 + id * 0.05}>
-                <ResumeCard
-                  key={education.school}
-                  href={education.href}
-                  logoUrl={education.logoUrl}
-                  altText={education.school}
-                  title={education.school}
-                  subtitle={education.degree}
-                  period={`${education.start} - ${education.end}`}
-                />
-              </BlurFade>
-            ))}
-          </div>
-        </section>
+
         <section id="skills">
           <div className="flex min-h-0 flex-col gap-y-3">
             <BlurFade delay={BLUR_FADE_DELAY * 9}>
@@ -83,7 +50,7 @@ export default function Home() {
             <BlurFade delay={BLUR_FADE_DELAY * 11}>
               <div className="flex flex-col items-center justify-center space-y-4 text-center">
                 <div className="space-y-2">
-                  <div className="bg-foreground text-background inline-block rounded-lg px-3 py-1 text-sm">
+                  <div className="inline-block rounded-lg bg-foreground px-3 py-1 text-sm text-background">
                     My Projects
                   </div>
                   <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Check out my latest work</h2>
@@ -111,24 +78,6 @@ export default function Home() {
                 </BlurFade>
               ))}
             </div>
-          </div>
-        </section>
-
-        <section id="contact">
-          <div className="grid w-full items-center justify-center gap-4 px-4 py-12 text-center md:px-6">
-            <BlurFade delay={BLUR_FADE_DELAY * 16}>
-              <div className="space-y-3">
-                <div className="bg-foreground text-background inline-block rounded-lg px-3 py-1 text-sm">Contact</div>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Get in Touch</h2>
-                <p className="text-muted-foreground mx-auto max-w-[600px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Want to chat? Just shoot me a dm{' '}
-                  <Link href={resume.contact.social.GitHub.url} className="text-blue-500 hover:underline">
-                    with a direct question on twitter
-                  </Link>{' '}
-                  and I&apos;ll respond whenever I can. I will ignore all soliciting.
-                </p>
-              </div>
-            </BlurFade>
           </div>
         </section>
       </main>

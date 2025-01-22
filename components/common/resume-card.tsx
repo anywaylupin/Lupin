@@ -1,12 +1,14 @@
 'use client';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardHeader } from '@/components/ui';
-import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import React from 'react';
+
+import { Card, CardHeader } from '@/components/ui';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+
 import { IconChevronRight } from '../icons';
 
 interface ResumeCardProps {
@@ -42,7 +44,7 @@ export const ResumeCard = ({
     <Link href={href} className="block cursor-pointer" onClick={handleClick}>
       <Card className="flex">
         <div className="flex-none">
-          <Avatar className="bg-muted-background dark:bg-foreground m-auto size-12 border">
+          <Avatar className="bg-muted-background m-auto size-12 border dark:bg-foreground">
             <AvatarImage src={logoUrl} alt={altText} className="object-contain" />
             <AvatarFallback>{altText[0]}</AvatarFallback>
           </Avatar>
@@ -68,9 +70,9 @@ export const ResumeCard = ({
                   )}
                 />
               </h3>
-              <div className="text-muted-foreground text-right text-xs tabular-nums sm:text-sm">{period}</div>
+              <div className="text-right text-xs tabular-nums text-muted-foreground sm:text-sm">{period}</div>
             </div>
-            {subtitle && <div className="font-sans text-xs">{subtitle}</div>}
+            {subtitle && <div className="text-xs">{subtitle}</div>}
           </CardHeader>
           {description && (
             <motion.div

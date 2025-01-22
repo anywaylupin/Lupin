@@ -4,7 +4,7 @@ import { useTheme } from 'next-themes';
 
 import { Button } from '@/components/ui/button';
 
-import { IconMoonStars,IconSun } from '../icons';
+import { IconMoonStars, IconSun } from '../icons';
 
 export const ModeToggle = () => {
   const { theme, setTheme } = useTheme();

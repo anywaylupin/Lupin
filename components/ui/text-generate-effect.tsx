@@ -50,4 +50,4 @@ const TextGenerateEffect = ({
   );
 };
 
-export { type TextGenerateEffectProps, TextGenerateEffect };
+export { TextGenerateEffect, type TextGenerateEffectProps };

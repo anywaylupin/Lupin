@@ -1,3 +1,4 @@
+export * from './experience-card';
 export * from './header';
 export * from './mode-toggle';
 export * from './navbar';

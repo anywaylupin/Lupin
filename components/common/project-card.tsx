@@ -1,9 +1,9 @@
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-
-import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import Link from 'next/link';
 import Markdown from 'react-markdown';
+
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
 type Props = {
@@ -59,11 +59,11 @@ export const ProjectCard = ({
       <CardHeader className="px-2">
         <div className="space-y-1">
           <CardTitle className="mt-1 text-base">{title}</CardTitle>
-          <time className="font-sans text-xs">{dates}</time>
-          <div className="hidden font-sans text-xs underline print:visible">
+          <time className="text-xs">{dates}</time>
+          <div className="hidden text-xs underline print:visible">
             {link?.replace('https://', '').replace('www.', '').replace('/', '')}
           </div>
-          <Markdown className="prose text-muted-foreground dark:prose-invert max-w-full text-pretty font-sans text-xs">
+          <Markdown className="prose dark:prose-invert max-w-full text-pretty text-xs text-muted-foreground">
             {description}
           </Markdown>
         </div>
