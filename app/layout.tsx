@@ -12,7 +12,7 @@ const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'], dis
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'], display: 'swap' });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(content.url),
+  metadataBase: new URL(content.domain),
   title: {
     default: content.shortname,
     template: `%s | ${content.shortname}`
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `${content.shortname}`,
     description: content.description,
-    url: content.url,
+    url: content.domain,
     siteName: `${content.shortname}`,
     locale: 'en_US',
     type: 'website'

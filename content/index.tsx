@@ -5,14 +5,12 @@ export default {
   shortname: 'Nhân Nguyễn',
   fullname: 'Nguyễn Chơn Trọng Nhân',
   initials: 'NCTN',
-  url: 'https://anywaylupin.vercel.io',
-  location: 'Ho Chi Minh Vietnam',
+  domain: 'https://anywaylupin.vercel.app',
   greetings: ['Hi', 'Hello', 'Howdy', 'Hey'],
   description:
     "Conjuring magic through code. Currently thriving as a Frontend Developer at TotallyAwesome, I'm on a part-time journey to become a master problem-solver.",
   about:
     "Hello! I'm Lupin—a dedicated problem-solver who thrives in collaborative settings. My childhood dream of becoming a Robotics engineer still inspires me. I am fascinated by the potential of robots and AI to address challenges in our lives. With a growing expertise in coding and computer science, I aim to develop innovative solutions. I also enjoy sports, music, and gaming, which keep me balanced and motivated.",
-  avatarUrl: '/me.jpg',
   experience: [
     {
       title: 'Interactive Frontend Developer',
