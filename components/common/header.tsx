@@ -17,11 +17,9 @@ export const Header = () => {
           words={message}
         />
 
-        <TextGenerateEffect
-          transition={{ delay: BLUR_FADE_DELAY }}
-          className="max-w-[600px] text-sm md:text-xl"
-          words={content.description}
-        />
+        <BlurFade className="max-w-[600px] text-sm md:text-xl" delay={BLUR_FADE_DELAY}>
+          {content.description}
+        </BlurFade>
       </div>
       <BlurFade delay={BLUR_FADE_DELAY * 1.5}>
         <EmojiBee />
