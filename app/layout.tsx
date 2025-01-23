@@ -14,15 +14,15 @@ const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin']
 export const metadata: Metadata = {
   metadataBase: new URL(content.url),
   title: {
-    default: content.fullname,
-    template: `%s | ${content.name}`
+    default: content.shortname,
+    template: `%s | ${content.shortname}`
   },
   description: content.description,
   openGraph: {
-    title: `${content.name}`,
+    title: `${content.shortname}`,
     description: content.description,
     url: content.url,
-    siteName: `${content.name}`,
+    siteName: `${content.shortname}`,
     locale: 'en_US',
     type: 'website'
   },

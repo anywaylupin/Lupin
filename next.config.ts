@@ -1,8 +1,7 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  reactStrictMode: true,
-  pageExtensions: ['page.tsx', 'page.ts', 'ts']
+  reactStrictMode: true
 };
 
 export default nextConfig;

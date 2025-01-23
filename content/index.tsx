@@ -1,16 +1,15 @@
 import { IconArticle, IconBrandGithub, IconBrandLinkedin, IconHome, IconMail, IconWorld } from '@/components/icons';
 
-import { ModeToggle } from '@/components/common';
-
 export default {
   name: 'Nhân',
+  shortname: 'Nhân Nguyễn',
   fullname: 'Nguyễn Chơn Trọng Nhân',
   initials: 'NCTN',
   url: 'https://anywaylupin.vercel.io',
   location: 'Ho Chi Minh Vietnam',
   greetings: ['Hi', 'Hello', 'Howdy', 'Hey'],
   description:
-    "I conjure magic through code. Currently thriving as a Frontend Developer at TotallyAwesome, I'm on a part-time journey to become a master problem-solver.",
+    "Conjuring magic through code. Currently thriving as a Frontend Developer at TotallyAwesome, I'm on a part-time journey to become a master problem-solver.",
   about:
     "Hello! I'm Lupin—a dedicated problem-solver who thrives in collaborative settings. My childhood dream of becoming a Robotics engineer still inspires me. I am fascinated by the potential of robots and AI to address challenges in our lives. With a growing expertise in coding and computer science, I aim to develop innovative solutions. I also enjoy sports, music, and gaming, which keep me balanced and motivated.",
   avatarUrl: '/me.jpg',
@@ -78,7 +77,6 @@ export default {
     { title: 'Blogs', icon: <IconArticle />, href: '/blog' },
     { title: 'GitHub', icon: <IconBrandGithub />, href: 'https://github.com/anywaylupin' },
     { title: 'Linkedin', icon: <IconBrandLinkedin />, href: 'https://www.linkedin.com/in/lupinnguyen' },
-    { title: 'Send Email', icon: <IconMail />, href: 'mailto:lupin.nguyen@outlook.com' },
-    { title: 'Theme', icon: <ModeToggle /> }
+    { title: 'Send Email', icon: <IconMail />, href: 'mailto:lupin.nguyen@outlook.com' }
   ]
 };
