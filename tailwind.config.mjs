@@ -1,4 +1,4 @@
-import TailwindCssAnimate from 'tailwindcss-animate';
+import TailwindcssAnimate from 'tailwindcss-animate';
 import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette';
 
 export default {
@@ -73,7 +73,7 @@ export default {
       }
     }
   },
-  plugins: [addVariablesForColors, TailwindCssAnimate]
+  plugins: [addVariablesForColors, TailwindcssAnimate]
 };
 
 function addVariablesForColors({ addBase, theme }) {
