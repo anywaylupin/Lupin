@@ -39,22 +39,22 @@ export const metadata: Metadata = {
   }
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          'flex min-h-screen flex-col items-center gap-10 bg-background text-primary antialiased transition',
-          geistMono.variable,
-          geistSans.variable,
-          geistSans.className
-        )}
-      >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
-          <Navbar />
-        </ThemeProvider>
-      </body>
-    </html>
-  );
-}
+const RootLayout = ({ children }: React.PropsWithChildren) => (
+  <html lang="en" suppressHydrationWarning>
+    <body
+      className={cn(
+        'flex min-h-screen flex-col items-center gap-10 bg-background text-primary antialiased transition',
+        geistMono.variable,
+        geistSans.variable,
+        geistSans.className
+      )}
+    >
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        {children}
+        <Navbar />
+      </ThemeProvider>
+    </body>
+  </html>
+);
+
+export default RootLayout;
