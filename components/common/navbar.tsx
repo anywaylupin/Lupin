@@ -22,7 +22,7 @@ export const Navbar = () => {
   const navItems = [...content.navbar, { title: 'Theme', icon: <ModeToggle /> }];
 
   return (
-    <nav className="fixed bottom-4 z-50 mx-auto flex max-h-max origin-bottom items-center justify-center">
+    <nav className="fixed bottom-4 right-8 z-50 flex max-h-max origin-bottom items-center justify-center md:right-auto">
       <FloatingDock className="border shadow" mobileClassName="-translate-y-10" items={navItems} />
     </nav>
   );
