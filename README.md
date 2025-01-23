@@ -1,4 +1,4 @@
-# <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f41d/512.gif" alt="🐝" width="32" height="32"> Lupin Portfolio [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fdillionverma%2Fportfolio)
+# <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f41d/512.gif" alt="🐝" width="32" height="32"> Lupin Portfolio
 
 ![Home Page](./app/opengraph-image.png)
 
