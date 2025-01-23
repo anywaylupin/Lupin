@@ -20,7 +20,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          'flex min-h-screen flex-col items-center gap-10 px-6 py-12 antialiased sm:py-24',
+          'flex min-h-screen flex-col items-center gap-10 bg-background text-primary antialiased transition',
           geistMono.variable,
           geistSans.variable,
           geistSans.className

@@ -1,11 +1,11 @@
-import resume from '@/data/resume';
+import content from '@/content';
 
 import { FloatingDock } from '../ui';
 
 export const Navbar = () => {
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-30 mx-auto mb-4 flex h-full max-h-14 origin-bottom">
-      <FloatingDock className="shadow" mobileClassName="translate-y-20" items={resume.navbar} />
+    <nav className="fixed bottom-4 z-50 mx-auto flex max-h-max origin-bottom items-center justify-center">
+      <FloatingDock className="border shadow" mobileClassName="-translate-y-10" items={content.navbar} />
     </nav>
   );
 };

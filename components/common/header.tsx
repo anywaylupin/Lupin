@@ -1,16 +1,16 @@
 import Image from 'next/image';
 
-import resume from '@/data/resume';
+import content from '@/content';
 import { BLUR_FADE_DELAY } from '@/lib/constants';
 import { getRandom } from '@/lib/utils';
 
 import { Avatar, AvatarFallback, AvatarImage, BlurFade, TextGenerateEffect } from '../ui';
 
 export const Header = () => {
-  const message = `${getRandom(resume.greetings)}, I'm ${resume.name.split(' ')[0]} `;
+  const message = `${getRandom(content.greetings)}, I'm ${content.name.split(' ')[0]} `;
 
   return (
-    <header id="hero" className="flex w-full max-w-2xl justify-between gap-2">
+    <header id="hero" className="flex w-full max-w-2xl justify-between gap-2 px-6 pt-12 sm:pt-24">
       <div className="flex flex-1 flex-col gap-1.5">
         <div className="flex items-center gap-3 text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
           <TextGenerateEffect transition={{ delay: BLUR_FADE_DELAY }} words={message} />
@@ -22,12 +22,12 @@ export const Header = () => {
         <TextGenerateEffect
           transition={{ delay: BLUR_FADE_DELAY }}
           className="max-w-[600px] md:text-xl"
-          words={resume.description}
+          words={content.description}
         />
       </div>
       <Avatar className="size-28 border">
-        <AvatarImage alt={resume.name} src={resume.avatarUrl} />
-        <AvatarFallback>{resume.initials}</AvatarFallback>
+        <AvatarImage alt={content.name} src={content.avatarUrl} />
+        <AvatarFallback>{content.initials}</AvatarFallback>
       </Avatar>
     </header>
   );
