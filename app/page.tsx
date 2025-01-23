@@ -15,6 +15,7 @@ export default function Home() {
           <BlurFade delay={BLUR_FADE_DELAY * 3}>
             <h2 className="text-xl font-bold">About</h2>
           </BlurFade>
+
           <BlurFade delay={BLUR_FADE_DELAY * 4}>
             <Markdown className="prose dark:prose-invert max-w-full text-pretty text-sm text-muted-foreground">
               {content.about}
@@ -26,13 +27,17 @@ export default function Home() {
           <BlurFade delay={BLUR_FADE_DELAY * 5}>
             <h2 className="text-xl font-bold">Experience</h2>
           </BlurFade>
-          <ExperienceCards />
+
+          <BlurFade delay={BLUR_FADE_DELAY * 5.5}>
+            <ExperienceCards />
+          </BlurFade>
         </section>
 
         <section id="skills" className="flex min-h-0 flex-col gap-y-3">
           <BlurFade delay={BLUR_FADE_DELAY * 9}>
             <h2 className="text-xl font-bold">Skills</h2>
           </BlurFade>
+
           <div className="flex flex-wrap gap-1">
             {content.skills.map((skill, id) => (
               <BlurFade key={skill} delay={BLUR_FADE_DELAY * 10 + id * 0.05}>
@@ -55,7 +60,10 @@ export default function Home() {
               </div>
             </div>
           </BlurFade>
-          <ProjectCards />
+
+          <BlurFade className="grid grid-cols-1 gap-3 sm:grid-cols-2" delay={BLUR_FADE_DELAY * 12}>
+            <ProjectCards />
+          </BlurFade>
         </section>
       </main>
     </>
