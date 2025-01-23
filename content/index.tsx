@@ -63,7 +63,7 @@ export default {
       title: 'HieuNhan',
       image: '/hieunhan.png',
       description:
-        'A portfolio and blog designed for a university student to highlight academic activities and share insights. The clean layout allows for easy presentation of achievements and reflections.',
+        'Portfolio and blog designed for a university student to highlight academic activities and share insights. The clean layout allows for easy presentation of achievements and reflections.',
       tags: ['React', 'Astro', 'TailwindCSS', 'Aceternity UI', 'Framer Motion'],
       website: 'https://hieunhan.vercel.app',
       github: 'https://github.com/anywaylupin/HieuNhan',

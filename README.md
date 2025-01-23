@@ -14,12 +14,6 @@
 ![Magic UI](https://img.shields.io/badge/Magic%20UI-FF4B00?style=flat&logo=magic&logoColor=white)
 ![Radix UI](https://img.shields.io/badge/Radix%20UI-252526?style=flat&logo=radix-ui&logoColor=white)
 
-## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/270f_fe0f/512.gif" alt="✏" width="20" height="20"> Repository Information
-
-This repository was forked from [dillionverma/portfolio](https://github.com/dillionverma/portfolio).
-
-Feel free to explore and customize it to suit your needs!
-
 ## <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f4a1/512.gif" alt="💡" width="20" height="20"> License
 
 Licensed under the [MIT license](https://github.com/dillionverma/portfolio/blob/main/LICENSE.md).
