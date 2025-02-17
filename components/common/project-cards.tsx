@@ -16,7 +16,7 @@ export const ProjectCards = () => {
         <Link href={website} className="block cursor-pointer" target="_blank">
           {image && (
             <Image
-              src={image}
+              src={`/Lupin${image}`}
               alt={title}
               width={500}
               height={300}
