@@ -29,4 +29,4 @@ const Badge = ({ className, variant, ...props }: BadgeProps) => (
   <div className={cn(badgeVariants({ variant }), className)} {...props} />
 );
 
-export { type BadgeProps, Badge, badgeVariants };
+export { Badge, type BadgeProps, badgeVariants };
