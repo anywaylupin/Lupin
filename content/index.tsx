@@ -59,16 +59,7 @@ export default {
       github: 'https://github.com/anywaylupin/ChopKyHoa',
       highlight: '#d7ff01'
     },
-    {
-      title: 'HieuNhan',
-      image: '/hieunhan.png',
-      description:
-        'Portfolio and blog designed for a university student to highlight academic activities and share insights. The clean layout allows for easy presentation of achievements and reflections.',
-      tags: ['React', 'Astro', 'TailwindCSS', 'Aceternity UI', 'Framer Motion'],
-      website: 'https://hieunhan.vercel.app',
-      github: 'https://github.com/anywaylupin/HieuNhan',
-      highlight: '#F9E6F0'
-    }
+   
   ],
   navbar: [
     { title: 'Home', icon: <IconHome />, href: '/' },
