@@ -1,95 +1,21 @@
-import { rng, type Rand } from "../math";
-import { AMBER, CYAN, PINK, rgba } from "../theme";
-
-/** The city is painted on a fixed 1600 by 1000 board; the horizon sits at 560 and the parallax focus just above it. */
-export const CW = 1600;
-export const CH = 1000;
-export const HZ = 560;
+import { rng } from "../math";
+import { CYAN, PINK, rgba } from "../theme";
+import { paintBlock, type BlockStyle } from "./block";
+import { CH, CW, HZ, type Ctx2D, type Win } from "./board";
 
 export const LAYER_IDS = ["sky", "far", "farmid", "mid", "nearmid", "near"] as const;
 export type LayerId = (typeof LAYER_IDS)[number];
-
-export interface Win {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-  c: string;
-  on: boolean;
-}
 
 export interface Baked<I> {
   layers: { id: LayerId; image: I }[];
   wins: { mid: Win[]; nearmid: Win[] };
 }
 
-type Ctx2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 type Canvas2D = HTMLCanvasElement | OffscreenCanvas;
 
 export interface CanvasFactory<C extends Canvas2D> {
   make(w: number, h: number): C;
   ctx(c: C): Ctx2D;
-}
-
-interface BlockStyle {
-  top: string;
-  bottom: string;
-  row: number;
-  rim: number;
-  roof: number;
-  slab: number;
-  strip: number;
-  pad: number;
-  ww: number;
-  gap: number;
-  lit: number;
-  winA?: number;
-  spires?: boolean;
-}
-
-/**
- * Short, wide blocks with every floor visible: a slab line per storey, and either a lit strip or a row of windows that can switch on and off.
- * Spire blocks draw one extra random number, which the prototype spent on a spire list it never drew; it is kept so the seeded skyline stays identical.
- */
-function paintBlock(g: Ctx2D, x: number, top: number, w: number, o: BlockStyle, rand: Rand, wins: Win[] | null) {
-  const gr = g.createLinearGradient(0, top, 0, CH);
-  gr.addColorStop(0, o.top);
-  gr.addColorStop(1, o.bottom);
-  g.fillStyle = gr;
-  g.fillRect(x, top, w, CH - top);
-  if (rand() < 0.5) g.fillRect(x + w * (0.1 + rand() * 0.4), top - o.row, w * 0.3, o.row);
-  if (rand() < 0.35) {
-    g.fillRect(x + w * 0.75, top - o.row * 3, 3, o.row * 3);
-    if (o.spires) rand();
-  }
-  g.fillStyle = rgba(CYAN, o.rim);
-  g.fillRect(x + w - 2, top, 2, CH - top);
-  g.fillStyle = rgba(PINK, o.rim * 0.6);
-  g.fillRect(x, top, 1.5, CH - top);
-  g.fillStyle = `rgba(255,255,255,${o.roof})`;
-  g.fillRect(x, top, w, 1.5);
-  for (let fy = top + o.row; fy < CH; fy += o.row) {
-    g.fillStyle = "rgba(0,0,0,0.35)";
-    g.fillRect(x, fy - 2, w, 2);
-    g.fillStyle = `rgba(255,255,255,${o.slab})`;
-    g.fillRect(x, fy, w, 1);
-    if (rand() < o.strip) {
-      g.fillStyle = rgba(rand() < 0.5 ? PINK : CYAN, 0.22 + rand() * 0.2);
-      g.fillRect(x + 4, fy - o.row * 0.55, w - 8, 2);
-      continue;
-    }
-    for (let wx = x + o.pad; wx < x + w - o.pad - o.ww; wx += o.ww + o.gap) {
-      if (rand() < 0.12) continue;
-      const c = rand() < 0.42 ? CYAN : rand() < 0.8 ? PINK : AMBER;
-      const wy = fy - o.row * 0.78;
-      const wh = o.row * 0.48;
-      if (wins) wins.push({ x: wx, y: wy, w: o.ww, h: wh, c, on: rand() < o.lit });
-      else if (rand() < o.lit) {
-        g.fillStyle = rgba(c, o.winA ?? 0.5);
-        g.fillRect(wx, wy, o.ww, wh);
-      }
-    }
-  }
 }
 
 /**

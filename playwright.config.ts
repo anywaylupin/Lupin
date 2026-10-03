@@ -4,6 +4,7 @@ import { defineConfig } from "@playwright/test";
  * Phone and desktop sizes match the two the prototype is compared at.
  * Screenshot baselines come from Linux in CI because fonts and canvas antialiasing differ per OS.
  * Tests run against a production preview on its own port so a dev server on 4321 is never reused by mistake.
+ * `--ignore-lock` skips Astro 7's preview lock file, which a killed container leaves behind in the shared project folder.
  */
 export default defineConfig({
   testDir: "tests/e2e",
@@ -16,7 +17,7 @@ export default defineConfig({
     { name: "desktop", use: { browserName: "chromium", viewport: { width: 1440, height: 900 } } },
   ],
   webServer: {
-    command: "pnpm build && pnpm preview --port 4329",
+    command: "pnpm build && pnpm preview --port 4329 --ignore-lock",
     url: "http://localhost:4329",
     reuseExistingServer: !process.env["CI"],
   },

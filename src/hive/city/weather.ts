@@ -1,7 +1,7 @@
 import type { Point } from "../hex";
 import { easeOut, hash2 } from "../math";
 import { AMBER, CYAN, PINK, rgba } from "../theme";
-import { CH, CW, HZ } from "./bake";
+import { CH, CW, HZ } from "./board";
 import type { Scene } from "./scene";
 
 type Ctx = CanvasRenderingContext2D;

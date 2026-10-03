@@ -1,6 +1,6 @@
 import type { Point } from "../hex";
 import { AMBER, CYAN, PINK } from "../theme";
-import { HZ } from "./bake";
+import { HZ } from "./board";
 
 export interface Sign {
   x: number;

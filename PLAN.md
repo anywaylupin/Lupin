@@ -158,3 +158,28 @@ The overlay reads nav and camera state and writes nothing back except hover and 
 9. Performance with measured numbers and Lighthouse in CI.
 
 After each phase: Playwright screenshots of port and prototype at 390x844 and 1440x900, side by side, with a list of differences.
+
+## Measured (phase 9)
+
+Measured on the production build served by `astro preview`, Lighthouse 12 mobile preset (simulated 4x CPU, slow 4G), Playwright Chromium.
+
+| Route             | Performance | Accessibility | Best practices | SEO | LCP   | TBT           | CLS   |
+| ----------------- | ----------- | ------------- | -------------- | --- | ----- | ------------- | ----- |
+| `/`               | 92 to 98    | 100           | 100            | 100 | 1.4 s | 140 to 330 ms | 0     |
+| `/projects/`      | 99          | 100           | 100            | 100 | 1.4 s | 120 ms        | 0     |
+| `/stack/`         | 99          | 100           | 100            | 100 | 1.5 s | 110 ms        | 0     |
+| `/projects/juka/` | 98          | 100           | 100            | 100 | 1.4 s | 170 ms        | 0     |
+| `/experience/`    | 98          | 100           | 100            | 100 | 1.4 s | 150 ms        | 0.001 |
+
+- Initial JS: 22.1 KB gzip (56.5 KB raw) against the 80 KB budget; the bake worker adds 1.9 KB gzip off the main thread. CSS 3.8 KB gzip.
+- Fonts: two preloaded Latin Cascadia files; the Noto Sans SC subset for the signs is 2.4 KB.
+- Frame rate with GPU: 60 fps steady at 1440x900 with no frame over 20 ms across 600 frames; 57.5 fps at 390x844, DPR 2.75, 4x CPU throttle. The prototype measured 60 and 60.3 in the same runs.
+- Main thread per frame at steady state: 1.2 ms of script on average.
+
+Fixes this pass found:
+
+- The worker baked on GPU-backed OffscreenCanvas; drawing those bitmaps on the main thread forced a synchronous readback, a 680 ms stall that put Lighthouse TBT at 2.9 s and Performance at 70. CPU-backed canvases in the worker (`willReadFrequently`) brought TBT to about 150 ms.
+- The npm font provider preloaded all eleven Cascadia unicode ranges; the Fontsource provider tags subsets, so only the two Latin files preload.
+- Hive text now has a 12px floor (labels wrap, tags that cannot fit are left to the leaf), which Lighthouse requires for legible text; the prototype went down to 9px on phones.
+
+The remaining home page variance is an uninstrumented compositor stall of about 170 ms observed under software rendering, which CI shares; Lighthouse CI asserts on the median of three runs.

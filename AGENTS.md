@@ -19,10 +19,18 @@ COMPARE=1 pnpm test:e2e compare   # port and prototype screenshots side by side
 
 Run `pnpm format`, `pnpm lint`, `pnpm check` and `pnpm test` before every commit.
 
+The build renders OG images with Playwright Chromium, so any build machine needs it first:
+
+    pnpm exec playwright install chromium
+
+On Cloudflare Pages that makes the build command `pnpm exec playwright install chromium && pnpm build`, output directory `dist`.
+
+Visual baselines are Linux only and come from Docker so they match CI: `pnpm test:visual:update`.
+
 ## Layout
 
 ```
-astro.config.ts         site config, fonts API (Cascadia Code from npm, Noto Sans SC glyph subset)
+astro.config.ts         site config, fonts API (Cascadia Code from Fontsource, Noto Sans SC glyph subset)
 src/
   content.config.ts     collections and Zod schemas
   content/              Markdown content; adding a project is adding one file here

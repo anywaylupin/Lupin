@@ -170,16 +170,38 @@ export function boot(): void {
       if (n.S < 1) drawMoving(g, h, movingHex(h));
     }
     chrome.place();
-    requestAnimationFrame(frame);
   };
+
+  let raf = 0;
+  const loop = (now: number) => {
+    frame(now);
+    raf = requestAnimationFrame(loop);
+  };
+  /** The loop stops while the tab is hidden; resuming resets the frame clock so the first frame back does not jump. */
+  const resume = () => {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame((t) => {
+      last = t;
+      loop(t);
+    });
+  };
+  document.addEventListener("visibilitychange", () => (document.hidden ? cancelAnimationFrame(raf) : resume()));
+  /** A resolution query fires once per value, so each change re-arms it for the new ratio, as when a window moves between monitors. */
+  const watchDpr = () =>
+    matchMedia(`(resolution: ${devicePixelRatio}dppx)`).addEventListener(
+      "change",
+      () => {
+        resize();
+        watchDpr();
+      },
+      { once: true },
+    );
+  watchDpr();
 
   bindInput(h, cv, { ...sheetHooks(h, cv, chrome.changed), firstGesture: chrome.gesture, escape: chrome.escape });
   sizeCanvas();
   Object.assign(h.frontCam, h.front.home);
   nav.applyInstant(parseRoute(h.data, location.pathname) ?? HOME_ROUTE);
   document.documentElement.classList.add("hive");
-  requestAnimationFrame((t) => {
-    last = t;
-    frame(t);
-  });
+  resume();
 }

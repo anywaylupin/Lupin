@@ -1,6 +1,6 @@
 import { rng } from "../math";
 import { CYAN, PINK, rgba } from "../theme";
-import { CH, CW } from "./bake";
+import { CH, CW } from "./board";
 
 export interface GlitchTimer {
   next: number;

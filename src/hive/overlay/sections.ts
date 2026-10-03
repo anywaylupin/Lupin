@@ -14,18 +14,42 @@ export interface SectionActions {
   reveal: (el: Element, ms: number) => void;
 }
 
+/** What a proxy needs to build itself; `back` is the face shown once the cell has turned past edge on. */
+interface ProxySpec {
+  where: Where;
+  i: number;
+  item: Placed;
+  href: string | null;
+  aria: string;
+  label: string;
+  tag: string;
+  hasText: boolean;
+  color: string;
+  front: HTMLElement;
+  back: HTMLElement | null;
+}
+
 interface Proxy {
   el: HTMLElement;
   where: Where;
   i: number;
   item: Placed;
   label: string;
+  tag: string;
   hasText: boolean;
   fFront: HTMLElement;
   fBack: HTMLElement;
   shown: boolean;
   face: "front" | "back";
 }
+
+/**
+ * Text never drops below 12px, the size Lighthouse counts as legible; the prototype went down to 9px on phones.
+ * Labels that cannot fit a line at that size wrap, and tags that cannot fit are left to the leaf page.
+ */
+const MIN_TEXT = 12;
+/** Cascadia Code advances about 0.62 em per glyph. */
+const GLYPH_W = 0.62;
 
 function esc(s: string): string {
   return s.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll('"', "&quot;");
@@ -71,39 +95,30 @@ function inPlace(e: MouseEvent): boolean {
 export function createSections(h: Hive, root: HTMLElement, actions: SectionActions) {
   let proxies: Proxy[] = [];
 
-  const add = (
-    where: Where,
-    i: number,
-    item: Placed,
-    href: string | null,
-    aria: string | null,
-    label: string,
-    hasText: boolean,
-    fFront: HTMLElement,
-    fBack: HTMLElement,
-  ) => {
-    const el: HTMLElement = document.createElement(href ? "a" : "div");
-    el.className = href ? "cell" : "cell static";
-    if (el instanceof HTMLAnchorElement && href) {
-      el.href = href;
+  const add = (p: ProxySpec) => {
+    const el: HTMLElement = document.createElement(p.href ? "a" : "div");
+    el.className = p.href ? "cell" : "cell static";
+    if (el instanceof HTMLAnchorElement && p.href) {
+      el.href = p.href;
       el.draggable = false;
+      el.setAttribute("aria-label", p.aria);
     }
-    if (aria && href) el.setAttribute("aria-label", aria);
+    const fBack = p.back ?? face("", p.color, true);
     fBack.hidden = true;
-    el.append(fFront, fBack);
+    el.append(p.front, fBack);
     const enter = () => {
       el.classList.add("hot");
-      actions.hover(item.id);
+      actions.hover(p.item.id);
     };
     const leave = () => {
       el.classList.remove("hot");
-      if (h.hoverKey === item.id) actions.hover(null);
+      if (h.hoverKey === p.item.id) actions.hover(null);
     };
-    if (href) {
+    if (p.href) {
       el.addEventListener("click", (e) => {
         if (!inPlace(e)) return;
         e.preventDefault();
-        if (!h.nav.busy && !h.dragMoved) actions.activate(where, i);
+        if (!h.nav.busy && !h.dragMoved) actions.activate(p.where, p.i);
       });
       el.addEventListener("focus", () => el.matches(":focus-visible") && enter());
       el.addEventListener("blur", leave);
@@ -112,65 +127,68 @@ export function createSections(h: Hive, root: HTMLElement, actions: SectionActio
     el.addEventListener("pointerleave", leave);
     el.addEventListener("pointerdown", (e) => startPan(h, e));
     root.append(el);
-    proxies.push({ el, where, i, item, label, hasText, fFront, fBack, shown: false, face: "front" });
+    const { where, i, item, label, tag, hasText, front } = p;
+    proxies.push({ el, where, i, item, label, tag, hasText, fFront: front, fBack, shown: false, face: "front" });
   };
 
   const rebuild = () => {
     root.replaceChildren();
     proxies = [];
-    h.front.powered.forEach((p, i) => {
+    h.front.powered.forEach((item, i) => {
       const cell = h.data.home[i];
       if (!cell) return;
       const color = i === 0 ? "var(--cyan)" : cell.cards ? "var(--pink)" : "var(--blue)";
-      const aria = cell.cards
-        ? `${cell.label}, opens ${cell.cards.length} cards`
-        : cell.sub
-          ? `${cell.label}, ${cell.sub}`
-          : cell.label;
-      const back = cell.cards ? face(faceHTML("back", "Back", cell.label), "var(--pink)", true) : face("", color, true);
-      add(
-        "front",
+      const sub = cell.sub ? `${cell.label}, ${cell.sub}` : cell.label;
+      add({
+        where: "front",
         i,
-        p,
-        cell.path,
-        aria,
-        cell.label,
-        false,
-        face(faceHTML(cell.icon, cell.label, cell.sub), color),
-        back,
-      );
+        item,
+        href: cell.path,
+        aria: cell.cards ? `${cell.label}, opens ${cell.cards.length} cards` : sub,
+        label: cell.label,
+        tag: "",
+        hasText: false,
+        color,
+        front: face(faceHTML(cell.icon, cell.label, cell.sub), color),
+        back: cell.cards ? face(faceHTML("back", "Back", cell.label), "var(--pink)", true) : null,
+      });
     });
     const sec = h.nav.sec;
     const cell = h.data.home[sec];
-    h.backs[sec]?.items.forEach((it, k) => {
+    h.backs[sec]?.items.forEach((item, k) => {
       if (k === 0) {
-        add(
-          "back",
-          0,
-          it,
-          "/",
-          "Back",
-          "Back",
-          false,
-          face(faceHTML("back", "Back", cell?.label), "var(--pink)", true),
-          face("", "var(--pink)", true),
-        );
+        const front = face(faceHTML("back", "Back", cell?.label), "var(--pink)", true);
+        add({
+          where: "back",
+          i: 0,
+          item,
+          href: "/",
+          aria: "Back",
+          label: "Back",
+          tag: "",
+          hasText: false,
+          color: "var(--pink)",
+          front,
+          back: null,
+        });
         return;
       }
       const c = cell?.cards?.[k - 1];
       if (!c) return;
       const color = c.leaf ? "var(--pink)" : "var(--cyan)";
-      add(
-        "back",
-        k,
-        it,
-        c.leaf ? c.path : null,
-        cardLabel(c),
-        c.title,
-        !!c.text,
-        face(faceHTML(c.icon, c.title, null, c.text, c.tag), color),
-        face("", color, true),
-      );
+      add({
+        where: "back",
+        i: k,
+        item,
+        href: c.leaf ? c.path : null,
+        aria: cardLabel(c),
+        label: c.title,
+        tag: c.tag ?? "",
+        hasText: !!c.text,
+        color,
+        front: face(faceHTML(c.icon, c.title, null, c.text, c.tag), color),
+        back: null,
+      });
     });
   };
 
@@ -219,15 +237,15 @@ export function createSections(h: Hive, root: HTMLElement, actions: SectionActio
         o.fBack.hidden = faceNow !== "back";
         if (faceNow === "back") actions.reveal(o.fBack, 320);
       }
-      st.setProperty(
-        "--fs",
-        `${clamp(Math.min(size * (o.hasText ? 0.15 : 0.18), (w * 0.8) / (o.label.length * 0.62)), 9, 26)}px`,
-      );
+      const fit = (w * 0.8) / (o.label.length * GLYPH_W);
+      const ss = clamp(size * 0.09, MIN_TEXT, 13);
+      st.setProperty("--fs", `${clamp(Math.min(size * (o.hasText ? 0.15 : 0.18), fit), MIN_TEXT, 26)}px`);
       st.setProperty("--is", `${clamp(size * 0.26, 12, 40)}px`);
-      st.setProperty("--ss", `${clamp(size * 0.09, 9, 13)}px`);
+      st.setProperty("--ss", `${ss}px`);
       st.setProperty("--tw", `${w * 0.7}px`);
+      o.el.classList.toggle("wrap", fit < MIN_TEXT);
       o.el.classList.toggle("tight", w < (o.hasText ? 230 : 170));
-      o.el.classList.toggle("tiny", w < 90);
+      o.el.classList.toggle("tiny", w < 90 || (o.tag.length + 2) * GLYPH_W * ss > w * 0.8);
       const vis = alpha > 0.4;
       if (vis && !o.shown) actions.reveal(o.face === "back" ? o.fBack : o.fFront, 320);
       o.shown = vis;

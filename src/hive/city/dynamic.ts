@@ -1,7 +1,7 @@
 import type { Point } from "../hex";
 import { clamp, hash2, lerp } from "../math";
 import { AMBER, CYAN, PINK, rgba } from "../theme";
-import { CH, CW, type Win } from "./bake";
+import { CH, CW, type Win } from "./board";
 import { glitchLayer, glitching, type GlitchTimer } from "./glitch";
 import type { Layer } from "./layers";
 import type { Drone, Platform, Rail, Scene, Sign } from "./scene";

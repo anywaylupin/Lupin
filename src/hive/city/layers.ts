@@ -1,6 +1,7 @@
 import type { Cam } from "../camera";
 import type { Point } from "../hex";
-import { bakeCity, CH, CW, type Baked, type LayerId } from "./bake";
+import { bakeCity, type Baked, type LayerId } from "./bake";
+import { CH, CW } from "./board";
 
 /** How far behind the sheet each layer sits inside the 900px CSS perspective; the browser does the parallax. */
 const DEPTH: Record<LayerId, number> = { sky: 3200, far: 1900, farmid: 1150, mid: 620, nearmid: 300, near: 70 };

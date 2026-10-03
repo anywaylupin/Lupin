@@ -632,3 +632,9 @@
   opacity: 0;
   pointer-events: none;
 }
+
+.face .sub,
+.cell.wrap .face .label {
+  white-space: normal;
+  max-width: var(--tw, 120px);
+}
