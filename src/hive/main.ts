@@ -111,6 +111,7 @@ export function boot(): void {
     h.drag = null;
     h.pending = null;
     Object.assign(h.frontCam, h.front.home);
+    chrome.relayout();
     nav.applyInstant(route);
   };
   let resizeTimer = 0;

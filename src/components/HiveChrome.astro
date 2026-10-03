@@ -1,11 +1,13 @@
 ---
 import { DATA_ELEMENT_ID } from "../hive/data";
 import { getHiveData, serializeData } from "../lib/content";
+import { site } from "../site";
 import Icon from "./Icon.astro";
 import "../styles/overlay.css";
 import "../styles/settings.css";
 
 const data = serializeData(await getHiveData());
+const reversedEmail = [...site.email].reverse().join("");
 const switches = [
   ["glitch", "Glitch"],
   ["decrypt", "Text decrypt"],
@@ -87,6 +89,27 @@ const switches = [
       </div>
     </section>
   </div>
+  <div class="contact" id="contacts" role="group" aria-label="Contact">
+    <a class="hexbtn" data-tip="GitHub" href={site.github} target="_blank" rel="noopener" aria-label="GitHub">
+      <Icon name="code" />
+    </a>
+    <a class="hexbtn" data-tip="LinkedIn" href={site.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn">
+      <Icon name="profile" />
+    </a>
+    <button
+      class="hexbtn"
+      type="button"
+      data-tip="Copy email"
+      data-email={reversedEmail}
+      aria-label="Copy email address"
+    >
+      <Icon name="mail" />
+    </button>
+    <a class="hexbtn" data-tip="Download CV" href={site.cv} download aria-label="Download CV as PDF">
+      <Icon name="file" />
+    </a>
+  </div>
+  <svg id="map" aria-hidden="true"></svg>
   <div id="tip" hidden aria-hidden="true"></div>
 </div>
 <script type="application/json" id={DATA_ELEMENT_ID} set:html={data} />

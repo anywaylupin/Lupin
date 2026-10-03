@@ -2,8 +2,10 @@ import { createAudio } from "./fx/audio";
 import { decrypt } from "./fx/decrypt";
 import { resetSheet } from "./interact";
 import { createNavigator, currentRoute } from "./nav";
+import { setupContacts } from "./overlay/contacts";
 import { setupHexButton } from "./overlay/hexbtn";
 import { createLeaf } from "./overlay/leaf";
+import { createMap } from "./overlay/map";
 import { createPath } from "./overlay/path";
 import { createSections } from "./overlay/sections";
 import { createSettings } from "./overlay/settings";
@@ -12,7 +14,7 @@ import { savePrefs } from "./prefs";
 import type { Route } from "./route";
 import { on, type Hive } from "./state";
 
-export function byId<T extends HTMLElement>(id: string, type: new () => T): T {
+export function byId<T extends Element>(id: string, type: new () => T): T {
   const el = document.getElementById(id);
   if (!(el instanceof type)) throw new Error(`#${id} is missing`);
   return el;
@@ -24,7 +26,8 @@ export function createChrome(h: Hive) {
   const electric = () => on(h, "electric");
   const tip = createTooltip(byId("tip", HTMLElement), () => on(h, "glitch"), reveal);
   const audio = createAudio(() => h.prefs);
-  const changed = () => {};
+  const map = createMap(h, byId("map", SVGSVGElement));
+  const changed = () => map.update();
 
   const cells = byId("cells", HTMLElement);
   const leafBack = byId("leaf-back", HTMLButtonElement);
@@ -69,7 +72,7 @@ export function createChrome(h: Hive) {
         else if (from.sec >= 0 && to.sec < 0) sections.focus("front", from.sec);
         else if (from.sec < 0 && to.sec >= 0) sections.focus("back", 0);
       },
-      sectionChange: changed,
+      sectionChange: (closing) => map.update(closing),
     },
     h.data.homeTitle,
   );
@@ -100,11 +103,14 @@ export function createChrome(h: Hive) {
     },
   );
   applyEffects();
+  setupContacts(byId("contacts", HTMLElement), electric, tip);
+  map.build();
 
   return {
     nav,
     changed,
     reducedChanged: applyEffects,
+    relayout: map.build,
     place: () => {
       sections.place();
       leaf.place();
