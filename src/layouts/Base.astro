@@ -1,6 +1,5 @@
 ---
-import "@fontsource/cascadia-code/400.css";
-import "@fontsource/cascadia-code/700.css";
+import { Font } from "astro:assets";
 import "../styles/tokens.css";
 import "../styles/base.css";
 
@@ -20,6 +19,8 @@ const { title, description } = Astro.props;
     <meta name="description" content={description} />
     <meta name="theme-color" content="#05040b" />
     <title>{title}</title>
+    <Font cssVariable="--font-mono" preload />
+    <Font cssVariable="--font-zh" />
   </head>
   <body>
     <slot />

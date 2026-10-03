@@ -10,6 +10,6 @@
   --fg: #d9d2ee;
   --muted: #857ea3;
   --panel: rgba(10, 8, 22, 0.96);
-  --mono: "Cascadia Code", "Cascadia Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --mono: var(--font-mono);
   color-scheme: dark;
 }

@@ -124,6 +124,9 @@ The overlay reads nav and camera state and writes nothing back except hover and 
 7. All listed extra dependencies are approved.
 8. Cloudflare Pages is connected by the owner; no deploy config in the repo.
 9. Commit after each phase, never push.
+10. Astro 7 instead of 5. Fonts go through the Astro fonts API: Cascadia Code from `@fontsource/cascadia-code` via the npm provider, Noto Sans SC via the Google provider with a glyph subset, both self-hosted at build. Content config lives in `src/content.config.ts` with glob loaders.
+11. Experience cards with a Markdown body open a leaf at `/experience/<slug>/`, following the prototype rule that any card with a leaf flips; otherwise the folded GMP text would be unreachable in the hive.
+12. Resize keeps loose and removed hexes when the hex size and orientation are unchanged, and re-applies the current route instead of closing it.
 
 ## Open questions (answered, kept for context)
 
