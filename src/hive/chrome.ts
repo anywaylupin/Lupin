@@ -14,6 +14,9 @@ import { savePrefs } from "./prefs";
 import type { Route } from "./route";
 import { on, type Hive } from "./state";
 
+/** Reduced motion swaps flips and slides for a fade this long each way. */
+const VEIL_MS = 160;
+
 export function byId<T extends Element>(id: string, type: new () => T): T {
   const el = document.getElementById(id);
   if (!(el instanceof type)) throw new Error(`#${id} is missing`);
@@ -30,6 +33,7 @@ export function createChrome(h: Hive) {
   const changed = () => map.update();
 
   const cells = byId("cells", HTMLElement);
+  const veil = byId("veil", HTMLElement);
   const leafBack = byId("leaf-back", HTMLButtonElement);
   const leaf = createLeaf(
     h,
@@ -73,6 +77,11 @@ export function createChrome(h: Hive) {
         else if (from.sec < 0 && to.sec >= 0) sections.focus("back", 0);
       },
       sectionChange: (closing) => map.update(closing),
+      veil: async (show) => {
+        veil.style.pointerEvents = show ? "auto" : "none";
+        const frames = [{ opacity: show ? 0 : 1 }, { opacity: show ? 1 : 0 }];
+        await veil.animate(frames, { duration: VEIL_MS, easing: "ease", fill: "forwards" }).finished;
+      },
     },
     h.data.homeTitle,
   );

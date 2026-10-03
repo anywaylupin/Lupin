@@ -1,8 +1,11 @@
 ---
 import { Font } from "astro:assets";
 import HiveChrome from "../components/HiveChrome.astro";
+import Icon from "../components/Icon.astro";
+import { site } from "../site";
 import "../styles/tokens.css";
 import "../styles/base.css";
+import "../styles/fallback.css";
 
 interface Props {
   title: string;
@@ -13,6 +16,17 @@ interface Props {
 
 const { title, description, hive = true, ogImage = "/og/home.png" } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const [user, domain] = site.email.split("@");
+const nav = [
+  ["/", "home"],
+  ["/about/", "about"],
+  ["/projects/", "projects"],
+  ["/stack/", "stack"],
+  ["/experience/", "experience"],
+  ["/now/", "now"],
+  ["/hours/", "hours"],
+] as const;
+const here = Astro.url.pathname;
 ---
 
 <!doctype html>
@@ -24,11 +38,16 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="theme-color" content="#05040b" />
     <title>{title}</title>
     <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap.xml" />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={new URL(ogImage, Astro.site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <Font cssVariable="--font-mono" preload />
     <Font cssVariable="--font-zh" />
@@ -38,8 +57,55 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   </head>
   <body>
     {hive && <HiveChrome />}
-    <main id="content">
-      <slot />
-    </main>
+    <div id="content">
+      <header class="site-head">
+        <a class="brand" href="/">
+          <b aria-hidden="true">❯</b>
+          {site.name}
+        </a>
+        <nav aria-label="Site">
+          <ul>
+            {nav.map(([href, label]) => (
+              <li>
+                <a href={href} aria-current={here === href ? "page" : undefined}>
+                  {label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </header>
+      <main>
+        <slot />
+      </main>
+      <footer class="site-foot">
+        <ul aria-label="Contact">
+          <li>
+            <a href={site.github} rel="noopener">
+              <Icon name="code" />
+              GitHub
+            </a>
+          </li>
+          <li>
+            <a href={site.linkedin} rel="noopener">
+              <Icon name="profile" />
+              LinkedIn
+            </a>
+          </li>
+          <li>
+            <span>
+              <Icon name="mail" />
+              {user} [at] {domain}
+            </span>
+          </li>
+          <li>
+            <a href={site.cv} download>
+              <Icon name="file" />
+              Download CV
+            </a>
+          </li>
+        </ul>
+      </footer>
+    </div>
   </body>
 </html>

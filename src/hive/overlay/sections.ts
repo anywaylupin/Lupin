@@ -238,7 +238,9 @@ export function createSections(h: Hive, root: HTMLElement, actions: SectionActio
     for (const o of proxies) o.el.classList.remove("hot");
   };
 
+  /** Places first: a proxy that was faded out last frame is still hidden, and hidden elements silently refuse focus. */
   const focus = (where: Where, i: number) => {
+    place();
     proxies.find((o) => o.where === where && o.i === i)?.el.focus({ preventScroll: true });
   };
 

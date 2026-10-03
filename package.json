@@ -15,7 +15,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:visual:update": "node scripts/visual-update.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.3.1",

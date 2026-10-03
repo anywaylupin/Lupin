@@ -20,9 +20,9 @@ const switches = [
 <div class="chrome">
   <div id="city" aria-hidden="true"></div>
   <canvas id="hive" aria-hidden="true"></canvas>
-  <p class="sr" id="hive-title">
-    Portfolio
-  </p>
+  <h1 class="sr" id="hive-title">
+    {site.name}, portfolio
+  </h1>
   <div id="path" aria-hidden="true"></div>
   <nav id="cells" aria-labelledby="hive-title"></nav>
   <section id="leaf" hidden aria-labelledby="leaf-title">
@@ -31,6 +31,7 @@ const switches = [
       <Icon name="back" />
     </button>
   </section>
+  <div id="veil" aria-hidden="true"></div>
   <div id="settings">
     <button
       id="settings-btn"

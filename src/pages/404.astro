@@ -1,0 +1,14 @@
+---
+import Shell from "../layouts/Shell.astro";
+import { pageTitle } from "../lib/content";
+---
+
+<Shell title={pageTitle("Not found")} description="This page does not exist." hive={false}>
+  <p class="cmd">
+    <b aria-hidden="true">❯</b>cat this-page.md
+  </p>
+  <h1>No such file or directory</h1>
+  <p>
+    This hex was never part of the hive. <a href="/">Go back to the start</a>.
+  </p>
+</Shell>

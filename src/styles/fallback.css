@@ -1,0 +1,164 @@
+/* The plain page every route renders for no-JS readers and crawlers; the hive hides it once it boots. */
+#content {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 16px 48px;
+  line-height: 1.7;
+}
+
+#content a {
+  color: var(--fg);
+  text-underline-offset: 3px;
+}
+
+#content a:hover {
+  color: var(--cyan);
+}
+
+#content a:focus-visible {
+  outline: 1px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+#content .icon {
+  width: 1.1em;
+  height: 1.1em;
+  vertical-align: -0.2em;
+  margin-right: 8px;
+  color: var(--cyan);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+.site-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px 24px;
+  margin-bottom: 40px;
+  font-size: 13px;
+}
+
+.site-head .brand {
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.site-head b,
+#content .cmd b {
+  color: var(--pink);
+  margin-right: 8px;
+}
+
+.site-head ul,
+.site-foot ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-head [aria-current="page"] {
+  color: var(--cyan);
+}
+
+#content .cmd {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+#content h1 {
+  margin: 0 0 16px;
+  font-size: clamp(22px, 2vw + 14px, 32px);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+#content h2 {
+  margin: 0;
+  font-size: 15px;
+}
+
+#content p,
+#content .body,
+#content .intro {
+  color: #bfb7dc;
+  max-width: 60ch;
+}
+
+#content .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin: 16px 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: var(--cyan);
+}
+
+#content .tags li::before {
+  content: "[";
+  color: var(--muted);
+}
+
+#content .tags li::after {
+  content: "]";
+  color: var(--muted);
+}
+
+#content .links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+}
+
+#content .links span {
+  color: var(--muted);
+}
+
+#content .cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+#content .card {
+  padding: 16px;
+  background: var(--cell);
+  border: 1px solid #2a2350;
+}
+
+#content .card p {
+  margin: 6px 0 0;
+  font-size: 13px;
+}
+
+#content .card .tag {
+  color: var(--cyan);
+}
+
+#content .group {
+  margin-top: 24px;
+}
+
+.site-foot {
+  margin-top: 56px;
+  padding-top: 16px;
+  border-top: 1px solid #221c44;
+  font-size: 13px;
+}
+
+.site-foot span {
+  color: var(--muted);
+}

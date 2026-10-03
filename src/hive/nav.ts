@@ -14,6 +14,7 @@ export interface NavUI {
   busy: (on: boolean) => void;
   settled: (from: Route) => void;
   sectionChange: (closing: boolean) => void;
+  veil: (on: boolean) => Promise<void>;
 }
 
 /**
@@ -193,6 +194,43 @@ export function createNavigator(h: Hive, ui: NavUI, homeTitle: string) {
     ui.settled(currentRoute(h));
   };
 
+  let fading = false;
+  let queued: (() => void) | null = null;
+
+  /**
+   * Under reduced motion every transition becomes a short fade through the background instead of a flip or a slide.
+   * The transition itself still runs, finishing in one frame behind the veil; a request arriving mid fade waits its turn.
+   */
+  const veiled = (run: () => void) => {
+    if (!h.reduced) {
+      run();
+      return;
+    }
+    if (fading) {
+      queued = run;
+      return;
+    }
+    fading = true;
+    void ui.veil(true).then(() => {
+      run();
+      const settle = () => {
+        if (n.busy || n.target) {
+          requestAnimationFrame(settle);
+          return;
+        }
+        const next = queued;
+        queued = null;
+        if (next) {
+          next();
+          requestAnimationFrame(settle);
+          return;
+        }
+        requestAnimationFrame(() => void ui.veil(false).then(() => (fading = false)));
+      };
+      requestAnimationFrame(settle);
+    });
+  };
+
   /**
    * Back steps through entries the hive pushed with the browser's own history, so the browser back button and this stay in sync.
    * On a deep link there is nothing of ours to step back to, so it closes one level and replaces the URL instead.
@@ -209,14 +247,17 @@ export function createNavigator(h: Hive, ui: NavUI, homeTitle: string) {
     try {
       history.replaceState(null, "", routePath(h.data, parent));
     } catch {}
-    n.target = parent;
-    step();
+    veiled(() => {
+      n.target = parent;
+      step();
+    });
   };
 
-  const goTo = (route: Route) => {
-    n.target = route;
-    step();
-  };
+  const goTo = (route: Route) =>
+    veiled(() => {
+      n.target = route;
+      step();
+    });
 
   addEventListener("popstate", () => goTo(parseRoute(h.data, location.pathname) ?? HOME_ROUTE));
 
@@ -246,5 +287,12 @@ export function createNavigator(h: Hive, ui: NavUI, homeTitle: string) {
     } else if (n.leafOpen) n.CF = { where: n.leafOpen.where, idx: n.leafOpen.idx, f: 1 };
   };
 
-  return { tick, openSection, closeSection, openLeaf, closeLeaf, back, goTo, applyInstant };
+  return {
+    tick,
+    openSection: (i: number) => veiled(() => openSection(i)),
+    openLeaf: (where: Where, idx: number) => veiled(() => openLeaf(where, idx)),
+    back,
+    goTo,
+    applyInstant,
+  };
 }

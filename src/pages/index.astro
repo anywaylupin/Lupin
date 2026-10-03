@@ -1,10 +1,17 @@
 ---
+import CardList from "../components/CardList.astro";
 import Shell from "../layouts/Shell.astro";
-import { HOME_TITLE } from "../lib/content";
+import { getHiveData, HOME_TITLE } from "../lib/content";
 import { site } from "../site";
+
+const { home } = await getHiveData();
 ---
 
 <Shell title={HOME_TITLE} description={site.description}>
-  <h1>{site.name}</h1>
-  <p>{site.description}</p>
+  <CardList
+    cmd="ls ~"
+    title={site.name}
+    intro={site.description}
+    cards={home.map((c) => ({ title: c.label, icon: c.icon, text: c.sub, href: c.path }))}
+  />
 </Shell>

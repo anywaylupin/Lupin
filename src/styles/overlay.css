@@ -624,3 +624,11 @@
     transition: none !important;
   }
 }
+
+#veil {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  opacity: 0;
+  pointer-events: none;
+}
