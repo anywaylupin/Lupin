@@ -7,7 +7,8 @@ import { readFileSync } from "node:fs";
  */
 const { version } = JSON.parse(readFileSync("node_modules/@playwright/test/package.json", "utf8"));
 const image = `mcr.microsoft.com/playwright:v${version}-noble`;
-const run = "corepack enable && pnpm install --frozen-lockfile --store-dir /tmp/pnpm-store && pnpm test:e2e visual --update-snapshots";
+const run =
+  "corepack enable && pnpm install --frozen-lockfile --store-dir /tmp/pnpm-store && pnpm test:e2e visual --update-snapshots";
 const args = [
   "run",
   "--rm",

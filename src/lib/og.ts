@@ -52,9 +52,12 @@ export async function renderOg(c: OgCard): Promise<Uint8Array<ArrayBuffer>> {
   try {
     browser = await chromium.launch();
   } catch (err) {
-    throw new Error("OG images need Chromium at build time; run `pnpm exec playwright install chromium` first.", {
-      cause: err,
-    });
+    throw new Error(
+      "OG images need Chromium at build time; run `pnpm exec playwright install --only-shell chromium` first.",
+      {
+        cause: err,
+      },
+    );
   }
   try {
     const page = await browser.newPage({ viewport: { width: 1200, height: 630 } });

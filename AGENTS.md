@@ -19,11 +19,8 @@ COMPARE=1 pnpm test:e2e compare   # port and prototype screenshots side by side
 
 Run `pnpm format`, `pnpm lint`, `pnpm check` and `pnpm test` before every commit.
 
-The build renders OG images with Playwright Chromium, so any build machine needs it first:
-
-    pnpm exec playwright install chromium
-
-On Cloudflare Pages that makes the build command `pnpm exec playwright install chromium && pnpm build`, output directory `dist`.
+The build renders OG images with Playwright's headless Chromium, and `pnpm build` installs it first; the install is a no-op once the browser is cached.
+On Cloudflare Pages the build command is `pnpm build` with output directory `dist`.
 
 Visual baselines are Linux only and come from Docker so they match CI: `pnpm test:visual:update`.
 
