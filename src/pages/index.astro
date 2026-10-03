@@ -1,10 +1,10 @@
 ---
-import Base from "../layouts/Base.astro";
+import Shell from "../layouts/Shell.astro";
+import { HOME_TITLE } from "../lib/content";
+import { site } from "../site";
 ---
 
-<Base title="Breached hive" description="Portfolio of a senior frontend developer moving into fullstack.">
-  <main>
-    <h1>Breached hive</h1>
-    <p>Scaffold is up. The hive arrives in phase 2.</p>
-  </main>
-</Base>
+<Shell title={HOME_TITLE} description={site.description}>
+  <h1>{site.name}</h1>
+  <p>{site.description}</p>
+</Shell>

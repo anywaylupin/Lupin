@@ -1,0 +1,22 @@
+---
+import { DATA_ELEMENT_ID } from "../hive/data";
+import { getHiveData, serializeData } from "../lib/content";
+
+const data = serializeData(await getHiveData());
+---
+
+<div class="chrome">
+  <div id="city" aria-hidden="true"></div>
+  <canvas id="hive" aria-hidden="true"></canvas>
+</div>
+<script type="application/json" id={DATA_ELEMENT_ID} set:html={data} />
+<script>
+  import { boot } from "../hive/main";
+
+  try {
+    boot();
+  } catch (err) {
+    document.documentElement.classList.remove("js", "hive");
+    console.error(err);
+  }
+</script>

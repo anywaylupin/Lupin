@@ -1,14 +1,17 @@
 ---
 import { Font } from "astro:assets";
+import HiveChrome from "../components/HiveChrome.astro";
 import "../styles/tokens.css";
 import "../styles/base.css";
+import "../styles/overlay.css";
 
 interface Props {
   title: string;
   description: string;
+  hive?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, hive = true } = Astro.props;
 ---
 
 <!doctype html>
@@ -21,8 +24,14 @@ const { title, description } = Astro.props;
     <title>{title}</title>
     <Font cssVariable="--font-mono" preload />
     <Font cssVariable="--font-zh" />
+    {hive && <script is:inline>
+      document.documentElement.classList.add("js");
+    </script>}
   </head>
   <body>
-    <slot />
+    {hive && <HiveChrome />}
+    <main id="content">
+      <slot />
+    </main>
   </body>
 </html>
