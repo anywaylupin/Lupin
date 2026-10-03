@@ -1,0 +1,15 @@
+/* Muted is lifted from the prototype's #7d7699, which was 4.3:1 on the cell colour, to clear AA at 4.5:1. */
+:root {
+  --bg: #05040b;
+  --cell: #141030;
+  --line: #19143a;
+  --pink: #d9479f;
+  --blue: #3a6fd6;
+  --cyan: #5cc4dc;
+  --amber: #eba848;
+  --fg: #d9d2ee;
+  --muted: #857ea3;
+  --panel: rgba(10, 8, 22, 0.96);
+  --mono: "Cascadia Code", "Cascadia Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  color-scheme: dark;
+}

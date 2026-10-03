@@ -1,0 +1,7 @@
+dist/
+.astro/
+reference/
+pnpm-lock.yaml
+test-results/
+playwright-report/
+tests/e2e/**/*-snapshots/
