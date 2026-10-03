@@ -1,0 +1,11 @@
+---
+import { svgIcon, type IconName } from "../hive/icons";
+
+interface Props {
+  name: IconName;
+}
+
+const { name } = Astro.props;
+---
+
+<Fragment set:html={svgIcon(name)} />

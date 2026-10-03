@@ -1,0 +1,22 @@
+---
+import type { GetStaticPaths } from "astro";
+import { render } from "astro:content";
+import Leaf from "../../components/Leaf.astro";
+import Shell from "../../layouts/Shell.astro";
+import { experienceTag, experienceTitle, getExperience, pageTitle } from "../../lib/content";
+
+export const getStaticPaths = (async () =>
+  (await getExperience())
+    .filter((entry) => entry.body?.trim())
+    .map((entry) => ({ params: { slug: entry.id }, props: { entry } }))) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const title = experienceTitle(entry);
+---
+
+<Shell title={pageTitle(title)} description={entry.data.summary}>
+  <Leaf cmd={`cat experience/${entry.id}.md`} title={title} icon={entry.data.icon} tags={[experienceTag(entry)]}>
+    <Content />
+  </Leaf>
+</Shell>

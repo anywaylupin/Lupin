@@ -2,6 +2,7 @@ import type { IconName } from "./icons";
 
 /** Everything the hive draws, built from the content collections at build time and embedded in every page as JSON. */
 export interface HiveData {
+  homeTitle: string;
   home: CellData[];
 }
 

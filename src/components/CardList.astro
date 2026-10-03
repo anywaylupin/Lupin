@@ -1,0 +1,41 @@
+---
+import type { IconName } from "../hive/icons";
+import Icon from "./Icon.astro";
+
+export interface Card {
+  title: string;
+  icon: IconName;
+  text?: string | null;
+  tag?: string | null;
+  href?: string | null;
+}
+
+interface Props {
+  cmd: string;
+  title: string;
+  intro?: string;
+  cards: Card[];
+}
+
+const { cmd, title, intro, cards } = Astro.props;
+---
+
+<section class="page-section">
+  <p class="cmd">
+    <b aria-hidden="true">❯</b>
+    {cmd}
+  </p>
+  <h1>{title}</h1>
+  {intro && <p class="intro">{intro}</p>}
+  <slot />
+  <ul class="cards">
+    {cards.map((c) => (
+      <li class="card">
+        <Icon name={c.icon} />
+        <h2>{c.href ? <a href={c.href}>{c.title}</a> : c.title}</h2>
+        {c.text && <p>{c.text}</p>}
+        {c.tag && <p class="tag">{c.tag}</p>}
+      </li>
+    ))}
+  </ul>
+</section>

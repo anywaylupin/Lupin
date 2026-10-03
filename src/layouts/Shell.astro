@@ -9,9 +9,11 @@ interface Props {
   title: string;
   description: string;
   hive?: boolean;
+  ogImage?: string;
 }
 
-const { title, description, hive = true } = Astro.props;
+const { title, description, hive = true, ogImage = "/og/home.png" } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
@@ -22,6 +24,13 @@ const { title, description, hive = true } = Astro.props;
     <meta name="description" content={description} />
     <meta name="theme-color" content="#05040b" />
     <title>{title}</title>
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
     <Font cssVariable="--font-mono" preload />
     <Font cssVariable="--font-zh" />
     {hive && <script is:inline>

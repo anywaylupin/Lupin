@@ -157,7 +157,7 @@ export async function getHiveData(): Promise<HiveData> {
     now: homeCell(now),
     hours: homeCell(hours),
   };
-  return { home: HOME_ORDER.map((id) => cells[id]) };
+  return { homeTitle: HOME_TITLE, home: HOME_ORDER.map((id) => cells[id]) };
 }
 
 /** JSON inside a script element must not contain `</script>`; escaping every `<` rules that out. */

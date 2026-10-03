@@ -1,0 +1,30 @@
+---
+import { render } from "astro:content";
+import Shell from "../layouts/Shell.astro";
+import { getStack, pageTitle } from "../lib/content";
+
+const stack = await getStack();
+const { Content } = await render(stack);
+---
+
+<Shell title={pageTitle("Stack")} description="Frontend, backend, data and infra, and tooling I work with.">
+  <section class="page-section">
+    <p class="cmd">
+      <b aria-hidden="true">❯</b>ls stack
+    </p>
+    <h1>Stack</h1>
+    <div class="intro">
+      <Content />
+    </div>
+    {stack.data.groups.map((g) => (
+      <section class="group">
+        <h2>{g.name}</h2>
+        <ul class="tags">
+          {g.items.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </section>
+</Shell>

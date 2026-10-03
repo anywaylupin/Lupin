@@ -1,0 +1,52 @@
+---
+import type { LinkData } from "../hive/data";
+import type { IconName } from "../hive/icons";
+import Icon from "./Icon.astro";
+
+interface Props {
+  cmd: string;
+  title: string;
+  icon: IconName;
+  tags: string[];
+  links?: LinkData[];
+}
+
+const { cmd, title, icon, tags, links = [] } = Astro.props;
+---
+
+<article class="page-leaf">
+  <p class="cmd">
+    <b aria-hidden="true">❯</b>
+    {cmd}
+  </p>
+  <h1>
+    <Icon name={icon} />
+    {title}
+  </h1>
+  <div class="body">
+    <slot />
+  </div>
+  {tags.length > 0 && (
+    <ul class="tags" aria-label="Tags">
+      {tags.map((t) => (
+        <li>{t}</li>
+      ))}
+    </ul>
+  )}
+  {links.length > 0 && (
+    <p class="links">
+      {links.map((l) =>
+        l.href ? (
+          <a href={l.href} rel="noopener">
+            <b aria-hidden="true">❯</b>open {l.label}
+          </a>
+        ) : (
+          <span>
+            <b aria-hidden="true">❯</b>
+            {l.label}, add link
+          </span>
+        ),
+      )}
+    </p>
+  )}
+</article>

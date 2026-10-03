@@ -1,6 +1,7 @@
 ---
 import { DATA_ELEMENT_ID } from "../hive/data";
 import { getHiveData, serializeData } from "../lib/content";
+import Icon from "./Icon.astro";
 
 const data = serializeData(await getHiveData());
 ---
@@ -8,6 +9,17 @@ const data = serializeData(await getHiveData());
 <div class="chrome">
   <div id="city" aria-hidden="true"></div>
   <canvas id="hive" aria-hidden="true"></canvas>
+  <p class="sr" id="hive-title">
+    Portfolio
+  </p>
+  <div id="path" aria-hidden="true"></div>
+  <nav id="cells" aria-labelledby="hive-title"></nav>
+  <section id="leaf" hidden aria-labelledby="leaf-title">
+    <div class="leaf-inner" id="leaf-inner" tabindex="-1"></div>
+    <button class="hexbtn" id="leaf-back" type="button" data-tip="Back" aria-label="Back">
+      <Icon name="back" />
+    </button>
+  </section>
 </div>
 <script type="application/json" id={DATA_ELEMENT_ID} set:html={data} />
 <script>

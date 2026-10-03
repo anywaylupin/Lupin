@@ -1,0 +1,25 @@
+---
+import type { GetStaticPaths } from "astro";
+import { render } from "astro:content";
+import Leaf from "../../components/Leaf.astro";
+import Shell from "../../layouts/Shell.astro";
+import { getProjects, pageTitle } from "../../lib/content";
+
+export const getStaticPaths = (async () =>
+  (await getProjects()).map((entry) => ({ params: { slug: entry.id }, props: { entry } }))) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<Shell title={pageTitle(entry.data.title)} description={entry.data.summary} ogImage={`/og/${entry.id}.png`}>
+  <Leaf
+    cmd={`cat projects/${entry.id}.md`}
+    title={entry.data.title}
+    icon={entry.data.icon}
+    tags={entry.data.tags}
+    links={entry.data.links}
+  >
+    <Content />
+  </Leaf>
+</Shell>

@@ -33,6 +33,9 @@ const scenarios: Scenario[] = [
     hash: "",
     run: (page, vp) => (vp.width > 600 ? drag(page, [700, 640], [990, 610]) : drag(page, [250, 125], [255, 470])),
   },
+  { name: "section", path: "/projects/", hash: "#projects" },
+  { name: "leaf", path: "/projects/juka/", hash: "#projects.juka" },
+  { name: "page", path: "/hours/", hash: "#hours" },
 ];
 
 /**

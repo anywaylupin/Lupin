@@ -1,0 +1,24 @@
+---
+import CardList from "../../components/CardList.astro";
+import Shell from "../../layouts/Shell.astro";
+import { getProjects, pageTitle } from "../../lib/content";
+
+const projects = await getProjects();
+---
+
+<Shell
+  title={pageTitle("Projects")}
+  description="Side projects: release digests, flashcards, a .NET and React product and a QR payments app."
+>
+  <CardList
+    cmd="ls projects"
+    title="Projects"
+    cards={projects.map((p) => ({
+      title: p.data.title,
+      icon: p.data.icon,
+      text: p.data.summary,
+      tag: p.data.status,
+      href: `/projects/${p.id}/`,
+    }))}
+  />
+</Shell>

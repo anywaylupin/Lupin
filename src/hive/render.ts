@@ -3,7 +3,7 @@ import type { HiveData } from "./data";
 import { charge, drawMagnet, drawSeat, SEAT_MS, type Spark } from "./fx/electric";
 import { DIRS, ax, hexVerts, keyOf, visibleRange, type Point } from "./hex";
 import { addPoly, hexFill, type Ctx } from "./paint";
-import type { Loose } from "./layout";
+import type { BackSheet, Loose } from "./layout";
 import { emptyGaps, heldPose, isLocked, isOpen, loosePoly, stepSnap } from "./sheet";
 import { on, type Hive } from "./state";
 import { BLUE, C, CYAN, HEX, PINK, rgba } from "./theme";
@@ -188,4 +188,72 @@ export function drawFront(g: Ctx, h: Hive, cam: Cam, live: boolean, now: number)
     if (gv > 0.02) charge(g, p.x, p.y, size, z, gv, spark(h, now));
   }
   drawLoose(g, h, z, live, now);
+}
+
+/** Card strokes on a back sheet: Back is bright pink, cards that open a page soft pink, the rest blue. */
+function backStroke(h: Hive, i: number): string {
+  if (i === 0) return rgba(PINK, 0.85);
+  return h.data.home[h.nav.sec]?.cards?.[i - 1]?.leaf ? rgba(PINK, 0.5) : rgba(BLUE, 0.5);
+}
+
+export function drawBack(
+  g: Ctx,
+  h: Hive,
+  B: BackSheet,
+  cam: Cam,
+  live: boolean,
+  decoA: number,
+  itemA: (k: number) => number,
+  skipFirst: boolean,
+  now: number,
+) {
+  const R = h.front.R;
+  const z = cam.z;
+  const o = camOrigin(h, cam);
+  g.setTransform(h.DPR * z, 0, 0, h.DPR * z, h.DPR * o.x, h.DPR * o.y);
+  if (decoA > 0.01) {
+    const mw = { x: (h.pointer.x - o.x) / z, y: (h.pointer.y - o.y) / z };
+    const flR = Math.max(200, R * 2.2);
+    const vr = visibleRange(z, o.x, o.y, h.W, h.H, R);
+    g.globalAlpha = decoA;
+    for (let r = vr.r0; r <= vr.r1; r++) {
+      const [q0, q1] = vr.q(r);
+      for (let q = q0; q <= q1; q++) {
+        if (B.taken.has(keyOf(q, r))) continue;
+        const p = ax(q, r, R);
+        const fl = flashAt(h, p, mw, z, live, flR);
+        hexFill(g, p.x, p.y, R * HEX, C.deco, fl > 0.01 ? rgba(PINK, 0.08 + 0.35 * fl) : C.line, 1 / z);
+      }
+    }
+    g.globalAlpha = 1;
+  }
+  const CF = h.nav.CF;
+  for (const i of hoverLast(B.items, h.hoverKey)) {
+    const it = B.items[i];
+    const a = itemA(i);
+    if (!it || (skipFirst && i === 0) || a < 0.01) continue;
+    const stroke = backStroke(h, i);
+    g.globalAlpha = a;
+    if (CF?.where === "back" && CF.idx === i) flipCell(g, it.x, it.y, R * HEX, z, CF.f, stroke);
+    else {
+      const gv = growOf(h, it.id, live && h.hoverKey === it.id);
+      const size = R * HEX * (1 + 0.07 * gv);
+      hexFill(g, it.x, it.y, size, i === 0 ? C.back : C.cell, stroke, (i === 0 ? 1.8 : 1.3) / z);
+      if (gv > 0.02) charge(g, it.x, it.y, size, z, gv, spark(h, now));
+    }
+    g.globalAlpha = 1;
+  }
+}
+
+/** The opening hex in screen space: its front face until it turns edge on, then the Back face. */
+export function drawMoving(g: Ctx, h: Hive, m: Point & { size: number; flip: number }): void {
+  const cs = Math.cos(Math.PI * m.flip);
+  g.setTransform(h.DPR, 0, 0, h.DPR, 0, 0);
+  g.save();
+  g.translate(m.x, m.y);
+  g.scale(Math.max(Math.abs(cs), 0.002), 1);
+  g.translate(-m.x, -m.y);
+  if (cs >= 0) hexFill(g, m.x, m.y, m.size, C.cell, frontStroke(h.data, h.nav.sec), 1.4);
+  else hexFill(g, m.x, m.y, m.size, C.back, rgba(PINK, 0.85), 1.8);
+  g.restore();
 }

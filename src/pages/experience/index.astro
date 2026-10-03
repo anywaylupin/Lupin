@@ -1,0 +1,21 @@
+---
+import CardList from "../../components/CardList.astro";
+import Shell from "../../layouts/Shell.astro";
+import { experienceTag, getExperience, pageTitle } from "../../lib/content";
+
+const entries = await getExperience();
+---
+
+<Shell title={pageTitle("Experience")} description="Work history: interactive and frontend development at SQREEM.">
+  <CardList
+    cmd="ls experience"
+    title="Experience"
+    cards={entries.map((e) => ({
+      title: `${e.data.role}, ${e.data.company}`,
+      icon: e.data.icon,
+      text: e.data.summary,
+      tag: experienceTag(e),
+      href: e.body?.trim() ? `/experience/${e.id}/` : null,
+    }))}
+  />
+</Shell>
