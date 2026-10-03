@@ -19,5 +19,6 @@ export default defineConfig(
       "@typescript-eslint/no-explicit-any": "error",
     },
   },
+  { files: ["tests/**"], rules: { "@typescript-eslint/no-non-null-assertion": "off" } },
   prettier,
 );

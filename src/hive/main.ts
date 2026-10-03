@@ -5,6 +5,7 @@ import { bake, mountCity, placeCity } from "./city/layers";
 import { createScene } from "./city/scene";
 import { DATA_ELEMENT_ID, type HiveData } from "./data";
 import { bindInput } from "./input";
+import { sheetHooks } from "./interact";
 import { buildBack, buildFront } from "./layout";
 import { rng } from "./math";
 import { loadPrefs } from "./prefs";
@@ -126,14 +127,8 @@ export function boot(): void {
     requestAnimationFrame(frame);
   };
 
-  bindInput(h, cv, {
-    firstGesture: () => {},
-    canvasDown: () => false,
-    canvasMove: () => false,
-    canvasUp: () => {},
-    hover: () => {},
-    escape: () => {},
-  });
+  const changed = () => {};
+  bindInput(h, cv, { ...sheetHooks(h, cv, changed), firstGesture: () => {}, escape: () => {} });
   addEventListener("resize", resize);
   sizeCanvas();
   Object.assign(h.frontCam, h.front.home);

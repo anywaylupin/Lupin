@@ -1,9 +1,39 @@
-import { test } from "@playwright/test";
-import { readFile } from "node:fs/promises";
+import { test, type Page } from "@playwright/test";
+import { mkdir, readFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import { resolve } from "node:path";
 
 const prototype = pathToFileURL(resolve("reference/hive.html")).href;
+const dir = ".compare";
+
+type Size = { width: number; height: number };
+
+interface Scenario {
+  name: string;
+  path: string;
+  hash: string;
+  run?: (page: Page, vp: Size) => Promise<void>;
+}
+
+async function drag(page: Page, from: [number, number], to: [number, number]) {
+  await page.mouse.move(...from);
+  await page.mouse.down();
+  for (let i = 1; i <= 12; i++) {
+    await page.mouse.move(from[0] + ((to[0] - from[0]) * i) / 12, from[1] + ((to[1] - from[1]) * i) / 12);
+  }
+  await page.mouse.up();
+}
+
+/** Same steps on both builds; deep links use routes on the port and hashes on the prototype. */
+const scenarios: Scenario[] = [
+  { name: "home", path: "/", hash: "" },
+  {
+    name: "drag",
+    path: "/",
+    hash: "",
+    run: (page, vp) => (vp.width > 600 ? drag(page, [700, 640], [990, 610]) : drag(page, [250, 125], [255, 470])),
+  },
+];
 
 /**
  * Writes port and prototype screenshots side by side for the per-phase review.
@@ -26,23 +56,27 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
-test("port vs prototype", async ({ page }, info) => {
-  const dir = "test-results/compare";
-  const shots: string[] = [];
-  for (const [name, url] of [
-    ["port", "/"],
-    ["prototype", prototype],
-  ] as const) {
-    await page.goto(url);
-    await page.waitForTimeout(1500);
-    const path = `${dir}/${info.project.name}-${name}.png`;
-    await page.screenshot({ path });
-    shots.push((await readFile(path)).toString("base64"));
-  }
-  const { width, height } = page.viewportSize() ?? { width: 0, height: 0 };
-  await page.setViewportSize({ width: width * 2 + 8, height });
-  await page.setContent(
-    `<body style="margin:0;display:flex;gap:8px;background:#f0f">${shots.map((s) => `<img src="data:image/png;base64,${s}">`).join("")}</body>`,
-  );
-  await page.screenshot({ path: `${dir}/${info.project.name}-side.png` });
-});
+for (const s of scenarios) {
+  test(`port vs prototype: ${s.name}`, async ({ page }, info) => {
+    await mkdir(dir, { recursive: true });
+    const vp = page.viewportSize() ?? { width: 0, height: 0 };
+    const shots: string[] = [];
+    for (const [name, url] of [
+      ["port", s.path],
+      ["prototype", `${prototype}${s.hash}`],
+    ] as const) {
+      await page.goto(url);
+      await page.waitForTimeout(1200);
+      await s.run?.(page, vp);
+      await page.waitForTimeout(900);
+      const path = `${dir}/${info.project.name}-${s.name}-${name}.png`;
+      await page.screenshot({ path });
+      shots.push((await readFile(path)).toString("base64"));
+    }
+    await page.setViewportSize({ width: vp.width * 2 + 8, height: vp.height });
+    await page.setContent(
+      `<body style="margin:0;display:flex;gap:8px;background:#f0f">${shots.map((b) => `<img src="data:image/png;base64,${b}">`).join("")}</body>`,
+    );
+    await page.screenshot({ path: `${dir}/${info.project.name}-${s.name}-side.png` });
+  });
+}
