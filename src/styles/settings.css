@@ -1,0 +1,283 @@
+/* The same element is a hex and a panel: width, height and clip-path animate together, so it unfolds in place without rotating. */
+#settings {
+  --hex: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  --box: polygon(50% 0, 100% 0, 100% 100%, 50% 100%, 0 100%, 0 0);
+  --morph: 0.42s cubic-bezier(0.6, 0, 0.2, 1);
+  position: fixed;
+  z-index: 5;
+  top: calc(20px + env(safe-area-inset-top, 0px));
+  right: 24px;
+  width: 44px;
+  height: 50px;
+  background: #2a2350;
+  clip-path: var(--hex);
+  transform-origin: 100% 0;
+  transition:
+    width var(--morph),
+    height var(--morph),
+    clip-path var(--morph),
+    background 0.2s ease;
+}
+
+#settings::before {
+  content: "";
+  position: absolute;
+  inset: 1.5px;
+  background: var(--cell);
+  clip-path: inherit;
+}
+
+#settings:hover:not(.open) {
+  background: var(--pink);
+}
+
+#settings.open {
+  width: min(300px, calc(100vw - 48px));
+  height: var(--open-h, 320px);
+  clip-path: var(--box);
+  background: #3a3266;
+}
+
+#settings.open::before {
+  background: var(--panel);
+}
+
+#settings-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 44px;
+  height: 50px;
+  display: grid;
+  place-items: center;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--fg);
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+#settings-btn:hover,
+#settings-btn:focus-visible {
+  color: var(--cyan);
+}
+
+#settings-btn:focus {
+  outline: none;
+}
+
+#settings-btn svg {
+  width: 19px;
+  height: 19px;
+}
+
+#settings.open #settings-btn {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Border-box keeps the padded menu inside the 300px panel; the prototype let it overflow left and the clip cut the first letters off every label. */
+#menu {
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: min(300px, calc(100vw - 48px));
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+#settings.open #menu {
+  opacity: 1;
+  transition-delay: 0.22s;
+}
+
+#menu[hidden] {
+  display: none;
+}
+
+.menu-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.menu-head h2 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.menu-head h2 b {
+  color: var(--pink);
+  margin-right: 8px;
+}
+
+#menu-close {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  background: none;
+  border: 0;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 0;
+}
+
+#menu-close:hover,
+#menu-close:focus-visible {
+  color: var(--cyan);
+}
+
+#menu-close:focus-visible {
+  outline: 1px solid var(--cyan);
+}
+
+#menu-close svg {
+  width: 16px;
+  height: 16px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 34px;
+}
+
+.row label,
+.row span {
+  color: var(--fg);
+}
+
+.switch {
+  width: 40px;
+  height: 20px;
+  flex: none;
+  border: 1px solid #3a3266;
+  background: #0d0a1e;
+  position: relative;
+  cursor: pointer;
+  padding: 0;
+}
+
+.switch::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 12px;
+  height: 12px;
+  background: var(--muted);
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease;
+}
+
+.switch[aria-checked="true"] {
+  border-color: var(--pink);
+}
+
+.switch[aria-checked="true"]::after {
+  transform: translateX(20px);
+  background: var(--pink);
+}
+
+.switch:focus-visible,
+#menu input:focus-visible {
+  outline: 1px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+#menu input[type="range"] {
+  appearance: none;
+  width: 128px;
+  height: 18px;
+  background: transparent;
+  cursor: pointer;
+}
+
+#menu input[type="range"]::-webkit-slider-runnable-track {
+  height: 2px;
+  background: linear-gradient(to right, var(--pink) var(--p, 30%), #2a2350 var(--p, 30%));
+}
+
+#menu input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 12px;
+  height: 14px;
+  margin-top: -6px;
+  background: var(--pink);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  border: 0;
+}
+
+#menu input[type="range"]::-moz-range-track {
+  height: 2px;
+  background: #2a2350;
+}
+
+#menu input[type="range"]::-moz-range-progress {
+  height: 2px;
+  background: var(--pink);
+}
+
+#menu input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 14px;
+  border: 0;
+  border-radius: 0;
+  background: var(--pink);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+
+.textbtn {
+  font-size: 12px;
+  color: var(--fg);
+  background: #0d0a1e;
+  border: 1px solid #3a3266;
+  padding: 4px 12px;
+  cursor: pointer;
+}
+
+.textbtn:hover {
+  border-color: var(--pink);
+  color: var(--pink);
+}
+
+.textbtn:focus-visible {
+  outline: 1px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+.divider {
+  height: 1px;
+  background: #221c44;
+  margin: 6px 0;
+}
+
+@media (max-width: 560px) {
+  #settings {
+    right: 16px;
+    top: calc(14px + env(safe-area-inset-top, 0px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .switch::after,
+  #settings,
+  #menu,
+  #settings-btn {
+    transition: none;
+  }
+}

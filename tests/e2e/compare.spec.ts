@@ -36,6 +36,7 @@ const scenarios: Scenario[] = [
   { name: "section", path: "/projects/", hash: "#projects" },
   { name: "leaf", path: "/projects/juka/", hash: "#projects.juka" },
   { name: "page", path: "/hours/", hash: "#hours" },
+  { name: "settings", path: "/", hash: "", run: (page) => page.locator("#settings-btn").click() },
 ];
 
 /**

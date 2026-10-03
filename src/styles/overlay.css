@@ -384,3 +384,136 @@
     font-size: 12px;
   }
 }
+
+.glitchy .cell.hot .face .label::before,
+.glitchy .cell.hot .face .label::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  clip-path: inset(100% 0 0 0);
+}
+
+.glitchy .cell.hot .face .label::before {
+  color: var(--pink);
+  animation: glitch-a 1.9s steps(1) infinite;
+}
+
+.glitchy .cell.hot .face .label::after {
+  color: var(--cyan);
+  animation: glitch-b 2.3s steps(1) infinite;
+}
+
+@keyframes glitch-a {
+  0%,
+  86%,
+  100% {
+    clip-path: inset(100% 0 0 0);
+    transform: none;
+  }
+  88% {
+    clip-path: inset(0 0 68% 0);
+    transform: translate(-3px, -1px);
+  }
+  91% {
+    clip-path: inset(55% 0 12% 0);
+    transform: translate(2px, 1px);
+  }
+  94% {
+    clip-path: inset(30% 0 44% 0);
+    transform: translate(-2px, 0);
+  }
+}
+
+@keyframes glitch-b {
+  0%,
+  82%,
+  100% {
+    clip-path: inset(100% 0 0 0);
+    transform: none;
+  }
+  84% {
+    clip-path: inset(62% 0 8% 0);
+    transform: translate(3px, 1px);
+  }
+  88% {
+    clip-path: inset(10% 0 66% 0);
+    transform: translate(-2px, -1px);
+  }
+}
+
+#tip {
+  position: fixed;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  background: var(--cell);
+  color: var(--cyan);
+  border: 1px solid var(--pink);
+  font-size: 12px;
+  padding: 3px 9px;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+#tip[hidden] {
+  display: none;
+}
+
+#tip.glitch-in {
+  animation: tip-in 0.3s steps(1) both;
+}
+
+@keyframes tip-in {
+  0% {
+    clip-path: inset(0 0 100% 0);
+  }
+  12% {
+    clip-path: inset(0 0 58% 0);
+    transform: translateX(-5px);
+    text-shadow:
+      2px 0 var(--pink),
+      -2px 0 var(--cyan);
+  }
+  26% {
+    clip-path: inset(42% 0 0 0);
+    transform: translateX(4px);
+  }
+  40% {
+    clip-path: inset(0 0 22% 0);
+    transform: translateX(-2px);
+    text-shadow:
+      -2px 0 var(--pink),
+      2px 0 var(--cyan);
+  }
+  55% {
+    clip-path: inset(20% 0 30% 0);
+    transform: translateX(3px);
+  }
+  70% {
+    clip-path: none;
+    transform: none;
+    text-shadow:
+      1px 0 var(--pink),
+      -1px 0 var(--cyan);
+  }
+  100% {
+    clip-path: none;
+    transform: none;
+    text-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glitchy .cell.hot .face .label::before,
+  .glitchy .cell.hot .face .label::after {
+    animation: none;
+    display: none;
+  }
+  .hexbtn {
+    transition: none;
+  }
+  #tip.glitch-in {
+    animation: none;
+  }
+}

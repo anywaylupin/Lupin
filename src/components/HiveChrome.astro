@@ -2,8 +2,17 @@
 import { DATA_ELEMENT_ID } from "../hive/data";
 import { getHiveData, serializeData } from "../lib/content";
 import Icon from "./Icon.astro";
+import "../styles/overlay.css";
+import "../styles/settings.css";
 
 const data = serializeData(await getHiveData());
+const switches = [
+  ["glitch", "Glitch"],
+  ["decrypt", "Text decrypt"],
+  ["electric", "Electric borders"],
+  ["life", "City traffic and lights"],
+  ["weather", "Rain and storms"],
+] as const;
 ---
 
 <div class="chrome">
@@ -20,6 +29,65 @@ const data = serializeData(await getHiveData());
       <Icon name="back" />
     </button>
   </section>
+  <div id="settings">
+    <button
+      id="settings-btn"
+      type="button"
+      data-tip="Effects and sound"
+      aria-label="Effects and sound"
+      aria-expanded="false"
+      aria-controls="menu"
+    >
+      <Icon name="sliders" />
+    </button>
+    <section id="menu" hidden aria-labelledby="menu-title">
+      <div class="menu-head">
+        <h2 id="menu-title">
+          <b aria-hidden="true">❯</b>config --effects
+        </h2>
+        <button id="menu-close" type="button" aria-label="Close settings">
+          <Icon name="close" />
+        </button>
+      </div>
+      {switches.map(([pref, label]) => (
+        <div class="row">
+          <span id={`l-${pref}`}>{label}</span>
+          <button
+            class="switch"
+            type="button"
+            role="switch"
+            aria-checked="false"
+            data-pref={pref}
+            aria-labelledby={`l-${pref}`}
+          ></button>
+        </div>
+      ))}
+      <div class="divider"></div>
+      <div class="row">
+        <span id="l-sound">Brown noise</span>
+        <button
+          class="switch"
+          type="button"
+          role="switch"
+          aria-checked="false"
+          data-pref="sound"
+          aria-labelledby="l-sound"
+        ></button>
+      </div>
+      <div class="row">
+        <label for="volume">Volume</label>
+        <input type="range" id="volume" min="0" max="1" step="0.05" />
+      </div>
+      <div class="divider"></div>
+      <div class="row">
+        <span>Put the loose hexes back</span>
+        <button class="textbtn" id="reset" type="button">
+          Reset
+        </button>
+      </div>
+    </section>
+  </div>
+  <div id="tip" hidden aria-hidden="true"></div>
 </div>
 <script type="application/json" id={DATA_ELEMENT_ID} set:html={data} />
 <script>
