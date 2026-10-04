@@ -23,15 +23,24 @@ export function glitching(t: GlitchTimer, now: number, enabled: boolean): boolea
   return now < t.until;
 }
 
-/** Slices of the layer slip sideways with pink and cyan seams, and a few pixel blocks drop out; the pattern changes every 45 ms. */
-export function glitchLayer(g: CanvasRenderingContext2D, t: GlitchTimer, now: number, salt: number): void {
+/**
+ * Slices of the layer slip sideways with pink and cyan seams, and a few pixel blocks drop out; the pattern changes every 45 ms.
+ * The slices are cut from the baked image onto the overlay, so moving details inside a slice stay put for those few frames.
+ */
+export function glitchLayer(
+  g: CanvasRenderingContext2D,
+  baked: CanvasImageSource,
+  t: GlitchTimer,
+  now: number,
+  salt: number,
+): void {
   const r = rng(t.seed + salt * 977 + Math.floor(now / 45));
   g.setTransform(1, 0, 0, 1, 0, 0);
   for (let k = 0; k < 3; k++) {
     const y = r() * CH;
     const h = 4 + r() * 30;
     const dx = (r() - 0.5) * 80;
-    g.drawImage(g.canvas, 0, y, CW, h, dx, y, CW, h);
+    g.drawImage(baked, 0, y, CW, h, dx, y, CW, h);
     g.fillStyle = rgba(CYAN, 0.35);
     g.fillRect(0, y, CW, 1);
     g.fillStyle = rgba(PINK, 0.35);

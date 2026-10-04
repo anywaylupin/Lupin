@@ -246,7 +246,7 @@
 
 #path .prompt {
   color: var(--pink);
-  margin-right: 10px;
+  white-space: pre;
 }
 
 #path .here {
@@ -637,4 +637,16 @@
 .cell.wrap .face .label {
   white-space: normal;
   max-width: var(--tw, 120px);
+}
+
+.cell .face {
+  translate: 0 var(--lift, 0px);
+}
+
+.leaf-inner .scene {
+  display: block;
+  width: 100%;
+  height: clamp(44px, 12vw, 92px);
+  flex: none;
+  border: 1px solid #2a2350;
 }

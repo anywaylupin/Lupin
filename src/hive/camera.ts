@@ -50,3 +50,44 @@ export function rubber(v: number, lo: number, hi: number): number {
   if (v > hi) return hi + (v - hi) * 0.35;
   return v;
 }
+
+/** Wheel zoom stays between these; past 1.6x the near city layers run out of board and buildings start to float. */
+export const ZOOM_MIN = 0.6;
+export const ZOOM_MAX = 1.6;
+
+/** A zoom in progress: the target scale and the world point that stays under the screen point (sx, sy). */
+export interface ZoomAnim {
+  target: number;
+  sx: number;
+  sy: number;
+  wx: number;
+  wy: number;
+}
+
+/** Starts or retargets a smooth zoom from a wheel delta, anchored at the pointer. */
+export function zoomTowards(
+  c: Cam,
+  prev: ZoomAnim | null,
+  deltaY: number,
+  sx: number,
+  sy: number,
+  W: number,
+  H: number,
+): ZoomAnim {
+  const target = clamp((prev?.target ?? c.z) * Math.exp(-deltaY * 0.0015), ZOOM_MIN, ZOOM_MAX);
+  return { target, sx, sy, wx: (sx - W / 2) / c.z + c.x, wy: (sy - H / 2) / c.z + c.y };
+}
+
+/**
+ * Eases the camera's scale toward the target with a 90 ms time constant, keeping the anchor under the pointer.
+ * Returns true once it has landed.
+ */
+export function stepZoom(c: Cam, z: ZoomAnim, dt: number, W: number, H: number): boolean {
+  const k = 1 - Math.exp(-dt / 0.09);
+  c.z += (z.target - c.z) * k;
+  const done = Math.abs(z.target - c.z) < 0.0005;
+  if (done) c.z = z.target;
+  c.x = z.wx - (z.sx - W / 2) / c.z;
+  c.y = z.wy - (z.sy - H / 2) / c.z;
+  return done;
+}

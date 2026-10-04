@@ -1,13 +1,14 @@
-import { restOf } from "./camera";
+import { restOf, stepZoom } from "./camera";
 import { byId, createChrome } from "./chrome";
 import { type City, updateCity } from "./city/dynamic";
 import { createGlitch } from "./city/glitch";
 import { bake, mountCity, placeCity } from "./city/layers";
+import { starAt } from "./city/plan";
 import { createScene } from "./city/scene";
 import { DATA_ELEMENT_ID, type HiveData } from "./data";
 import { bindInput } from "./input";
 import { sheetHooks } from "./interact";
-import { buildBack, buildFront } from "./layout";
+import { buildBack, buildFront, holeView } from "./layout";
 import { rng } from "./math";
 import { cardAlpha, currentRoute, movingHex, phases } from "./nav";
 import { loadPrefs } from "./prefs";
@@ -59,7 +60,6 @@ function createHive(data: HiveData, reduced: boolean): Hive {
     frontCam: { x: 0, y: 0, z: 1 },
     backCam: { x: 0, y: 0, z: 1 },
     pointer: { x: -9999, y: -9999 },
-    clock: 0,
     nav: createNav(),
     hoverKey: null,
     hoverLoose: -1,
@@ -69,6 +69,9 @@ function createHive(data: HiveData, reduced: boolean): Hive {
     pending: null,
     prefs: loadPrefs(() => localStorage),
     reduced,
+    zoom: null,
+    dt: 0,
+    carriers: [],
   };
 }
 
@@ -89,7 +92,13 @@ export function boot(): void {
   const zh = signFont();
   let city: City | null = null;
   void bake().then((baked) => {
-    city = { layers: mountCity(cityEl, baked), wins: baked.wins, scene: createScene(), glitch: createGlitch() };
+    city = {
+      layers: mountCity(cityEl, baked),
+      wins: baked.wins,
+      ledges: baked.ledges,
+      scene: createScene(),
+      glitch: createGlitch(),
+    };
   });
 
   const sizeCanvas = () => {
@@ -105,11 +114,14 @@ export function boot(): void {
     const route = currentRoute(h);
     sizeCanvas();
     const next = layoutSheets(h);
-    if (next.front.R === h.front.R && next.front.portrait === h.front.portrait) h.front.rect = next.front.rect;
-    else h.front = next.front;
+    if (next.front.R === h.front.R && next.front.portrait === h.front.portrait) {
+      h.front.rect = next.front.rect;
+      h.front.home = next.front.home;
+    } else h.front = next.front;
     h.backs = next.backs;
     h.drag = null;
     h.pending = null;
+    h.zoom = null;
     Object.assign(h.frontCam, h.front.home);
     chrome.relayout();
     nav.applyInstant(route);
@@ -121,13 +133,21 @@ export function boot(): void {
   });
 
   let last = performance.now();
+  /**
+   * The city behind the sheet redraws every other frame, at 30 fps, while the sheet and the parallax stay at 60.
+   * Under Lighthouse's software rendering every city frame counted as a long task, holding the home page near 80; on phones it halves the battery the background costs.
+   */
+  let cityTurn = false;
+  let cityDt = 0;
   const frame = (now: number) => {
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
-    if (!h.reduced) h.clock += dt;
+    h.dt = dt;
     nav.tick(now);
     const n = h.nav;
-    if (!n.secAnim && !n.cardFlip && !n.leafOpen && h.drag?.kind !== "pan") {
+    if (h.zoom && (n.secAnim || n.cardFlip || n.leafOpen)) h.zoom = null;
+    if (h.zoom && stepZoom(activeCam(h), h.zoom, dt, h.W, h.H)) h.zoom = null;
+    if (!n.secAnim && !n.cardFlip && !n.leafOpen && !h.zoom && h.drag?.kind !== "pan") {
       const c = activeCam(h);
       const rect = onBack(h) ? (h.backs[n.sec]?.rect ?? h.front.rect) : h.front.rect;
       const r = restOf(rect, c, h.W, h.H);
@@ -140,18 +160,31 @@ export function boot(): void {
     if (n.S < 1) {
       g.clearRect(0, 0, h.W, h.H);
       if (city) {
-        placeCity(city.layers, h.reduced ? h.front.home : h.frontCam, h.front.home, h.front.hc, h.W, h.H);
+        placeCity(
+          city.layers,
+          h.reduced ? h.front.home : h.frontCam,
+          h.front.home,
+          holeView(h.front, h.W, h.H),
+          h.W,
+          h.H,
+        );
+        cityDt += dt;
+        cityTurn = !cityTurn;
+      }
+      if (city && cityTurn) {
         updateCity(city, {
-          dt,
+          dt: cityDt,
           now,
-          clock: h.clock,
           life: on(h, "life"),
           weather: on(h, "weather"),
           glitch: on(h, "glitch"),
           reduced: h.reduced,
           DPR: h.DPR,
           zh,
+          star: starAt(h.front.portrait),
+          starLayer: h.front.portrait ? "mid" : "sky",
         });
+        cityDt = 0;
       }
       drawFront(g, h, h.frontCam, live && n.S === 0, now);
     } else {

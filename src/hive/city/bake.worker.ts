@@ -16,6 +16,7 @@ const baked = bakeCity<OffscreenCanvas>({
 const message: Baked<ImageBitmap> = {
   layers: baked.layers.map((l) => ({ id: l.id, image: l.image.transferToImageBitmap() })),
   wins: baked.wins,
+  ledges: baked.ledges,
 };
 
 postMessage(message, { transfer: message.layers.map((l) => l.image) });

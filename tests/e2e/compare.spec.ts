@@ -13,6 +13,7 @@ interface Scenario {
   path: string;
   hash: string;
   run?: (page: Page, vp: Size) => Promise<void>;
+  settle?: number;
 }
 
 async function drag(page: Page, from: [number, number], to: [number, number]) {
@@ -31,12 +32,31 @@ const scenarios: Scenario[] = [
     name: "drag",
     path: "/",
     hash: "",
-    run: (page, vp) => (vp.width > 600 ? drag(page, [700, 640], [990, 610]) : drag(page, [250, 125], [255, 470])),
+    run: (page, vp) => (vp.width > 600 ? drag(page, [915, 200], [1130, 560]) : drag(page, [250, 125], [255, 470])),
   },
   { name: "section", path: "/projects/", hash: "#projects" },
   { name: "leaf", path: "/projects/juka/", hash: "#projects.juka" },
   { name: "page", path: "/hours/", hash: "#hours" },
   { name: "settings", path: "/", hash: "", run: (page) => page.locator("#settings-btn").click() },
+  {
+    name: "egg",
+    path: "/",
+    hash: "",
+    run: (page, vp) => (vp.width > 600 ? drag(page, [772, 450], [560, 880]) : drag(page, [351, 307], [60, 560])),
+  },
+  {
+    name: "reset",
+    path: "/",
+    hash: "",
+    settle: 120,
+    run: async (page, vp) => {
+      await (vp.width > 600 ? drag(page, [915, 200], [600, 870]) : drag(page, [250, 125], [60, 560]));
+      await page.locator("#settings-btn").click();
+      await page.waitForTimeout(500);
+      await page.locator("#reset").click();
+      await page.waitForTimeout(260);
+    },
+  },
 ];
 
 /**
@@ -72,7 +92,7 @@ for (const s of scenarios) {
       await page.goto(url);
       await page.waitForTimeout(1200);
       await s.run?.(page, vp);
-      await page.waitForTimeout(900);
+      await page.waitForTimeout(s.settle ?? 900);
       const path = `${dir}/${info.project.name}-${s.name}-${name}.png`;
       await page.screenshot({ path });
       shots.push((await readFile(path)).toString("base64"));

@@ -1,5 +1,4 @@
-import { bounds, rubber } from "./camera";
-import { clamp } from "./math";
+import { bounds, rubber, stepZoom, zoomTowards } from "./camera";
 import { activeCam, onBack, type Hive } from "./state";
 import { TEAR_PX } from "./theme";
 
@@ -28,6 +27,7 @@ export function interactive(h: Hive): boolean {
 export function startPan(h: Hive, e: PointerEvent): void {
   if (!interactive(h) || e.button !== 0) return;
   const c = activeCam(h);
+  h.zoom = null;
   h.drag = { kind: "pan", x: e.clientX, y: e.clientY, cx: c.x, cy: c.y };
   h.dragMoved = false;
 }
@@ -78,11 +78,10 @@ export function bindInput(h: Hive, cv: HTMLCanvasElement, hooks: InputHooks): vo
       if (!interactive(h) || (e.target instanceof Element && e.target.closest(".leaf-inner, #menu"))) return;
       e.preventDefault();
       const c = activeCam(h);
-      const wx = (e.clientX - h.W / 2) / c.z + c.x;
-      const wy = (e.clientY - h.H / 2) / c.z + c.y;
-      c.z = clamp(c.z * Math.exp(-e.deltaY * 0.0015), 0.6, 2.6);
-      c.x = wx - (e.clientX - h.W / 2) / c.z;
-      c.y = wy - (e.clientY - h.H / 2) / c.z;
+      h.zoom = zoomTowards(c, h.zoom, e.deltaY, e.clientX, e.clientY, h.W, h.H);
+      if (!h.reduced) return;
+      stepZoom(c, h.zoom, Infinity, h.W, h.H);
+      h.zoom = null;
     },
     { passive: false },
   );

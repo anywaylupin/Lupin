@@ -1,7 +1,8 @@
 import type { Cam, Rect } from "./camera";
 import { ax, keyOf, ring, type Axial, type Point } from "./hex";
 import { holeCells } from "./hole";
-import { clamp, type Rand } from "./math";
+import { clamp, hash2, type Rand } from "./math";
+import type { SceneKind } from "./scenes";
 
 export interface Slot extends Point {
   q: number;
@@ -24,6 +25,8 @@ export interface Snap {
   dur: number;
   delay: number;
   curve: "out" | "inOut";
+  /** True when the seat burst should fire on arrival; a hand drop fires it at release instead. */
+  burst: boolean;
 }
 
 /** A hex off the sheet: (x, y) is where it is held or resting, (ax, ay) where it is drawn after the magnet pull. */
@@ -58,6 +61,7 @@ export interface FrontSheet {
   removed: Set<string>;
   fx: SeatFx[];
   shake: { key: string; t0: number } | null;
+  eggs: Map<string, SceneKind>;
 }
 
 export interface BackSheet {
@@ -81,9 +85,12 @@ export function isPortrait(W: number, H: number): boolean {
   return H > W * 1.1;
 }
 
-/** Hex circumradius: about six and a half across a phone and twelve across a desktop, within readable limits. */
+/**
+ * Hex circumradius: 1.5x the prototype on desktop, which also halves how many hexes fill the screen.
+ * Phones grow only 1.2x, the most that still fits the content flower across a 390px screen.
+ */
 export function hexRadius(W: number, H: number): number {
-  return isPortrait(W, H) ? clamp(Math.min(W / 6.5, H / 10.5), 30, 90) : clamp(Math.min(W / 12, H / 8), 40, 110);
+  return isPortrait(W, H) ? clamp(Math.min(W / 5.4, H / 8.75), 36, 108) : clamp(Math.min(W / 8, H / 5.4), 60, 165);
 }
 
 export function slotAt(key: string, R: number): Slot {
@@ -95,9 +102,13 @@ export function slot(q: number, r: number, R: number): Slot {
   return { q, r, key: keyOf(q, r), ...ax(q, r, R) };
 }
 
-/** The camera rests off-centre so the content and the hole share the screen. */
-export function frontHome(R: number, portrait: boolean): Cam {
-  return { x: portrait ? 0 : R * 2.5, y: portrait ? R * 1.6 : 0, z: 1 };
+/**
+ * The camera rests so the content flower sits a margin in from the left in landscape, or centred in portrait, leaving the rest of the screen to the hole.
+ * The flower spans 2.51 radii left and 1.65 right of the name cell, edge to edge.
+ */
+export function frontHome(R: number, portrait: boolean, W: number): Cam {
+  if (portrait) return { x: -0.43 * R, y: R * 1.6, z: 1 };
+  return { x: W / 2 - 2.51 * R - Math.max(48, W * 0.05), y: 0, z: 1 };
 }
 
 export function frontRect(home: Cam, W: number, H: number, R: number): Rect {
@@ -110,11 +121,13 @@ export function frontRect(home: Cam, W: number, H: number, R: number): Rect {
 }
 
 /**
- * Three spare hexes rest near the hole, kept clear of the screen edges, the contact and map corners and the content.
+ * Three spare hexes rest beside the hole, kept clear of the screen edges, the contact and map corners, the content and the hole itself.
+ * With 1.5x hexes a spare over the hole hid most of the city behind it, so spares keep 1.25 radii from every hole cell.
  * After 600 failed tries the search widens so small screens still place all three.
  */
 export function spawnLoose(
   hc: Point,
+  hole: readonly Point[],
   home: Cam,
   powered: readonly Point[],
   W: number,
@@ -135,9 +148,57 @@ export function spawnLoose(
     if (sx > W - 210 && sy > H - 180) continue;
     if (powered.some((c) => Math.hypot(c.x - x, c.y - y) < R * 1.9)) continue;
     if (loose.some((h) => Math.hypot(h.x - x, h.y - y) < R * 1.9)) continue;
+    if (hole.some((g) => Math.hypot(g.x - x, g.y - y) < R * 1.25)) continue;
     loose.push({ x, y, rot: (rand() - 0.5) * 0.6 });
   }
   return loose;
+}
+
+/**
+ * Whether a plain hex at screen point (sx, sy) is bolted: under the contact or map corner, or one of the rare scattered ones.
+ * The corner boxes grow by half a radius so a hex whose body covers the buttons counts even when its centre sits outside them, as large hexes do.
+ */
+export function boltedAt(q: number, r: number, sx: number, sy: number, R: number, W: number, H: number): boolean {
+  const pad = R * 0.5;
+  if (sx < 170 + pad && sy > H - 150 - pad) return true;
+  if (sx > W - 190 - pad && sy > H - 160 - pad) return true;
+  return hash2(q * 7 + 3, r * 13 + 5) < 0.025;
+}
+
+/** Plain cells hugging the content flower, in order of preference; the first two that are free on this layout hide a scene. */
+const EGG_SPOTS: readonly Axial[] = [
+  [1, 0],
+  [-2, 1],
+  [1, -2],
+  [-2, 2],
+  [2, -2],
+];
+
+/**
+ * Secrets for the curious: tearing out one of these hexes shows a scene instead of the city, Wukong napping on his cloud or a bee nest.
+ * Spots skip content, the hole and the bolted corners, so every layout gets two that can actually be pulled.
+ */
+function hideEggs(
+  content: ReadonlySet<string>,
+  gaps: ReadonlyMap<string, Slot>,
+  R: number,
+  home: Cam,
+  W: number,
+  H: number,
+) {
+  const kinds: SceneKind[] = ["nap", "nest"];
+  const eggs = new Map<string, SceneKind>();
+  for (const [q, r] of EGG_SPOTS) {
+    const key = keyOf(q, r);
+    const p = ax(q, r, R);
+    const sx = p.x - home.x + W / 2;
+    const sy = p.y - home.y + H / 2;
+    if (content.has(key) || gaps.has(key) || boltedAt(q, r, sx, sy, R, W, H)) continue;
+    const kind = kinds[eggs.size];
+    if (!kind) break;
+    eggs.set(key, kind);
+  }
+  return eggs;
 }
 
 /** The front sheet has no edge; it holds the content flower, the broken patch and the three spares. */
@@ -148,12 +209,12 @@ export function buildFront(ids: readonly string[], W: number, H: number, rand: R
     const [q, r] = CONTENT_SLOTS[idx] ?? [0, 0];
     return { ...slot(q, r, R), idx, id: `f:${id}` };
   });
-  const home = frontHome(R, portrait);
+  const home = frontHome(R, portrait, W);
   const content = new Set(powered.map((c) => c.key));
   const hole = holeCells(portrait, content).map(([q, r]) => slot(q, r, R));
   const gaps = new Map(hole.map((g) => [g.key, g]));
   const hc = hole.reduce((s, g) => ({ x: s.x + g.x / hole.length, y: s.y + g.y / hole.length }), { x: 0, y: 0 });
-  const initLoose = spawnLoose(hc, home, powered, W, H, R, rand);
+  const initLoose = spawnLoose(hc, hole, home, powered, W, H, R, rand);
   return {
     R,
     portrait,
@@ -169,6 +230,7 @@ export function buildFront(ids: readonly string[], W: number, H: number, rand: R
     removed: new Set(),
     fx: [],
     shake: null,
+    eggs: hideEggs(content, gaps, R, home, W, H),
   };
 }
 
@@ -189,4 +251,25 @@ export function buildBack(section: string, ids: readonly string[], W: number, H:
     rect.y1 = Math.max(rect.y1, p.y + R * 2);
   }
   return { home: { x: 0, y: 0, z: 1 }, rect, items, taken: new Set(items.map((p) => p.key)) };
+}
+
+/**
+ * Screen centre of the part of the hole that is actually on screen at rest.
+ * The city is composed around one board point shown here; with 1.5x hexes the hole's centroid can sit past the right edge, which hid half the composition.
+ */
+export function holeView(F: FrontSheet, W: number, H: number): Point {
+  const hw = F.R * 0.87;
+  let x0 = W;
+  let x1 = 0;
+  let y0 = H;
+  let y1 = 0;
+  for (const g of F.hole) {
+    const sx = g.x - F.home.x + W / 2;
+    const sy = g.y - F.home.y + H / 2;
+    x0 = Math.min(x0, sx - hw);
+    x1 = Math.max(x1, sx + hw);
+    y0 = Math.min(y0, sy - F.R);
+    y1 = Math.max(y1, sy + F.R);
+  }
+  return { x: (Math.max(0, x0) + Math.min(W, x1)) / 2, y: (Math.max(0, y0) + Math.min(H, y1)) / 2 };
 }

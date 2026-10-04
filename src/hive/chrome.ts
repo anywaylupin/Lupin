@@ -40,7 +40,7 @@ export function createChrome(h: Hive) {
     { leaf: byId("leaf", HTMLElement), inner: byId("leaf-inner", HTMLElement), back: leafBack, cells },
     reveal,
   );
-  const path = createPath(h, byId("path", HTMLElement), reveal);
+  const path = createPath(h, byId("path", HTMLElement), () => on(h, "decrypt"));
   const sections = createSections(h, cells, {
     activate: (where, i) => {
       if (where === "front") {

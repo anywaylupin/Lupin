@@ -1,6 +1,12 @@
 import { rng } from "../math";
 import { CYAN, PINK, rgba } from "../theme";
-import { paintBlock, type BlockStyle } from "./block";
+import { antennaFarm, arcology, cantilever, cylinder, dome, megastructure, pagoda, twinTowers } from "./archetypes";
+import { facade, paintBlock, STYLE, type BlockStyle, type Ledge } from "./block";
+import { PLAN } from "./plan";
+
+/** The sky glows behind the dome, which stands at the board point the hole is centred on. */
+const FOCUS_X = PLAN.dome.x;
+import { coasterTrack, tube } from "./tracks";
 import { CH, CW, HZ, type Ctx2D, type Win } from "./board";
 
 export const LAYER_IDS = ["sky", "far", "farmid", "mid", "nearmid", "near"] as const;
@@ -9,6 +15,7 @@ export type LayerId = (typeof LAYER_IDS)[number];
 export interface Baked<I> {
   layers: { id: LayerId; image: I }[];
   wins: { mid: Win[]; nearmid: Win[] };
+  ledges: { mid: Ledge[]; nearmid: Ledge[] };
 }
 
 type Canvas2D = HTMLCanvasElement | OffscreenCanvas;
@@ -26,7 +33,7 @@ export function bakeCity<C extends Canvas2D>(f: CanvasFactory<C>): Baked<C> {
   const rand = rng(7);
   const layer = (blur: number) => {
     const c = f.make(CW, CH);
-    return { c, g: f.ctx(c), blur };
+    return { c, g: f.ctx(c), blur, out: { wins: [] as Win[], ledges: [] as Ledge[] } };
   };
   type Layer = ReturnType<typeof layer>;
   const blockRow = (
@@ -86,129 +93,58 @@ export function bakeCity<C extends Canvas2D>(f: CanvasFactory<C>): Baked<C> {
   g.lineWidth = 14;
   g.strokeStyle = rgba(CYAN, 0.06);
   g.beginPath();
-  g.ellipse(1100, 190, 480, 100, -0.14, 0, Math.PI * 2);
+  g.ellipse(FOCUS_X + 300, 180, 480, 100, -0.14, 0, Math.PI * 2);
   g.stroke();
   g.lineWidth = 2;
   g.strokeStyle = rgba(CYAN, 0.16);
   g.beginPath();
-  g.ellipse(1100, 190, 480, 100, -0.14, 0, Math.PI * 2);
+  g.ellipse(FOCUS_X + 300, 180, 480, 100, -0.14, 0, Math.PI * 2);
   g.stroke();
-  const glow = g.createRadialGradient(800, HZ, 0, 800, HZ, 760);
+  const glow = g.createRadialGradient(FOCUS_X, HZ, 0, FOCUS_X, HZ, 760);
   glow.addColorStop(0, "rgba(217,71,159,0.3)");
   glow.addColorStop(1, "rgba(217,71,159,0)");
   g.fillStyle = glow;
   g.fillRect(0, 0, CW, CH);
 
   const far = layer(2.4);
-  blockRow(
-    far,
-    {
-      top: "#221a5c",
-      bottom: "#140f3e",
-      row: 9,
-      rim: 0.12,
-      roof: 0.06,
-      slab: 0.03,
-      strip: 0.06,
-      pad: 4,
-      ww: 3,
-      gap: 4,
-      lit: 0.08,
-      winA: 0.45,
-      spires: true,
-    },
-    -40,
-    CW + 40,
-    [70, 160],
-    [HZ - 150, HZ - 40],
-    [0, 10],
-    null,
-  );
+  blockRow(far, STYLE.far, -40, CW + 40, [70, 160], [HZ - 150, HZ - 40], [0, 10], null);
   const farmid = layer(1.2);
-  blockRow(
-    farmid,
-    {
-      top: "#1f1b5e",
-      bottom: "#0f0c33",
-      row: 13,
-      rim: 0.2,
-      roof: 0.08,
-      slab: 0.04,
-      strip: 0.12,
-      pad: 6,
-      ww: 4,
-      gap: 5,
-      lit: 0.12,
-      winA: 0.5,
-    },
-    -60,
-    CW + 60,
-    [140, 260],
-    [HZ - 220, HZ - 90],
-    [6, 40],
-    null,
-  );
-  const winsMid: Win[] = [];
+  blockRow(farmid, STYLE.farmid, -60, CW + 60, [140, 260], [HZ - 220, HZ - 90], [6, 40], null);
+
   const mid = layer(0);
-  const midO: BlockStyle = {
-    top: "#1d1e58",
-    bottom: "#0b0c2a",
-    row: 22,
-    rim: 0.4,
-    roof: 0.12,
-    slab: 0.06,
-    strip: 0.1,
-    pad: 10,
-    ww: 9,
-    gap: 6,
-    lit: 0.32,
-  };
-  blockRow(mid, midO, -40, 520, [180, 300], [340, 470], [20, 80], winsMid);
-  paintBlock(mid.g, 560, 330, 230, midO, rand, winsMid);
-  paintBlock(mid.g, 820, 390, 260, midO, rand, winsMid);
-  blockRow(mid, midO, 1120, CW + 40, [180, 300], [340, 470], [20, 80], winsMid);
-  const winsNearmid: Win[] = [];
+  blockRow(mid, STYLE.mid, -40, PLAN.twin.x - 20, [150, 260], [340, 470], [20, 70], mid.out.wins);
+  twinTowers(mid.g, rand, mid.out);
+  dome(mid.g, rand, mid.out);
+  coasterTrack(mid.g, "behind");
+  cylinder(mid.g, mid.out);
+  coasterTrack(mid.g, "front");
+  blockRow(mid, STYLE.mid, PLAN.coaster.loopX + 70, CW + 40, [150, 260], [340, 470], [20, 70], mid.out.wins);
+
   const nearmid = layer(0);
+  blockRow(nearmid, STYLE.nearmid, -80, PLAN.mega.x - 10, [120, 200], [620, 720], [10, 40], nearmid.out.wins);
+  megastructure(nearmid.g, rand);
+  arcology(nearmid.g, rand, nearmid.out);
+  const k = PLAN.connector;
+  facade(nearmid.g, k.x, k.top, k.w, STYLE.nearmid, rand, nearmid.out.wins);
+  antennaFarm(nearmid.g, rand, nearmid.out);
+  pagoda(nearmid.g, rand, nearmid.out);
+  cantilever(nearmid.g, rand, nearmid.out);
   blockRow(
     nearmid,
-    {
-      top: "#14153f",
-      bottom: "#07081c",
-      row: 26,
-      rim: 0.5,
-      roof: 0.14,
-      slab: 0.06,
-      strip: 0.08,
-      pad: 12,
-      ww: 12,
-      gap: 8,
-      lit: 0.28,
-    },
-    -80,
+    STYLE.nearmid,
+    PLAN.cantilever.x + PLAN.cantilever.w + 12,
     CW + 80,
-    [240, 420],
+    [160, 260],
     [600, 720],
-    [30, 140],
-    winsNearmid,
+    [30, 100],
+    nearmid.out.wins,
   );
+  tube(nearmid.g);
+
   const near = layer(1.4);
   const ng = near.g;
-  const nearO: BlockStyle = {
-    top: "#0a0a22",
-    bottom: "#05050f",
-    row: 32,
-    rim: 0.55,
-    roof: 0.1,
-    slab: 0.05,
-    strip: 0.3,
-    pad: 14,
-    ww: 14,
-    gap: 10,
-    lit: 0.3,
-    winA: 0.55,
-  };
-  paintBlock(ng, -40, 740, 320, nearO, rand, null);
-  paintBlock(ng, 1330, 720, 320, nearO, rand, null);
+  paintBlock(ng, -40, 740, 320, STYLE.near, rand, null);
+  paintBlock(ng, 1330, 720, 320, STYLE.near, rand, null);
   ng.fillStyle = "#0b0b26";
   ng.fillRect(-40, 900, CW + 80, 30);
   ng.fillStyle = rgba(CYAN, 0.35);
@@ -229,6 +165,7 @@ export function bakeCity<C extends Canvas2D>(f: CanvasFactory<C>): Baked<C> {
       { id: "nearmid", image: finish(nearmid, 0) },
       { id: "near", image: finish(near, 0) },
     ],
-    wins: { mid: winsMid, nearmid: winsNearmid },
+    wins: { mid: mid.out.wins, nearmid: nearmid.out.wins },
+    ledges: { mid: mid.out.ledges, nearmid: nearmid.out.ledges },
   };
 }

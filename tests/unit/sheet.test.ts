@@ -12,6 +12,7 @@ import {
   isPlain,
   magnetFor,
   pickUp,
+  SETTLE_MS,
   SNAP_MS,
   stepSnap,
   tearOut,
@@ -37,15 +38,16 @@ describe("plain and bolted hexes", () => {
 
   it("bolts the hexes under the bottom corners and only a few others", () => {
     const F = sheet();
-    const screenToAxial = (sx: number, sy: number) => {
-      const wx = sx - W / 2 + F.home.x;
-      const wy = sy - H / 2 + F.home.y;
-      const r = Math.round(wy / (1.5 * F.R));
-      const q = Math.round(wx / (Math.sqrt(3) * F.R) - r / 2);
-      return [q, r] as const;
-    };
-    const [lq, lr] = screenToAxial(60, H - 40);
-    expect(isLocked(F, lq, lr, W, H)).toBe(true);
+    const cornerCell = [...Array(40).keys()]
+      .flatMap((a) => [...Array(40).keys()].map((b) => [a - 20, b - 20] as const))
+      .find(([q, r]) => {
+        const p = ax(q, r, F.R);
+        const sx = p.x - F.home.x + W / 2;
+        const sy = p.y - F.home.y + H / 2;
+        return sx > 0 && sx < 170 && sy < H && sy > H - 150 - F.R * 0.5;
+      });
+    expect(cornerCell).toBeDefined();
+    if (cornerCell) expect(isLocked(F, cornerCell[0], cornerCell[1], W, H)).toBe(true);
     let bolted = 0;
     let onScreen = 0;
     for (let q = -20; q < 20; q++) {
@@ -93,7 +95,7 @@ describe("drag state", () => {
     expect(hitLoose(F, { x: l.ax + F.R * 3, y: l.ay + F.R * 3 })).not.toBe(0);
   });
 
-  it("pulls toward a nearby empty slot and snaps in on drop", () => {
+  it("pulls toward a nearby empty slot, bursts at once on drop and snaps in", () => {
     const F = sheet();
     const slot = F.hole[0]!;
     const l = F.loose[0]!;
@@ -105,6 +107,7 @@ describe("drag state", () => {
     drop(F, l, 1000);
     expect(l.seat).toBe(slot.key);
     expect(l.snap?.dur).toBe(SNAP_MS);
+    expect(F.fx).toEqual([{ x: slot.x, y: slot.y, t0: 1000 }]);
     stepSnap(F, l, 1000 + SNAP_MS, false);
     expect(l.snap).toBeNull();
     expect(l.x).toBeCloseTo(slot.x);
@@ -124,5 +127,17 @@ describe("drag state", () => {
     expect(magnetFor(F, l)).toBeNull();
     drop(F, l, 0);
     expect(l.seat).toBeNull();
+  });
+
+  it("settles a lifted hex back down when it misses every slot", () => {
+    const F = sheet();
+    const l = F.loose[0]!;
+    Object.assign(l, { x: 1e5, y: 0, ax: 1e5, ay: 0 });
+    drop(F, l, 0, 0.2, 12);
+    expect(l.snap).toMatchObject({ fy: -12, to: { x: 1e5, y: 0, rot: 0.2 }, dur: SETTLE_MS });
+    expect(F.fx).toHaveLength(0);
+    stepSnap(F, l, SETTLE_MS, false);
+    expect(l.y).toBe(0);
+    expect(l.rot).toBeCloseTo(0.2);
   });
 });

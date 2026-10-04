@@ -100,7 +100,7 @@ test.describe("reduced motion", () => {
     await expect(page).toHaveURL(/\/projects\/$/);
     await expect(page.locator("#veil")).toHaveCSS("pointer-events", "none");
     await expect(page.locator("#veil")).toHaveCSS("opacity", "0");
-    await expect(page.locator("#path")).toHaveText("❯~/projects");
+    await expect(page.locator("#path")).toHaveText("❯ ~/projects");
     await expect(page.locator("[aria-busy]")).toHaveCount(0);
   });
 });

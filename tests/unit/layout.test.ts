@@ -14,10 +14,10 @@ describe("sizing", () => {
     expect(isPortrait(1440, 900)).toBe(false);
   });
 
-  it("clamps the hex size", () => {
-    expect(hexRadius(390, 844)).toBe(60);
-    expect(hexRadius(1440, 900)).toBe(110);
-    expect(hexRadius(200, 300)).toBe(30);
+  it("grows hexes 1.5x on desktop and 1.2x on phones, within limits", () => {
+    expect(hexRadius(390, 844)).toBeCloseTo(72.2, 1);
+    expect(hexRadius(1440, 900)).toBe(165);
+    expect(hexRadius(200, 300)).toBe(36);
   });
 });
 

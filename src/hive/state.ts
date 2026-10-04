@@ -1,7 +1,8 @@
-import type { Cam } from "./camera";
+import type { Cam, ZoomAnim } from "./camera";
 import type { HiveData } from "./data";
 import type { Point } from "./hex";
 import type { BackSheet, FrontSheet, Loose } from "./layout";
+import type { Carrier } from "./flourish";
 import type { Effect, Prefs } from "./prefs";
 import type { Route } from "./route";
 
@@ -41,9 +42,18 @@ export interface Nav {
   target: Route | null;
 }
 
-export type Drag =
-  | { kind: "pan"; x: number; y: number; cx: number; cy: number }
-  | { kind: "loose"; loose: Loose; ox: number; oy: number };
+export type Drag = { kind: "pan"; x: number; y: number; cx: number; cy: number } | LooseDrag;
+
+/** A held loose hex: grab offset, when it was lifted, and a lean that follows sideways motion and decays back. */
+export interface LooseDrag {
+  kind: "loose";
+  loose: Loose;
+  ox: number;
+  oy: number;
+  t0: number;
+  lean: number;
+  lastX: number;
+}
 
 /** A press on a plain hex that has not yet moved far enough to tear the hex out. */
 export interface Pending {
@@ -65,7 +75,6 @@ export interface Hive {
   frontCam: Cam;
   backCam: Cam;
   pointer: Point;
-  clock: number;
   nav: Nav;
   hoverKey: string | null;
   hoverLoose: number;
@@ -75,6 +84,9 @@ export interface Hive {
   pending: Pending | null;
   prefs: Prefs;
   reduced: boolean;
+  zoom: ZoomAnim | null;
+  dt: number;
+  carriers: Carrier[];
 }
 
 export function createNav(): Nav {

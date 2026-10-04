@@ -6,6 +6,7 @@ import type { Placed } from "../layout";
 import { clamp } from "../math";
 import { cardAlpha, movingHex, phases } from "../nav";
 import type { Hive, Where } from "../state";
+import { hoverLift } from "../render";
 import { HEX } from "../theme";
 
 export interface SectionActions {
@@ -192,8 +193,11 @@ export function createSections(h: Hive, root: HTMLElement, actions: SectionActio
     });
   };
 
-  /** Positions every proxy from the cameras each frame, mirroring the canvas: same flip, same fade, same hover growth. */
-  const place = () => {
+  /**
+   * Positions every proxy from the cameras each frame, mirroring the canvas: same flip, same fade, same hover growth.
+   * The hover float moves only the faces, so the hit area stays put and the pointer cannot slip off the bottom edge and flicker.
+   */
+  const place = (now = performance.now()) => {
     const n = h.nav;
     const { A } = phases(n.S);
     const R = h.front.R;
@@ -204,6 +208,7 @@ export function createSections(h: Hive, root: HTMLElement, actions: SectionActio
       let size: number;
       let alpha: number;
       let flip = 0;
+      let lift = 0;
       if (o.where === "front" && n.sec === o.i && n.S > 0) {
         const m = movingHex(h);
         ({ x, y, size, flip } = m);
@@ -212,6 +217,7 @@ export function createSections(h: Hive, root: HTMLElement, actions: SectionActio
         const c = o.where === "front" ? h.frontCam : h.backCam;
         x = (o.item.x - c.x) * c.z + h.W / 2;
         y = (o.item.y - c.y) * c.z + h.H / 2;
+        lift = hoverLift(h, o.item.id, h.grow.get(o.item.id) ?? 0, now) * c.z;
         size = R * HEX * c.z;
         if (o.where === "front") alpha = n.sec >= 0 ? 1 - A : 1;
         else alpha = o.i === 0 ? (n.S >= 1 ? 1 : 0) : cardAlpha(n.S, o.i, (back?.items.length ?? 1) - 1);
@@ -242,6 +248,7 @@ export function createSections(h: Hive, root: HTMLElement, actions: SectionActio
       st.setProperty("--fs", `${clamp(Math.min(size * (o.hasText ? 0.15 : 0.18), fit), MIN_TEXT, 26)}px`);
       st.setProperty("--is", `${clamp(size * 0.26, 12, 40)}px`);
       st.setProperty("--ss", `${ss}px`);
+      st.setProperty("--lift", `${lift.toFixed(1)}px`);
       st.setProperty("--tw", `${w * 0.7}px`);
       o.el.classList.toggle("wrap", fit < MIN_TEXT);
       o.el.classList.toggle("tight", w < (o.hasText ? 230 : 170));

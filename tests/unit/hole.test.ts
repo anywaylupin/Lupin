@@ -7,9 +7,9 @@ const content = new Set(CONTENT_SLOTS.map(([q, r]) => keyOf(q, r)));
 const keys = (portrait: boolean) => holeCells(portrait, content).map(([q, r]) => keyOf(q, r));
 
 describe("hole", () => {
-  it("is nine cells in portrait, where one tail cell would land on content, and eleven in landscape", () => {
+  it("is nine cells in portrait, where one tail cell would land on content, and fifteen in landscape", () => {
     expect(keys(true)).toHaveLength(9);
-    expect(keys(false)).toHaveLength(11);
+    expect(keys(false)).toHaveLength(15);
   });
 
   it("keeps the anchor and its whole ring", () => {
@@ -36,6 +36,15 @@ describe("hole", () => {
   it("tapers to a tail up and to the right of the anchor", () => {
     const [hq, hr] = holeAnchor(false);
     const tail = holeCells(false, content).filter(([q, r]) => axDist(q, r, hq, hr) > 1);
-    expect(tail.map(([q, r]) => keyOf(q, r))).toEqual([keyOf(5, -1), keyOf(5, 0), keyOf(4, -1), keyOf(6, -2)]);
+    expect(tail.map(([q, r]) => keyOf(q, r))).toEqual([
+      keyOf(4, -1),
+      keyOf(4, 0),
+      keyOf(3, -1),
+      keyOf(5, -2),
+      keyOf(5, -1),
+      keyOf(4, 1),
+      keyOf(3, 2),
+      keyOf(6, -3),
+    ]);
   });
 });

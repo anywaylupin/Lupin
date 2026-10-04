@@ -1,6 +1,6 @@
 import { ax, hexVerts, inPoly, keyOf, type Point } from "./hex";
-import { slotAt, type FrontSheet, type Loose, type Slot } from "./layout";
-import { clamp, ease, easeOut, hash2, lerp } from "./math";
+import { boltedAt, slotAt, type FrontSheet, type Loose, type Slot } from "./layout";
+import { clamp, ease, easeOut, lerp } from "./math";
 import { HEX } from "./theme";
 
 /** A drop snaps into an empty slot within this many hex radii; the magnet starts pulling from 1.9. */
@@ -32,11 +32,7 @@ export function isPlain(F: FrontSheet, key: string): boolean {
 export function isLocked(F: FrontSheet, q: number, r: number, W: number, H: number): boolean {
   if (!isPlain(F, keyOf(q, r))) return false;
   const p = ax(q, r, F.R);
-  const sx = p.x - F.home.x + W / 2;
-  const sy = p.y - F.home.y + H / 2;
-  if (sx < 170 && sy > H - 150) return true;
-  if (sx > W - 190 && sy > H - 160) return true;
-  return hash2(q * 7 + 3, r * 13 + 5) < 0.025;
+  return boltedAt(q, r, p.x - F.home.x + W / 2, p.y - F.home.y + H / 2, F.R, W, H);
 }
 
 export function loosePoly(l: Loose, R: number): Point[] {
@@ -87,15 +83,46 @@ export function tearOut(F: FrontSheet, key: string, q: number, r: number, wp: Po
   return { loose: l, ox: wp.x - p.x, oy: wp.y - p.y };
 }
 
-/** Releases a held hex where it is drawn; close enough to an empty slot, it snaps in and fires the seat burst on arrival. */
-export function drop(F: FrontSheet, l: Loose, now: number): void {
+/** A released hex that misses every slot settles from its lifted height back onto the sheet over this long. */
+export const SETTLE_MS = 160;
+
+/**
+ * Releases a held hex where it is drawn, `rot` and `lift` being its tilt and height while held.
+ * Close enough to an empty slot it snaps in, and the seat burst fires at once, so the drop feels instant instead of waiting out the 240 ms snap.
+ */
+export function drop(F: FrontSheet, l: Loose, now: number, rot = l.rot, lift = 0): void {
   l.x = l.ax;
   l.y = l.ay;
+  l.rot = rot;
   const m = magnetFor(F, l);
   if (m && Math.hypot(m.g.x - l.x, m.g.y - l.y) < F.R * SEAT_RANGE) {
     l.seat = m.g.key;
-    l.snap = { fx: l.x, fy: l.y, frot: l.rot, to: m.g, t0: now, dur: SNAP_MS, delay: 0, curve: "out" };
+    l.snap = {
+      fx: l.x,
+      fy: l.y - lift,
+      frot: rot,
+      to: m.g,
+      t0: now,
+      dur: SNAP_MS,
+      delay: 0,
+      curve: "out",
+      burst: false,
+    };
+    F.fx.push({ x: m.g.x, y: m.g.y, t0: now });
+    return;
   }
+  if (lift)
+    l.snap = {
+      fx: l.x,
+      fy: l.y - lift,
+      frot: rot,
+      to: { x: l.x, y: l.y, rot },
+      t0: now,
+      dur: SETTLE_MS,
+      delay: 0,
+      curve: "out",
+      burst: false,
+    };
 }
 
 /** The magnet drags the drawn position towards the slot by up to 45% of the gap, easing in with the square of the pull. */
@@ -107,7 +134,7 @@ export function heldPose(F: FrontSheet, l: Loose, magnet: boolean) {
   return m;
 }
 
-/** Advances a snapping hex; a hex that lands in a seat adds a seat burst at its slot. */
+/** Advances a snapping hex; a hex that lands in a seat on a reset adds its seat burst on arrival. */
 export function stepSnap(F: FrontSheet, l: Loose, now: number, reduced: boolean): void {
   const s = l.snap;
   if (!s) {
@@ -126,6 +153,6 @@ export function stepSnap(F: FrontSheet, l: Loose, now: number, reduced: boolean)
   l.ay = l.y;
   if (p >= 1) {
     l.snap = null;
-    if (l.seat) F.fx.push({ x: l.x, y: l.y, t0: now });
+    if (l.seat && s.burst) F.fx.push({ x: l.x, y: l.y, t0: now });
   }
 }

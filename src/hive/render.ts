@@ -1,11 +1,13 @@
 import type { Cam } from "./camera";
 import type { HiveData } from "./data";
+import { drawCarriers, drawDrips, drawEggs } from "./flourish";
 import { charge, drawMagnet, drawSeat, SEAT_MS, type Spark } from "./fx/electric";
 import { DIRS, ax, hexVerts, keyOf, visibleRange, type Point } from "./hex";
 import { addPoly, hexFill, type Ctx } from "./paint";
-import type { BackSheet, Loose } from "./layout";
+import type { BackSheet } from "./layout";
+import { clamp, easeOut } from "./math";
 import { emptyGaps, heldPose, isLocked, isOpen, loosePoly, stepSnap } from "./sheet";
-import { on, type Hive } from "./state";
+import { on, type Hive, type LooseDrag } from "./state";
 import { BLUE, C, CYAN, HEX, PINK, rgba } from "./theme";
 
 /** Hole edge vertex pairs, indexed like DIRS, so an edge is drawn only where the neighbour is still solid. */
@@ -39,12 +41,68 @@ export function flashAt(h: Hive, p: Point, mw: Point, z: number, live: boolean, 
   return Math.max(0, 1 - d / radius) ** 2;
 }
 
-/** Hover and focus grow a cell by up to 7% over about four frames; reduced motion jumps straight there. */
+/**
+ * Hover and focus grow a cell by up to 7%, easing in and out with a 140 ms time constant that does not depend on the frame rate.
+ * The prototype stepped a quarter of the way per frame, which felt abrupt at 60 fps and sluggish at 30; reduced motion jumps straight there.
+ */
 export function growOf(h: Hive, key: string, hot: boolean): number {
   const prev = h.grow.get(key) ?? 0;
-  const gv = prev + ((hot ? 1 : 0) - prev) * (h.reduced ? 1 : 0.25);
+  const k = h.reduced ? 1 : 1 - Math.exp(-h.dt / 0.14);
+  const gv = prev + ((hot ? 1 : 0) - prev) * k;
   h.grow.set(key, gv);
   return gv;
+}
+
+/** How high a hovered cell floats, in world units: it rises 6% of a radius and then bobs gently, each cell on its own phase. */
+export function hoverLift(h: Hive, id: string, gv: number, now: number): number {
+  if (gv < 0.001) return 0;
+  const phase = (id.length * 1.7 + id.charCodeAt(id.length - 1)) % 6.28;
+  const bob = h.reduced ? 0 : Math.sin(now / 420 + phase) * 0.014;
+  return -h.front.R * gv * (0.06 + bob);
+}
+
+/** A cell lifted off the sheet by hover: a soft shadow below it, then its electric border once it is visibly raised. */
+function drawLifted(
+  g: Ctx,
+  h: Hive,
+  x: number,
+  y: number,
+  size: number,
+  fill: string,
+  stroke: string,
+  lw: number,
+  z: number,
+  gv: number,
+  now: number,
+) {
+  if (gv > 0.02) {
+    g.save();
+    g.shadowColor = `rgba(0,0,0,${0.55 * gv})`;
+    g.shadowBlur = 18 * gv * h.DPR;
+    g.shadowOffsetY = 12 * gv * h.DPR;
+    hexFill(g, x, y, size, fill, stroke, lw);
+    g.restore();
+    charge(g, x, y, size, z, gv, spark(h, now));
+    return;
+  }
+  hexFill(g, x, y, size, fill, stroke, lw);
+}
+
+/** A picked up hex rises over 180 ms and rests tilted about 5 degrees, enough to read as lifted off the sheet. */
+const LIFT_MS = 180;
+const TILT = 0.09;
+
+/** Lift progress, height and tilt for the held hex, with a slow sway and bob; the magnet levels it as it nears a slot. */
+export function heldLook(h: Hive, d: LooseDrag, m: { k: number } | null, now: number) {
+  const lift = h.reduced ? 1 : easeOut(clamp((now - d.t0) / LIFT_MS, 0, 1));
+  const level = m ? 1 - m.k : 1;
+  const sway = h.reduced ? 0 : Math.sin(now / 320) * 0.025;
+  const bob = h.reduced ? 0 : Math.sin(now / 260) * 0.012;
+  return {
+    lift,
+    rot: d.loose.rot * level + (TILT + d.lean + sway) * level * lift,
+    dy: -h.front.R * (0.07 * lift + bob * level),
+  };
 }
 
 /** Draws a cell turned by f (0 front, 1 back) around its vertical axis; past halfway it shows its back face. */
@@ -134,11 +192,11 @@ function drawLoose(g: Ctx, h: Hive, z: number, live: boolean, now: number): void
   const F = h.front;
   const R = F.R;
   const sp = spark(h, now);
-  let held: { l: Loose; m: ReturnType<typeof heldPose> } | null = null;
+  let held: { d: LooseDrag; m: ReturnType<typeof heldPose> } | null = null;
   for (const [i, l] of F.loose.entries()) {
     stepSnap(F, l, now, h.reduced);
     if (h.drag?.kind === "loose" && h.drag.loose === l) {
-      held = { l, m: heldPose(F, l, !h.reduced) };
+      held = { d: h.drag, m: heldPose(F, l, !h.reduced) };
       continue;
     }
     if (l.seat) {
@@ -154,18 +212,22 @@ function drawLoose(g: Ctx, h: Hive, z: number, live: boolean, now: number): void
     g.restore();
   }
   if (held) {
-    const { l, m } = held;
+    const { d, m } = held;
+    const l = d.loose;
+    d.lean *= Math.exp(-h.dt / 0.25);
+    const look = heldLook(h, d, m, now);
     if (m) drawMagnet(g, loosePoly(l, R), m.g, m.k, R, z, sp);
     g.save();
     g.shadowColor = "rgba(0,0,0,0.7)";
-    g.shadowBlur = 26 * h.DPR;
-    g.shadowOffsetY = 14 * h.DPR;
+    g.shadowBlur = (16 + 18 * look.lift) * h.DPR;
+    g.shadowOffsetY = (8 + 16 * look.lift) * h.DPR;
     const stroke = m ? rgba(PINK, 0.6 + 0.4 * m.k) : rgba(BLUE, 0.85);
-    hexFill(g, l.ax, l.ay, R * HEX * 1.04, C.loose, stroke, 1.5 / z, l.rot * (m ? 1 - m.k : 1));
+    hexFill(g, l.ax, l.ay + look.dy, R * HEX * (1 + 0.06 * look.lift), C.loose, stroke, 1.5 / z, look.rot);
     g.restore();
   }
   F.fx = F.fx.filter((f) => now - f.t0 < SEAT_MS);
   for (const f of F.fx) drawSeat(g, f, R, z, sp);
+  drawCarriers(g, h, z, now);
 }
 
 export function drawFront(g: Ctx, h: Hive, cam: Cam, live: boolean, now: number): void {
@@ -173,8 +235,10 @@ export function drawFront(g: Ctx, h: Hive, cam: Cam, live: boolean, now: number)
   const z = cam.z;
   const { sec, S, CF } = h.nav;
   drawSheetBase(g, h, cam);
+  drawEggs(g, h, now);
   drawPlainHexes(g, h, cam, live, now);
   drawHoleEdges(g, h, z);
+  drawDrips(g, h, z, now);
   for (const i of hoverLast(F.powered, h.hoverKey)) {
     const p = F.powered[i];
     if (!p || (sec === i && S > 0)) continue;
@@ -184,8 +248,8 @@ export function drawFront(g: Ctx, h: Hive, cam: Cam, live: boolean, now: number)
     }
     const gv = growOf(h, p.id, live && h.hoverKey === p.id);
     const size = F.R * HEX * (1 + 0.07 * gv);
-    hexFill(g, p.x, p.y, size, C.cell, frontStroke(h.data, i), 1.4 / z);
-    if (gv > 0.02) charge(g, p.x, p.y, size, z, gv, spark(h, now));
+    const y = p.y + hoverLift(h, p.id, gv, now);
+    drawLifted(g, h, p.x, y, size, C.cell, frontStroke(h.data, i), 1.4 / z, z, gv, now);
   }
   drawLoose(g, h, z, live, now);
 }
@@ -238,8 +302,8 @@ export function drawBack(
     else {
       const gv = growOf(h, it.id, live && h.hoverKey === it.id);
       const size = R * HEX * (1 + 0.07 * gv);
-      hexFill(g, it.x, it.y, size, i === 0 ? C.back : C.cell, stroke, (i === 0 ? 1.8 : 1.3) / z);
-      if (gv > 0.02) charge(g, it.x, it.y, size, z, gv, spark(h, now));
+      const y = it.y + hoverLift(h, it.id, gv, now);
+      drawLifted(g, h, it.x, y, size, i === 0 ? C.back : C.cell, stroke, (i === 0 ? 1.8 : 1.3) / z, z, gv, now);
     }
     g.globalAlpha = 1;
   }

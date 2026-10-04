@@ -1,11 +1,25 @@
 import type { Point } from "../hex";
-import { clamp, hash2, lerp } from "../math";
+import { hash2 } from "../math";
 import { AMBER, CYAN, PINK, rgba } from "../theme";
+import type { Ledge } from "./block";
 import { CH, CW, type Win } from "./board";
+import { drawBees, drawCrane, drawJetpacker, drawRunner, drawWukong, stepBees } from "./cast";
+import { astronaut } from "./figures";
 import { glitchLayer, glitching, type GlitchTimer } from "./glitch";
+import {
+  drawBeam,
+  drawCapsules,
+  drawCoaster,
+  drawDome,
+  drawPlatforms,
+  drawPortals,
+  drawStar,
+  inDome,
+  stepFlare,
+} from "./hero";
 import type { Layer } from "./layers";
-import type { Drone, Platform, Rail, Scene, Sign } from "./scene";
-import { drawBolt, drawBoom, drawRain } from "./weather";
+import type { Lane, Scene, Sign } from "./scene";
+import { drawBolt, drawBoom, drawRain, drawSplashes, RAIN } from "./weather";
 
 type Ctx = CanvasRenderingContext2D;
 
@@ -13,18 +27,21 @@ type Ctx = CanvasRenderingContext2D;
 export interface CityFrame {
   dt: number;
   now: number;
-  clock: number;
   life: boolean;
   weather: boolean;
   glitch: boolean;
   reduced: boolean;
   DPR: number;
   zh: string;
+  star: Point;
+  /** The layer the star hangs on: the sky on desktops, the mid layer on phones, where the hole opens below the far skylines. */
+  starLayer: "sky" | "mid";
 }
 
 export interface City {
   layers: Layer[];
   wins: { mid: Win[]; nearmid: Win[] };
+  ledges: { mid: Ledge[]; nearmid: Ledge[] };
   scene: Scene;
   glitch: GlitchTimer;
 }
@@ -39,18 +56,18 @@ function toggleWindows(list: Win[], dt: number): void {
   }
 }
 
-function drawWindows(g: Ctx, list: readonly Win[], alpha: number): void {
+/** Windows brighten with the star's flare, as if the whole grid drew on it at once. */
+function drawWindows(g: Ctx, list: readonly Win[], alpha: number, glow: number): void {
   for (const col of [CYAN, PINK, AMBER]) {
-    g.fillStyle = rgba(col, alpha);
+    g.fillStyle = rgba(col, Math.min(1, alpha * (1 + 0.6 * glow)));
     for (const w of list) if (w.on && w.c === col) g.fillRect(w.x, w.y, w.w, w.h);
   }
 }
 
-function drawLanes(g: Ctx, s: Scene, k: number, f: CityFrame): void {
+function drawLanes(g: Ctx, lanes: readonly Lane[], layer: Lane["layer"], t: number): void {
   const span = CW + 240;
-  const t = f.life ? f.clock : 0;
-  for (const l of s.lanes) {
-    if (l.k !== k) continue;
+  for (const l of lanes) {
+    if (l.layer !== layer) continue;
     g.fillStyle = rgba(l.c, 0.9);
     for (let i = 0; i < l.n; i++) {
       const x = ((i * span) / l.n + hash2(i, l.y) * 30 + t * l.speed * l.dir) % span;
@@ -63,123 +80,15 @@ function drawLanes(g: Ctx, s: Scene, k: number, f: CityFrame): void {
   }
 }
 
-function drawPlatform(g: Ctx, p: Platform, f: CityFrame): void {
-  const lv = f.life;
-  const x = p.x + (lv ? Math.sin(f.clock * 0.25 + p.ph) * 10 : 0);
-  const y = p.y + (lv ? Math.sin(f.clock * 0.6 + p.ph) * 6 : 0);
-  const w = p.w;
-  const glow = g.createRadialGradient(x, y + 18, 0, x, y + 18, w * 0.7);
-  glow.addColorStop(0, rgba(CYAN, 0.3));
-  glow.addColorStop(1, rgba(CYAN, 0));
-  g.fillStyle = glow;
-  g.fillRect(x - w, y - 10, w * 2, w);
-  const top = Array.from({ length: 6 }, (_, i) => {
-    const a = (Math.PI / 3) * i;
-    return { x: x + (Math.cos(a) * w) / 2, y: y + Math.sin(a) * w * 0.14 };
-  });
-  g.fillStyle = "#0d0e2c";
-  g.beginPath();
-  const [t0, t1, t2, t3] = top;
-  if (t0 && t1 && t2 && t3) {
-    g.moveTo(t0.x, t0.y);
-    for (const v of [t0, t1, t2, t3]) g.lineTo(v.x, v.y + 9);
-    g.lineTo(t3.x, t3.y);
-    g.closePath();
-    g.fill();
-  }
-  g.beginPath();
-  top.forEach((v, i) => (i ? g.lineTo(v.x, v.y) : g.moveTo(v.x, v.y)));
-  g.closePath();
-  g.fillStyle = "#1e1f52";
-  g.fill();
-  g.strokeStyle = rgba(CYAN, 0.6);
-  g.lineWidth = 1.2;
-  g.stroke();
-  top.forEach((v, i) => {
-    if (lv && Math.floor(f.clock * 1.5 + i) % 2 !== 0) return;
-    g.fillStyle = rgba(AMBER, 0.95);
-    g.fillRect(v.x - 1.5, v.y - 1.5, 3, 3);
-  });
-}
-
-function railPoint(r: Rail, t: number): Point {
-  return { x: lerp(r.a.x, r.b.x, t), y: lerp(r.a.y, r.b.y, t) + Math.sin(t * Math.PI) * r.sag };
-}
-
-/** A sagging monorail with pylons; pods leave every three to seven seconds in either direction. */
-function drawRail(g: Ctx, r: Rail, f: CityFrame): void {
-  g.strokeStyle = "#24245a";
-  g.lineWidth = 4 * r.scale;
-  g.beginPath();
-  for (let t = 0; t <= 1.001; t += 0.05) {
-    const p = railPoint(r, t);
-    if (t) g.lineTo(p.x, p.y);
-    else g.moveTo(p.x, p.y);
-  }
-  g.stroke();
-  g.fillStyle = "#14143a";
-  for (let t = 0.08; t < 1; t += 0.14) {
-    const p = railPoint(r, t);
-    g.fillRect(p.x - 3 * r.scale, p.y, 6 * r.scale, CH - p.y);
-  }
-  g.fillStyle = rgba(CYAN, 0.4);
-  for (let t = 0; t <= 1; t += 0.02) {
-    const p = railPoint(r, t);
-    g.fillRect(p.x - 1, p.y - 3 * r.scale, 2, 2);
-  }
-  if (f.life) {
-    r.next -= f.dt;
-    if (r.next <= 0) {
-      r.pods.push({ t: 0, dir: Math.random() < 0.5 ? 1 : -1 });
-      r.next = 3 + Math.random() * 4;
-    }
-  }
-  const len = Math.hypot(r.b.x - r.a.x, r.b.y - r.a.y);
-  r.pods = r.pods.filter((pd) => pd.t <= 1);
-  for (const pd of r.pods) {
-    if (f.life) pd.t += (r.speed * f.dt) / len;
-    const t = pd.dir > 0 ? pd.t : 1 - pd.t;
-    const p = railPoint(r, t);
-    const q = railPoint(r, clamp(t + 0.01, 0, 1));
-    const s = r.scale;
-    g.save();
-    g.translate(p.x, p.y - 9 * s);
-    g.rotate(Math.atan2(q.y - p.y, q.x - p.x));
-    g.scale(s, s);
-    g.fillStyle = "#1d1f4e";
-    g.beginPath();
-    g.roundRect(-30, -6, 60, 12, 6);
-    g.fill();
-    g.fillStyle = rgba(CYAN, 0.9);
-    for (let wx = -24; wx < 22; wx += 9) g.fillRect(wx, -3, 6, 3);
-    g.fillStyle = rgba(AMBER, 1);
-    g.fillRect(pd.dir > 0 ? 27 : -29, -1, 2, 2);
-    g.restore();
-  }
-}
-
-function drawDrone(g: Ctx, d: Drone, f: CityFrame): void {
-  const t = f.life ? f.clock : 0;
-  const x = d.cx + Math.sin(t * d.sp + d.ph) * d.ax;
-  const y = d.cy + Math.sin(t * d.sp * 2 + d.ph) * d.ay;
-  g.fillStyle = "#15163e";
-  g.fillRect(x - 5, y - 1.5, 10, 3);
-  if (f.reduced || Math.floor(f.clock * 2 + d.ph) % 2 === 0) {
-    g.fillStyle = rgba(PINK, 1);
-    g.fillRect(x - 1, y + 1.5, 2, 2);
-  }
-}
-
 /** A flying car crosses every ten to twenty seconds, trailing pink and throwing an amber beam ahead. */
-function drawCar(g: Ctx, s: Scene, f: CityFrame): void {
-  if (f.life) {
-    s.nextCar -= f.dt;
-    if (!s.car && s.nextCar <= 0)
-      s.car = { p: 0, dir: Math.random() < 0.5 ? 1 : -1, y: 360 + Math.random() * 120, dur: 6 + Math.random() * 3 };
+function drawCar(g: Ctx, s: Scene, dt: number): void {
+  s.nextCar -= dt;
+  if (!s.car && s.nextCar <= 0) {
+    s.car = { p: 0, dir: Math.random() < 0.5 ? 1 : -1, y: 340 + Math.random() * 100, dur: 7 + Math.random() * 3 };
   }
   const car = s.car;
   if (!car) return;
-  if (f.life) car.p += f.dt / car.dur;
+  car.p += dt / car.dur;
   if (car.p > 1) {
     s.car = null;
     s.nextCar = 10 + Math.random() * 10;
@@ -216,8 +125,8 @@ function drawCar(g: Ctx, s: Scene, f: CityFrame): void {
 }
 
 /** Neon signs flicker off for an eighth of a second about one tick in twenty five while the glitch effect is on. */
-function drawSign(g: Ctx, s: Sign, f: CityFrame): void {
-  const lit = !f.glitch || hash2(Math.floor(f.clock * 8), s.x) > 0.04;
+function drawSign(g: Ctx, s: Sign, f: CityFrame, t: number): void {
+  const lit = !f.glitch || hash2(Math.floor(t * 8), s.x) > 0.04;
   g.fillStyle = "#0b0a20";
   g.fillRect(s.x, s.y, s.w, s.h);
   g.strokeStyle = rgba(s.c, lit ? 0.9 : 0.25);
@@ -242,48 +151,67 @@ function drawSign(g: Ctx, s: Sign, f: CityFrame): void {
 }
 
 /**
- * Only layers with something moving are redrawn each frame: the baked layer first, then lights, traffic and weather on top.
- * The far layer never changes, and the sky is redrawn only while weather is on or once after it turns off.
+ * Redraws each layer's live overlay every frame: lights, traffic, weather and the cast over the untouched baked canvas below.
+ * The far layer has no overlay. Life time and weather time advance only while their switch is on, so each switch freezes its half of the city mid-motion.
  */
 export function updateCity(city: City, f: CityFrame): void {
   const s = city.scene;
+  const dtL = f.life ? f.dt : 0;
+  const dtW = f.weather ? f.dt : 0;
+  s.life += dtL;
+  s.weather += dtW;
+  const glow = stepFlare(s, dtW);
   const glitchNow = glitching(city.glitch, f.now, f.glitch);
   if (f.life) {
     toggleWindows(city.wins.mid, f.dt);
     toggleWindows(city.wins.nearmid, f.dt);
+    stepBees(s.bees, s.swarms, f.dt);
   }
   for (const L of city.layers) {
-    if (L.id === "far") continue;
-    if (L.id === "sky" && !f.weather && !L.dirty) continue;
     const g = L.g;
+    if (!g) continue;
     g.setTransform(1, 0, 0, 1, 0, 0);
     g.clearRect(0, 0, CW, CH);
-    g.drawImage(L.baked, 0, 0);
     if (L.id === "sky") {
-      L.dirty = f.weather;
-      if (f.weather) drawBolt(g, s, f.dt, f.DPR);
+      if (f.starLayer === "sky") drawStar(g, s, f.star, s.life + s.weather, astronaut);
+      if (f.weather) drawBolt(g, s, dtW, f.DPR);
     } else if (L.id === "farmid") {
-      if (f.weather) drawBoom(g, s, f.dt);
-      drawLanes(g, s, 0.35, f);
+      if (f.weather) {
+        drawBoom(g, s, dtW);
+        drawRain(g, s.weather, RAIN.far);
+      }
+      drawLanes(g, s.lanes, "farmid", s.life);
     } else if (L.id === "mid") {
-      drawWindows(g, city.wins.mid, 0.75);
-      for (const sign of s.signs) if (sign.k === 0.6) drawSign(g, sign, f);
-      for (const p of s.platforms) if (p.k === 0.6) drawPlatform(g, p, f);
-      for (const r of s.rails) if (r.k === 0.6) drawRail(g, r, f);
-      for (const d of s.drones) drawDrone(g, d, f);
-      if (glitchNow) glitchLayer(g, city.glitch, f.now, 1);
+      drawWindows(g, city.wins.mid, 0.75, glow);
+      for (const sign of s.signs) if (sign.layer === "mid") drawSign(g, sign, f, s.life);
+      drawPlatforms(g, s.life, f.life);
+      if (f.starLayer === "mid") drawStar(g, s, f.star, s.life + s.weather, astronaut);
+      drawBeam(g, s, f.star, s.life + s.weather);
+      drawDome(g, s, dtW, f.weather);
+      drawPortals(g, s, dtL, s.life);
+      drawCoaster(g, s, dtL);
+      drawCrane(g, s.life, f.life);
+      drawRunner(g, s.life);
+      drawJetpacker(g, s.life);
+      drawBees(g, s, s.life);
+      if (f.weather) {
+        drawRain(g, s.weather, RAIN.mid, inDome);
+        drawSplashes(g, s.weather, city.ledges.mid);
+      }
+      if (glitchNow) glitchLayer(g, L.baked, city.glitch, f.now, 1);
     } else if (L.id === "nearmid") {
-      drawWindows(g, city.wins.nearmid, 0.6);
-      for (const sign of s.signs) if (sign.k === 0.85) drawSign(g, sign, f);
-      drawLanes(g, s, 0.85, f);
-      for (const p of s.platforms) if (p.k === 0.85) drawPlatform(g, p, f);
-      for (const r of s.rails) if (r.k === 0.85) drawRail(g, r, f);
-      drawCar(g, s, f);
-      if (glitchNow) glitchLayer(g, city.glitch, f.now, 2);
+      drawWindows(g, city.wins.nearmid, 0.6, glow);
+      for (const sign of s.signs) if (sign.layer === "nearmid") drawSign(g, sign, f, s.life);
+      drawLanes(g, s.lanes, "nearmid", s.life);
+      drawCapsules(g, s, dtL);
+      drawCar(g, s, dtL);
+      drawWukong(g, s, dtL, s.life);
+      if (f.weather) drawSplashes(g, s.weather, city.ledges.nearmid);
+      if (glitchNow) glitchLayer(g, L.baked, city.glitch, f.now, 2);
     } else if (L.id === "near") {
-      drawLanes(g, s, 1.1, f);
-      if (f.weather) drawRain(g, f.clock);
-      if (glitchNow) glitchLayer(g, city.glitch, f.now, 3);
+      drawLanes(g, s.lanes, "near", s.life);
+      if (f.weather) drawRain(g, s.weather, RAIN.near);
+      if (glitchNow) glitchLayer(g, L.baked, city.glitch, f.now, 3);
     }
   }
 }

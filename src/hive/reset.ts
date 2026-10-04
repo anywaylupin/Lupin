@@ -70,7 +70,17 @@ export function applyReset(F: FrontSheet, plan: ResetPlan, now: number): void {
     const h = F.loose[m.hex];
     if (!h) continue;
     h.seat = m.seat;
-    h.snap = { fx: h.ax, fy: h.ay, frot: h.rot, to: m.to, t0: now, dur: RESET_MS, delay: m.delay, curve: "inOut" };
+    h.snap = {
+      fx: h.ax,
+      fy: h.ay,
+      frot: h.rot,
+      to: m.to,
+      t0: now,
+      dur: RESET_MS,
+      delay: m.delay,
+      curve: "inOut",
+      burst: true,
+    };
   }
 }
 

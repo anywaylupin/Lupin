@@ -1,8 +1,10 @@
 import type { Cam } from "./camera";
 import { keyOf, toAxial, type Point } from "./hex";
 import type { InputHooks } from "./input";
-import { applyReset, planReset, settleReset } from "./reset";
-import { drop, hitLoose, isLocked, isOpen, isPlain, pickUp, tearOut } from "./sheet";
+import { applyReset, planReset, RESET_MS, settleReset } from "./reset";
+import { clamp } from "./math";
+import { heldLook } from "./render";
+import { drop, hitLoose, isLocked, isOpen, isPlain, magnetFor, pickUp, tearOut } from "./sheet";
 import { onBack, type Hive } from "./state";
 import { TEAR_PX } from "./theme";
 
@@ -28,7 +30,7 @@ export function sheetHooks(
       if (li >= 0) {
         const grab = pickUp(F(), li, wp);
         if (!grab) return false;
-        h.drag = { kind: "loose", ...grab };
+        h.drag = { kind: "loose", ...grab, t0: performance.now(), lean: 0, lastX: e.clientX };
         cv.classList.add("dragging");
         changed();
         return true;
@@ -48,21 +50,28 @@ export function sheetHooks(
     canvasMove(e) {
       const p = h.pending;
       if (p && Math.hypot(e.clientX - p.x, e.clientY - p.y) > TEAR_PX) {
-        h.drag = { kind: "loose", ...tearOut(F(), p.key, p.q, p.r, p.wp) };
+        const torn = tearOut(F(), p.key, p.q, p.r, p.wp);
+        h.drag = { kind: "loose", ...torn, t0: performance.now(), lean: 0, lastX: e.clientX };
         h.pending = null;
         cv.classList.add("dragging");
         changed();
       }
-      if (h.drag?.kind !== "loose") return false;
+      const d = h.drag;
+      if (d?.kind !== "loose") return false;
       const wp = worldPt(h, e, h.frontCam);
-      h.drag.loose.x = wp.x - h.drag.ox;
-      h.drag.loose.y = wp.y - h.drag.oy;
+      d.loose.x = wp.x - d.ox;
+      d.loose.y = wp.y - d.oy;
+      d.lean = clamp(d.lean * 0.7 + (e.clientX - d.lastX) * 0.004, -0.2, 0.2);
+      d.lastX = e.clientX;
       return true;
     },
     canvasUp() {
       h.pending = null;
-      if (h.drag?.kind !== "loose") return;
-      drop(F(), h.drag.loose, performance.now());
+      const d = h.drag;
+      if (d?.kind !== "loose") return;
+      const now = performance.now();
+      const look = heldLook(h, d, magnetFor(F(), d.loose), now);
+      drop(F(), d.loose, now, look.rot, -look.dy);
       changed();
     },
     hover(e) {
@@ -84,11 +93,18 @@ export function sheetHooks(
   };
 }
 
-/** Flies every loose hex home, then heals the sheet once the last one has landed. */
+/** Bees fly every loose hex home, then the sheet heals once the last one has landed. */
 export function resetSheet(h: Hive, changed: () => void): void {
   const F = h.front;
   const plan = planReset(F, h.reduced);
-  applyReset(F, plan, performance.now());
+  const now = performance.now();
+  applyReset(F, plan, now);
+  h.carriers = h.reduced
+    ? []
+    : plan.moves.flatMap((m) => {
+        const l = F.loose[m.hex];
+        return l ? [{ l, t0: now, delay: m.delay, dur: RESET_MS, from: null }] : [];
+      });
   changed();
   setTimeout(() => {
     if (h.front !== F) return;
