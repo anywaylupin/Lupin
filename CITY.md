@@ -35,6 +35,7 @@ Fusang calls the meteor matter **Yunjin** (陨金, fallen gold). It comes in thr
 **The secret:** the seeds shine forever.
 Xihe's scientists have measured the last seed for thousands of years and found its power has not dropped at all; they have drawn the bold conclusion, but Xihe keeps it hidden.
 Everyone else on Fusang fears the last seed is dying, and every faction studies it.
+Xihe keeps the fear alive on purpose: it tells the Kuafu their labour is what keeps the seed burning, so every shift in the mines feels like keeping the sun alive.
 
 ## History
 
