@@ -1,60 +1,62 @@
 # City plan
 
 The design for the city behind the sheet, second version.
-It replaces the first design entirely; only the names, the pirates and wizards, the two levels and the bees carry over.
+It replaces the first design entirely; only the names, the pirates and wizards, the split between undercity and high ground, and the bees carry over.
 The code in `src/hive/city/` still follows the first design until the phases below rebuild it.
 
 ## Direction
 
-A sleek sci-fi megacity at blue hour, split in two: a polished upper city on a raised plateau and a dense, glowing undercity in the canyon around it.
-Fewer buildings, all of similar height, spaced so each one can be seen from every side.
+A sleek sci-fi megacity packed as tight as Manhattan, on one flat ground.
+Every tower is two worlds stacked: its lower third is the undercity, its upper part the high ground.
+Lumen is one of the buildings, not the centre of anything.
 
-| Influence   | What it brings                                                                                           |
-| ----------- | -------------------------------------------------------------------------------------------------------- |
-| Akira       | Scale and speed: a ring road of red light trails, huge plazas, Lumen as the stadium landmark             |
-| Edgerunners | Graphic punch: hot pink and yellow neon used sparingly against graphite, loud holograms and ads          |
-| Arcane      | The class split: a clean high ground over a chem-lit undercity, linked by lifts, bridges and a waterfall |
-| Hongyadong  | Lantern Steps: stacked timber terraces glowing gold down a cliff face, after the Chongqing landmark      |
+| Influence          | What it brings                                                                                                           |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| Akira              | Scale and speed: light-trail bikes in the street canyons, huge signage, a city under pressure in its scenarios           |
+| Edgerunners        | Graphic punch: hot pink and yellow neon against graphite, loud holograms and ads down in the alleys                      |
+| Arcane             | The class split, turned vertical: clean high ground on the decks and towers, a chem-lit undercity in the streets beneath |
+| Chongqing, Chengdu | A 3D city: skybridges, escalators and lifts between towers; Lantern Steps follows Hongyadong                             |
 
-Palette: graphite, white, brushed silver and smoked glass, with cyan and amber as the light accents and pink kept for signs.
+Palette: graphite, white, brushed silver and smoked glass up high, with cyan and amber as the light accents; warm clutter and hot neon below the deck.
 Lit windows come in floor bands, never random dots.
 
 ## Layout
 
-- **Plateau.** Round high ground with Lumen at its centre and the upper landmarks in a ring round it, each on its own plaza with clear space around.
-- **Canyon.** The undercity surrounds the plateau below the cliff: canals, Lantern Steps, Rust Cove and The Crucible. Three edge landmarks climb from the canyon floor past the cliff top.
-- **Heights.** Upper landmarks stand within about 15% of each other, so no tower hides another. Only Lumen, which is wider, and Owlspire, which floats, break the line.
-- **Fillers.** Only a thin, low, hazy ring far out, for depth. Nothing between the landmarks.
-- **Camera.** A little high, so the ground shows. Panning the hex sheet orbits the camera round Lumen, so every face of every building comes into view; panning down drops the camera into the canyon.
+- **One flat ground, packed tight.** A dense street grid like New York, towers filling their lots, streets narrow. The view shows only city: no edge, no outskirts, no horizon line.
+- **The split.** The bottom third of every tower is the undercity: shopfronts, pipes, signs, steam. Above it the high ground starts: clean glass, white cladding, gardens.
+- **The deck line.** At that third, plazas and bridges join neighbouring towers into the high ground. The undercity shows only beneath the decks and between the buildings.
+- **Getting around.** Bridges at the deck and higher, glass tubes, escalators up to terraces, lifts, and portals that link rooftops across the city.
+- **Heights.** Towers stand within a narrow band of each other, so the skyline reads as one mass and every landmark still shows its crown.
+- **Camera.** Looking down at a steep angle so streets and decks show. Panning the hex sheet moves across the grid and turns it a little, so towers show more than one face.
 
 ## Lumen
 
-Modelled on the Las Vegas Sphere: a full sphere sunk about a fifth into its plaza, a glowing seam where it meets the ground, and an LED skin that wraps the whole ball.
-It turns slowly to face the viewer.
+A building like any other on the grid, filling a two by two block, shaped like the Las Vegas Sphere: an undercity podium to the deck line, a sphere sunk about a fifth into it, a glowing seam, and an LED skin over the whole ball.
 
-- **The face.** A chubby, funny face that fills the sphere the way the Sphere's emoji does: puffy pink cheeks, small bright eyes, a wide grin. It blinks, puffs its cheeks, sticks out its tongue, yawns and dozes off at night.
-- **The programme.** The face alternates with whole-ball shows every 20 to 40 seconds: the giant eye, a planet, an advert for one of the owner's projects, a city message. Shows change with a wipe, not a glitch.
-- **Moods.** The face follows the world state: it grins in peace, cheers at festivals, sweats at aliens, trembles at the dark force, frowns in civil war and wears snow in winter.
+- **A small face.** Just eyes and a mouth in bright LED on a dark skin: no cheeks, no full-ball emoji. Small enough to move round the sphere like a character living on it.
+- **Where it goes.** Most of the time it sits near the top and follows the pointer. Now and then it slides down the side to peer into the street below, looks around, and climbs back up.
+- **The rest of the skin.** Dark LED with slow colour waves, and a ticker band round the middle carrying the owner's projects and city messages.
+- **Moods.** The face follows the world state: it smiles in peace, cheers at festivals, hides low on the ball during an invasion, trembles at the dark force, frowns in civil war and sleeps at night.
 
 ## Landmarks
 
-| Name             | Level     | New design                                              | Everyday event                                   |
-| ---------------- | --------- | ------------------------------------------------------- | ------------------------------------------------ |
-| Lumen            | Centre    | LED sphere sunk into the plateau                        | Changes show; reacts to the city                 |
-| Kaleido          | Upper     | Rounded slab wrapped by two curved screens              | Ad takeover lands on one of the owner's projects |
-| Bell Crown       | Upper     | Graphite tower crowned with stacked metal temple roofs  | The bell rings a ring of light across the sky    |
-| Ironbloom        | Upper     | Half built: solid base, white steel lattice, crane      | The crane hoists a beam while welders spark      |
-| Bamboo Veil      | Upper     | Tower of green vertical fins and sky gardens            | Fireflies pour out of the gardens                |
-| Steamvault       | Upper     | Windowless ribbed data stack with vents                 | Vents blast a column of steam                    |
-| Starberth        | Upper     | Tower with a round rooftop landing cradle               | The Wanderer lands and lifts off                 |
-| Lotus Pillar     | Upper rim | One-pillar shrine rising from a lotus pond              | Pads light in a ripple, petals lift              |
-| Silverfall       | Edge      | Terraced tower pouring a waterfall into the canyon      | The falls surge and a neon rainbow forms         |
-| Threadline       | Edge      | Tower the maglev ring runs straight through             | An express bursts through, floors light in turn  |
-| Ascender         | Edge      | Slender tower with glass lifts from canyon to sky       | The lifts race to the top                        |
-| Lantern Steps    | Under     | Hongyadong-style stacked terraces on the cliff          | A flight of sky lanterns rises past the plateau  |
-| Rust Cove        | Under     | Pirate harbour under pipe arches on the canal           | The galleon fires a salute                       |
-| The Crucible     | Under     | Foundry of furnaces and chimneys, chem green and orange | A pour of molten metal lights the canyon         |
-| Owlspire Academy | Sky       | Floating rock with a crooked spire, books in orbit      | A spell lights every window and showers sparks   |
+| Name             | Where    | Design                                                 | Everyday event                                   |
+| ---------------- | -------- | ------------------------------------------------------ | ------------------------------------------------ |
+| Lumen            | Two lots | LED sphere with a roaming face                         | Follows the pointer; peeks into the street       |
+| Kaleido          | Tower    | Slab wrapped by two curved screens                     | Ad takeover lands on one of the owner's projects |
+| Bell Crown       | Tower    | Graphite tower crowned with stacked metal temple roofs | The bell rings a ring of light across the sky    |
+| Ironbloom        | Tower    | Half built: solid base, white steel lattice, crane     | The crane hoists a beam while welders spark      |
+| Bamboo Veil      | Tower    | Green vertical fins and sky gardens                    | Fireflies pour out of the gardens                |
+| Steamvault       | Tower    | Windowless ribbed data stack with vents                | Vents blast a column of steam                    |
+| Starberth        | Tower    | Rooftop landing cradle                                 | The Wanderer lands and lifts off                 |
+| Lotus Pillar     | Deck     | One-pillar shrine in a lotus pond on a deck plaza      | Pads light in a ripple, petals lift              |
+| Silverfall       | Both     | Tower pouring a waterfall from the deck to the street  | The falls surge and a neon rainbow forms         |
+| Threadline       | Both     | Tower the maglev runs straight through                 | An express bursts through, floors light in turn  |
+| Ascender         | Both     | Glass lifts from the street to the roof                | The lifts race to the top                        |
+| Lantern Steps    | Street   | Hongyadong-style stacked terraces under the deck       | A flight of sky lanterns rises between towers    |
+| Rust Cove        | Street   | Pirate harbour on the one canal street                 | The galleon fires a salute                       |
+| The Crucible     | Street   | Foundry glowing orange and chem green in a back alley  | A pour of molten metal lights the alley          |
+| Owlspire Academy | Sky      | Floating rock with a crooked spire, books in orbit     | A spell lights every window and showers sparks   |
 
 The ships keep their names: the Wanderer, a spaceship that cloaks, and the Night Kite, the pirates' sky galleon.
 
@@ -69,13 +71,13 @@ Each axis changes the sky, the light, the particles, which events may run, and L
 
 ## Events
 
-| Scenario       | Events                                                                                                                                                                           |
-| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Peace          | Light-trail bike race on the ring road, maglev express, drone light show, broom race round Owlspire, Night Kite smuggling run, the Wanderer cloaking, every landmark's own event |
-| Festival       | Fireworks over the plateau, lantern flights from Lantern Steps, a countdown shared by Kaleido and Lumen, a dragon of drones round Lumen, parade boats on the canal               |
-| Alien invasion | A mothership parts the clouds, tractor beams lift cars, rooftop turrets on Starberth and Ironbloom fire, the Wanderer decloaks to fight, Lumen sweats and flashes warnings       |
-| Dark force     | The sky turns crimson, shadow fog climbs out of the undercity, Owlspire raises a shield dome, wizards duel on the rooftops, lights go out district by district                   |
-| Civil war      | Barricades glow on the bridges, fires and smoke in the canyon, searchlights from Bell Crown, pirates raid the lifts, enforcer flyers sweep the cliff                             |
+| Scenario       | Events                                                                                                                                                                       |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Peace          | Light-trail bikes racing the street canyons, maglev express, commuters through the portals, broom race between rooftops, Night Kite smuggling run, each landmark's own event |
+| Festival       | Fireworks between the towers, lantern flights out of the alleys, a countdown shared by Kaleido and Lumen, a dragon of drones weaving along the bridges                       |
+| Alien invasion | A mothership over the grid, tractor beams lifting cars off the bridges, rooftop turrets firing, the Wanderer decloaking to fight, Lumen's face hiding low                    |
+| Dark force     | A crimson sky, shadow fog rising out of the streets up to the decks, Owlspire's shield over the rooftops, wizard duels across the bridges                                    |
+| Civil war      | The deck line becomes a front: barricades on the bridges, fires and smoke in the streets, searchlights from Bell Crown, pirates raiding the lifts                            |
 
 Behind every hex: a torn or glass hex asks the director for the nearest event, and the scenario decides which ones are allowed.
 
@@ -87,16 +89,16 @@ Behind every hex: a torn or glass hex asks the director for the nearest event, a
 
 ## Phases
 
-1. **Blockout:** the concept model, to agree positions, heights and mood. Done as an interactive preview.
+1. **Blockout:** the concept model, to agree the grid, the deck line, heights and mood. Done as an interactive preview.
 2. **Model generator:** the `.glb` pipeline and the first landmark as the quality bar.
-3. **Models:** the remaining landmarks, Lumen, ships and the filler kit, each approved in the preview.
-4. **City:** plateau and canyon, the orbiting camera, the world state and Lumen's programme in the site.
+3. **Models:** the remaining landmarks, Lumen, ships, the tower kit and the links, each approved in the preview.
+4. **City:** the grid, the camera, the world state and Lumen's face in the site.
 5. **Events:** the director, everyday events, then the scenarios.
 6. **Polish:** low graphics, tests and visual baselines.
 
 ## Open questions
 
-1. Is the round plateau with the canyon round it the right shape, or should the high ground be a long cliff on one side?
-2. Should time and season follow the visitor's real clock and calendar by default?
-3. Do Lumen's worlds inside the sphere stay, as one of its shows, or go?
+1. Is a third of the tower height the right line between undercity and high ground, or closer to half?
+2. Should the camera stay at a steep angle, or come down lower so the towers rise up in front of the viewer?
+3. Should Lumen keep the worlds inside the sphere as an occasional show?
 4. Which landmark should be modelled first as the quality bar for the rest?
