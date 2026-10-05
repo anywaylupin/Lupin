@@ -1,54 +1,66 @@
+import type { PerspectiveCamera, Scene, WebGLRenderer } from "three";
 import { rng } from "../math";
-import { CYAN, PINK, rgba } from "../theme";
-import { CH, CW } from "./board";
-
-export interface GlitchTimer {
-  next: number;
-  until: number;
-  seed: number;
-}
-
-export function createGlitch(): GlitchTimer {
-  return { next: 2500, until: 0, seed: 0 };
-}
-
-/** The glitch belongs to the city, not the cursor: every three to seven and a half seconds it fires for 140 to 260 ms. */
-export function glitching(t: GlitchTimer, now: number, enabled: boolean): boolean {
-  if (!enabled) return false;
-  if (now > t.next) {
-    t.until = now + 140 + Math.random() * 120;
-    t.next = now + 3000 + Math.random() * 4500;
-    t.seed = (Math.random() * 1e6) | 0;
-  }
-  return now < t.until;
-}
 
 /**
- * Slices of the layer slip sideways with pink and cyan seams, and a few pixel blocks drop out; the pattern changes every 45 ms.
- * The slices are cut from the baked image onto the overlay, so moving details inside a slice stay put for those few frames.
+ * True on software WebGL, as in Lighthouse and headless test runs.
+ * In a headless run the sheet fell from about 12 fps to 2 with the city drawing every frame; at half resolution and one frame in twelve it holds 9.
  */
-export function glitchLayer(
-  g: CanvasRenderingContext2D,
-  baked: CanvasImageSource,
-  t: GlitchTimer,
-  now: number,
-  salt: number,
+export function softwareGl(renderer: WebGLRenderer): boolean {
+  const gl = renderer.getContext();
+  const info = gl.getExtension("WEBGL_debug_renderer_info");
+  const name = info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : "";
+  return /swiftshader|llvmpipe|software/i.test(name);
+}
+
+/** Frames between city renders on software WebGL. */
+export const SOFT_EVERY = 12;
+
+/** The glitch belongs to the city, not the cursor: every three to seven and a half seconds it fires for 140 to 260 ms. */
+export function glitchTimer() {
+  let next = 2.5;
+  let until = 0;
+  let seed = 0;
+  return (clock: number, enabled: boolean) => {
+    if (!enabled) return null;
+    if (clock > next) {
+      until = clock + 0.14 + Math.random() * 0.12;
+      next = clock + 3 + Math.random() * 4.5;
+      seed = (Math.random() * 1e6) | 0;
+    }
+    return clock < until ? seed : null;
+  };
+}
+
+/** Slices of the frame slip sideways with pink and cyan seams, re-rendered through an offset view inside a scissor. */
+export function glitchSlices(
+  renderer: WebGLRenderer,
+  scene: Scene,
+  camera: PerspectiveCamera,
+  W: number,
+  H: number,
+  seed: number,
 ): void {
-  const r = rng(t.seed + salt * 977 + Math.floor(now / 45));
-  g.setTransform(1, 0, 0, 1, 0, 0);
+  const r = rng(seed);
+  renderer.autoClear = false;
+  renderer.setScissorTest(true);
   for (let k = 0; k < 3; k++) {
-    const y = r() * CH;
-    const h = 4 + r() * 30;
-    const dx = (r() - 0.5) * 80;
-    g.drawImage(baked, 0, y, CW, h, dx, y, CW, h);
-    g.fillStyle = rgba(CYAN, 0.35);
-    g.fillRect(0, y, CW, 1);
-    g.fillStyle = rgba(PINK, 0.35);
-    g.fillRect(0, y + h, CW, 1);
+    const y = Math.floor(r() * H);
+    const h = 4 + Math.floor(r() * 30);
+    camera.setViewOffset(W, H, (r() - 0.5) * 80, 0, W, H);
+    renderer.setScissor(0, y, W, h);
+    renderer.clear();
+    renderer.render(scene, camera);
+    for (const [yy, c] of [
+      [y, 0x2f6a78],
+      [y + h, 0x7a2a5c],
+    ] as const) {
+      renderer.setScissor(0, yy, W, 1);
+      renderer.setClearColor(c, 1);
+      renderer.clear(true, false, false);
+    }
   }
-  const blocks = [rgba(CYAN, 0.45), rgba(PINK, 0.45), "rgba(235,230,255,0.35)"];
-  for (let k = 0; k < 6; k++) {
-    g.fillStyle = blocks[k % 3] ?? "transparent";
-    g.fillRect(r() * CW, r() * CH, 6 + r() * 22, 4 + r() * 12);
-  }
+  camera.clearViewOffset();
+  renderer.setClearColor(0x000000, 1);
+  renderer.setScissorTest(false);
+  renderer.autoClear = true;
 }

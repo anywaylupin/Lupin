@@ -1,6 +1,6 @@
 import type { Cam } from "./camera";
 import type { HiveData } from "./data";
-import { drawCarriers, drawDrips, drawEggs } from "./flourish";
+import { drawCarriers, drawDrips } from "./flourish";
 import { charge, drawMagnet, drawSeat, SEAT_MS, type Spark } from "./fx/electric";
 import { DIRS, ax, hexVerts, keyOf, visibleRange, type Point } from "./hex";
 import { addPoly, hexFill, type Ctx } from "./paint";
@@ -235,7 +235,6 @@ export function drawFront(g: Ctx, h: Hive, cam: Cam, live: boolean, now: number)
   const z = cam.z;
   const { sec, S, CF } = h.nav;
   drawSheetBase(g, h, cam);
-  drawEggs(g, h, now);
   drawPlainHexes(g, h, cam, live, now);
   drawHoleEdges(g, h, z);
   drawDrips(g, h, z, now);

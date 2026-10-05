@@ -1,7 +1,7 @@
 import { defineConfig, fontProviders } from "astro/config";
 
 /** Every glyph the city signs and the Juka title draw, so the CJK font ships as a few kilobytes instead of megabytes. */
-const SIGN_GLYPHS = [..."夜市橘开放快递卡"];
+const SIGN_GLYPHS = [..."夜市橘开放快递卡龍茶祭酒"];
 
 /**
  * Cascadia Code comes through the Fontsource provider, not the npm one, because only Fontsource tags subsets.

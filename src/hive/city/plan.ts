@@ -1,78 +1,153 @@
-import type { Point } from "../hex";
+import { lerp, type Rand } from "../math";
 
-/**
- * Where every hero piece of the city stands, shared by the bake (static structure) and the live layers (what moves on it).
- * Board units; the hole shows a window around FOCUS (960, 430): about x 670 to 1250 on desktop and x 830 to 1090 on phones.
- * FOCUS sits right of the board's centre because desktops show the hole near the right edge, and the board must still reach the left edge of the screen.
- * The dome takes the centre so phones see it whole; everything else frames it inside the desktop window, with fillers beyond for panning.
- * The right twin tower is still being built: solid to `builtTo`, bare frame above, with the crane on top.
- */
-export const PLAN = {
-  dome: { x: 960, y: 600, rx: 150, ry: 150 },
-  twin: { x: 630, w: [70, 62], gap: 34, tops: [250, 300], bridgeY: 336, builtTo: 388, craneTop: 190 },
-  cylinder: { x: 1160, r: 36, top: 236 },
-  arcology: { x: 490, w: 270, top: 540 },
-  pagoda: { x: 1160, w: 150, top: 470 },
-  cantilever: { x: 1322, w: 200, top: 560 },
-  antennas: { x: 996, w: 150, top: 716 },
-  mega: { x: 270, w: 210, top: 500 },
-  connector: { x: 766, w: 228, top: 742 },
-  tube: [
-    { x: 756, y: 624 },
-    { x: 880, y: 712 },
-    { x: 1060, y: 712 },
-    { x: 1164, y: 646 },
-  ],
-  coaster: { x: 1160, helixTop: 300, helixBottom: 540, helixR: 50, loopX: 1238, loopY: 492, loopR: 44 },
-  portals: { a: { x: 720, y: 372 }, b: { x: 1272, y: 292 } },
-  perches: { pagoda: { x: 1235, y: 452 }, arcology: { x: 612, y: 520 } },
-  swing: { anchor: { x: 798, y: 404 }, len: 170 },
-  platforms: [
-    { x: 800, y: 214, w: 110 },
-    { x: 1062, y: 242, w: 96 },
-  ],
-} as const;
-
-/**
- * The power star sits in the top right of what desktops see through the hole.
- * On phones the hole opens below the content and only its upper middle is clear, so the star moves there, just above the dome.
- */
-export function starAt(portrait: boolean): Point {
-  return portrait ? { x: 1040, y: 366 } : { x: 1172, y: 140 };
+/** A point in the city, in world units of about a metre; y is up and the camera looks down negative z. */
+export interface Vec3 {
+  x: number;
+  y: number;
+  z: number;
 }
 
-/** A point on a cubic Bezier through four control points. */
-export function bezier(p: readonly Point[], t: number): Point {
-  const [a, b, c, d] = p;
-  if (!a || !b || !c || !d) return { x: 0, y: 0 };
-  const u = 1 - t;
+/**
+ * Building styles: the old town near the dome is temple halls and pagodas, the ring beyond it mixes them with neon towers, and the back is cyber high-rise.
+ * A hybrid is a glass tower crowned with a pagoda roof, the one shape that belongs to both cities.
+ */
+export type Kind = "pagoda" | "hall" | "tower" | "hybrid" | "cylinder" | "mega";
+
+export interface Building {
+  kind: Kind;
+  x: number;
+  z: number;
+  w: number;
+  d: number;
+  h: number;
+  /** 0 pink, 1 cyan, 2 amber: the colour of its neon trim. */
+  hue: 0 | 1 | 2;
+  seed: number;
+}
+
+/** The dome stands at the origin, the centre of the city and of the screen at rest. */
+export const DOME = { r: 70, plaza: 135 } as const;
+/** The power star hangs above the dome; the beam joins them. */
+export const STAR: Vec3 = { x: 0, y: 195, z: -40 };
+/** The avenue runs from the camera to the dome, kept clear so nothing ever stands in front of it; torii gates span it. */
+export const AVENUE = { half: 40, gates: [110, 200] } as const;
+/** Block pitch; streets run on the half-pitch lines between blocks. */
+export const CELL = 64;
+/** Spans the city covers, wide enough that a full pan on a wide screen still shows rooftops at the edges. */
+export const SPAN = { x: 1700, zNear: 230, zFar: -1700 } as const;
+
+/** The camera at rest; phones get a wider lens so the dome is not all they see. */
+export const VIEW = {
+  eye: { x: 0, y: 210, z: 430 },
+  target: { x: 0, y: 45, z: 0 },
+  fov: (aspect: number) => (aspect < 1 ? 72 : 55),
+} as const;
+
+function pick<T>(rand: Rand, list: readonly T[]): T {
+  const v = list[Math.floor(rand() * list.length)];
+  if (v === undefined) throw new Error("pick from an empty list");
+  return v;
+}
+
+/** True where a cell is outside the wedge the camera can ever see, so the city does not build what nobody looks at. */
+function offView(x: number, z: number): boolean {
+  return Math.abs(x) > 300 + (VIEW.eye.z - z) * 1.05;
+}
+
+/**
+ * Heights rise with distance from the camera, so the skyline climbs toward the back and the foreground stays low enough to see over.
+ * Megastructures only stand far back, where they frame the dome instead of hiding it.
+ */
+function heightAt(rand: Rand, x: number, z: number): { kind: Kind; h: number } {
+  const dome = Math.hypot(x, z);
+  const back = VIEW.eye.z - z;
+  if (z > 110) return { kind: pick(rand, ["hall", "pagoda"] as const), h: 14 + rand() * 22 };
+  if (dome < 330) {
+    const kind = pick(rand, ["pagoda", "pagoda", "hall", "hybrid"] as const);
+    return { kind, h: kind === "hall" ? 18 + rand() * 18 : 40 + rand() * 70 };
+  }
+  if (back > 950 && rand() < 0.08) return { kind: "mega", h: 300 + rand() * 200 };
+  const kind = pick(rand, ["tower", "tower", "hybrid", "cylinder", "pagoda"] as const);
+  const base = Math.min(1, back / 1700);
+  const h = lerp(50, 230, base) * (0.5 + rand());
+  return { kind, h: kind === "pagoda" ? Math.min(h, 140) : h };
+}
+
+/**
+ * Lays out the whole city from a seed: one building per block, jittered inside its block, with plazas left empty here and there.
+ * The dome's plaza and the avenue in front of it stay clear; two tall pagodas flank the dome as landmarks.
+ */
+export function planCity(rand: Rand): Building[] {
+  const out: Building[] = [];
+  for (let z = SPAN.zFar; z <= SPAN.zNear; z += CELL) {
+    for (let x = -SPAN.x; x <= SPAN.x; x += CELL) {
+      const cx = x + (rand() - 0.5) * 10;
+      const cz = z + (rand() - 0.5) * 10;
+      if (Math.hypot(cx, cz) < DOME.plaza + CELL / 2) continue;
+      if (Math.abs(cx) < AVENUE.half + CELL / 2 && cz > 0) continue;
+      if (offView(cx, cz) || rand() < 0.12) continue;
+      const { kind, h } = heightAt(rand, cx, cz);
+      const big = kind === "mega" ? 1.15 : kind === "hall" ? 0.6 + rand() * 0.2 : 0.5 + rand() * 0.25;
+      out.push({
+        kind,
+        x: cx,
+        z: cz,
+        w: CELL * big,
+        d: CELL * (kind === "hall" ? 0.6 : big),
+        h,
+        hue: pick(rand, [0, 1, 2] as const),
+        seed: Math.floor(rand() * 1e9),
+      });
+    }
+  }
+  for (const side of [-1, 1]) {
+    out.push({ kind: "pagoda", x: side * 205, z: -70, w: 46, d: 46, h: 190, hue: side < 0 ? 0 : 1, seed: 7 + side });
+  }
+  return out;
+}
+
+/** The fixed shrine inside the dome: a small three-tier pagoda the snow falls on. */
+export const SHRINE: Building = { kind: "pagoda", x: 0, z: 0, w: 26, d: 26, h: 52, hue: 2, seed: 3 };
+
+/** Tiers a pagoda of height h gets: three for a shrine, up to seven for the landmarks. */
+export function tiersOf(b: Building): number {
+  return Math.max(3, Math.min(7, Math.round(b.h / 28)));
+}
+
+/**
+ * The flying dragon's spine: a straight run from `a` to `b` bent by an S curve up and sideways, so it reads as swimming through the air.
+ * `u` runs 0 to 1 along the flight; segments behind the head pass a smaller `u`.
+ */
+export function serpent(a: Vec3, b: Vec3, u: number, amp: number): Vec3 {
+  const w = Math.sin(u * Math.PI * 5);
   return {
-    x: u * u * u * a.x + 3 * u * u * t * b.x + 3 * u * t * t * c.x + t * t * t * d.x,
-    y: u * u * u * a.y + 3 * u * u * t * b.y + 3 * u * t * t * c.y + t * t * t * d.y,
+    x: lerp(a.x, b.x, u),
+    y: lerp(a.y, b.y, u) + w * amp + Math.sin(u * Math.PI) * amp * 0.8,
+    z: lerp(a.z, b.z, u) + Math.cos(u * Math.PI * 5) * amp * 0.6,
   };
 }
 
 /**
- * The rollercoaster track as one closed circuit: three turns down a helix around the cylinder tower, across into a vertical loop, then a lift hill back to the top.
- * `side` is how far round the tower a point is, -1 behind to 1 in front, so the train can pass behind it.
+ * The screen is cut into a three by three grid and each set piece takes the cell that has waited longest, so over a minute every corner of the screen sees something.
+ * Returns the cell index; `last` holds when each cell was last used.
  */
-export function coasterAt(t: number): Point & { side: number } {
-  const c = PLAN.coaster;
-  const u = ((t % 1) + 1) % 1;
-  const loopBottom = { x: c.loopX, y: c.loopY + c.loopR };
-  if (u < 0.55) {
-    const k = u / 0.55;
-    const a = k * Math.PI * 6;
-    return { x: c.x + Math.sin(a) * c.helixR, y: c.helixTop + (c.helixBottom - c.helixTop) * k, side: Math.cos(a) };
-  }
-  if (u < 0.62) {
-    const k = (u - 0.55) / 0.07;
-    return { x: c.x + (loopBottom.x - c.x) * k, y: c.helixBottom + (loopBottom.y - c.helixBottom) * k, side: 1 };
-  }
-  if (u < 0.82) {
-    const a = Math.PI / 2 - ((u - 0.62) / 0.2) * Math.PI * 2;
-    return { x: c.loopX + Math.cos(a) * c.loopR, y: c.loopY + Math.sin(a) * c.loopR, side: 1 };
-  }
-  const k = (u - 0.82) / 0.18;
-  return { x: loopBottom.x + (c.x - loopBottom.x) * k, y: loopBottom.y + (c.helixTop - loopBottom.y) * k, side: 1 };
+export function nextCell(last: number[], now: number, rand: Rand): number {
+  let best = 0;
+  let age = -Infinity;
+  last.forEach((t, i) => {
+    const a = now - t + rand() * 2;
+    if (a > age) {
+      age = a;
+      best = i;
+    }
+  });
+  last[best] = now;
+  return best;
+}
+
+/** The centre of a grid cell in normalised device coordinates, with a little jitter so repeats do not land on the same spot. */
+export function cellNdc(cell: number, rand: Rand): { x: number; y: number } {
+  const col = cell % 3;
+  const row = Math.floor(cell / 3);
+  return { x: (col - 1) * 0.66 + (rand() - 0.5) * 0.4, y: (1 - row) * 0.6 + (rand() - 0.5) * 0.3 };
 }

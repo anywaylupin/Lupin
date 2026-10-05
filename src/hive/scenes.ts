@@ -1,14 +1,14 @@
-import { astronaut, bee, cloud, runner, wukong } from "./city/figures";
+import { astronaut, bee } from "./figures";
 import { hash2 } from "./math";
-import { AMBER, CYAN, PINK, rgba } from "./theme";
+import { AMBER, PINK, rgba } from "./theme";
 
 type Ctx = CanvasRenderingContext2D;
 
 /**
- * Small animated vignettes: page headers when a cell flips into its page, and secrets behind a few plain hexes.
+ * Small animated vignettes that head a page when a cell flips into it.
  * Each draws into a w by h box from the origin, with `t` in seconds; reduced motion passes a fixed `t` for a still frame.
  */
-export type SceneKind = "rooftop" | "hive" | "orbit" | "swing" | "dusk" | "nap" | "nest";
+export type SceneKind = "rooftop" | "hive" | "orbit" | "lanterns" | "dusk";
 
 function sky(g: Ctx, w: number, h: number, top: string, bottom: string) {
   const gr = g.createLinearGradient(0, 0, 0, h);
@@ -47,6 +47,42 @@ function at(g: Ctx, x: number, y: number, s: number, draw: () => void, flip = fa
   g.restore();
 }
 
+/** A three-tier pagoda silhouette standing on (x, y), its eaves tipped up and edged in pink. */
+function pagoda(g: Ctx, x: number, y: number, u: number) {
+  for (let i = 0; i < 3; i++) {
+    const w = u * (1.4 - i * 0.3);
+    const top = y - u * (0.9 + i * 0.95);
+    g.fillStyle = "#0b0a20";
+    g.fillRect(x - w * 0.55, top, w * 1.1, u);
+    g.beginPath();
+    g.moveTo(x - w * 1.1, top - u * 0.15);
+    g.quadraticCurveTo(x - w * 0.5, top + u * 0.05, x, top - u * 0.5);
+    g.quadraticCurveTo(x + w * 0.5, top + u * 0.05, x + w * 1.1, top - u * 0.15);
+    g.lineTo(x + w * 0.6, top + u * 0.08);
+    g.lineTo(x - w * 0.6, top + u * 0.08);
+    g.closePath();
+    g.fill();
+    g.strokeStyle = rgba(PINK, 0.8);
+    g.lineWidth = 1;
+    g.stroke();
+  }
+  g.fillStyle = rgba(AMBER, 0.9);
+  g.fillRect(x - 0.5, y - u * 3.6, 1, u * 0.7);
+}
+
+/** A sky lantern: a warm paper box with a brighter flame at its foot. */
+function lantern(g: Ctx, x: number, y: number, r: number, a: number) {
+  const glow = g.createRadialGradient(x, y, 0, x, y, r * 3);
+  glow.addColorStop(0, rgba(AMBER, 0.45 * a));
+  glow.addColorStop(1, rgba(AMBER, 0));
+  g.fillStyle = glow;
+  g.fillRect(x - r * 3, y - r * 3, r * 6, r * 6);
+  g.fillStyle = rgba(AMBER, 0.9 * a);
+  g.fillRect(x - r * 0.7, y - r, r * 1.4, r * 2);
+  g.fillStyle = `rgba(255,236,190,${a})`;
+  g.fillRect(x - r * 0.3, y + r * 0.5, r * 0.6, r * 0.5);
+}
+
 function honeycomb(g: Ctx, cx: number, cy: number, r: number, fill: (i: number) => number) {
   let i = 0;
   for (let row = -1; row <= 1; row++) {
@@ -73,7 +109,11 @@ export function drawScene(g: Ctx, kind: SceneKind, w: number, h: number, t: numb
     g.fillRect(w * 0.55, h * 0.72, w * 0.3, h * 0.28);
     g.fillStyle = rgba(PINK, 0.85);
     g.fillRect(w * 0.55, h * 0.72, w * 0.3, 1.5);
-    at(g, w * 0.7, h * 0.72, 1.6 * s, () => wukong(g, t, 0));
+    pagoda(g, w * 0.7, h * 0.72, 18 * s);
+    for (let i = 0; i < 3; i++) {
+      const k = (t * 0.12 + i / 3) % 1;
+      lantern(g, w * (0.2 + 0.25 * i) + Math.sin(t + i) * 4 * s, h * (0.8 - 0.7 * k), 3 * s, 1 - k);
+    }
   } else if (kind === "hive") {
     sky(g, w, h, "#07051a", "#1a0f36");
     honeycomb(g, w / 2, h / 2, 13 * s, (i) => (i === 7 ? Math.sin(t * 1.5) * 0.5 + 0.5 : hash2(i, 3) > 0.4 ? 1 : 0.1));
@@ -111,27 +151,15 @@ export function drawScene(g: Ctx, kind: SceneKind, w: number, h: number, t: numb
     g.quadraticCurveTo((cx + ax) / 2, cy + 30 * s, ax, ay - 10 * s);
     g.stroke();
     at(g, ax, ay, 1.8 * s, () => astronaut(g, t));
-  } else if (kind === "swing") {
+  } else if (kind === "lanterns") {
     sky(g, w, h, "#05061a", "#2a1052");
-    g.fillStyle = "#120f34";
-    g.fillRect(w * 0.12, h * 0.15, w * 0.08, h);
-    g.fillRect(w * 0.8, h * 0.25, w * 0.08, h);
-    const a = Math.sin(t * 1.4) * 0.9;
-    const ax = w * 0.5;
-    const len = h * 0.6;
-    const hx = ax + Math.sin(a) * len;
-    const hy = Math.cos(a) * len;
-    g.strokeStyle = "rgba(200,240,255,0.7)";
-    g.beginPath();
-    g.moveTo(ax, 0);
-    g.lineTo(hx, hy);
-    g.stroke();
-    g.save();
-    g.translate(hx, hy + 16 * s);
-    g.rotate(-a * 0.6);
-    g.scale(1.6 * s, 1.6 * s);
-    runner(g, t);
-    g.restore();
+    skyline(g, w, h, h * 0.3, "#120f34");
+    pagoda(g, w * 0.22, h, 22 * s);
+    for (let i = 0; i < 9; i++) {
+      const k = (t * (0.05 + hash2(i, 4) * 0.05) + hash2(i, 5)) % 1;
+      const x = w * hash2(i, 6) + Math.sin(t * 0.8 + i) * 6 * s;
+      lantern(g, x, h * (1.05 - 1.2 * k), (2.4 + hash2(i, 7) * 2) * s, Math.min(1, (1 - k) * 2));
+    }
   } else if (kind === "dusk") {
     const k = Math.sin(t * 0.25) * 0.5 + 0.5;
     sky(g, w, h, "#060820", k > 0.5 ? "#5a1d66" : "#7a4a2a");
@@ -143,30 +171,5 @@ export function drawScene(g: Ctx, kind: SceneKind, w: number, h: number, t: numb
     g.fillStyle = sun;
     g.fillRect(sx - 30 * s, sy - 30 * s, 60 * s, 60 * s);
     skyline(g, w, h, h * 0.4, "#0e0b2a");
-  } else if (kind === "nap") {
-    g.fillStyle = "#0e0b2a";
-    g.fillRect(0, 0, w, h);
-    at(g, w * 0.5, h * 0.62, 1.2 * s, () => cloud(g, t));
-    at(g, w * 0.5, h * 0.6, 1.1 * s, () => {
-      g.rotate(-Math.PI / 2.2);
-      wukong(g, t * 0.2, 0);
-    });
-    g.fillStyle = rgba(CYAN, 0.8);
-    g.font = `${10 * s}px monospace`;
-    for (let i = 0; i < 3; i++) {
-      const k = (t * 0.4 + i / 3) % 1;
-      g.globalAlpha = 1 - k;
-      g.fillText("z", w * 0.62 + k * 14 * s, h * 0.45 - k * 26 * s);
-    }
-    g.globalAlpha = 1;
-  } else {
-    g.fillStyle = "#120a26";
-    g.fillRect(0, 0, w, h);
-    honeycomb(g, w / 2, h / 2, 12 * s, (i) => (hash2(i, 5) > 0.3 ? 1 : 0.2));
-    for (let i = 0; i < 3; i++) {
-      at(g, w / 2 + Math.sin(t * 0.7 + i * 2) * w * 0.25, h / 2 + Math.cos(t * 0.5 + i) * h * 0.2, 1.3 * s, () =>
-        bee(g, t, i),
-      );
-    }
   }
 }

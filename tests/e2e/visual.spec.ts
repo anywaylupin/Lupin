@@ -26,7 +26,7 @@ test.beforeEach(async ({ page }) => {
 async function settle(page: Page, path: string) {
   await page.goto(path);
   await expect(page.locator("html")).toHaveClass(/hive/);
-  await expect(page.locator("#city canvas")).toHaveCount(11);
+  await expect(page.locator("#city canvas")).toHaveCount(1);
   await page.mouse.move(0, 0);
   await page.waitForTimeout(400);
 }

@@ -1,14 +1,10 @@
 import { restOf, stepZoom } from "./camera";
 import { byId, createChrome } from "./chrome";
-import { type City, updateCity } from "./city/dynamic";
-import { createGlitch } from "./city/glitch";
-import { bake, mountCity, placeCity } from "./city/layers";
-import { starAt } from "./city/plan";
-import { createScene } from "./city/scene";
+import type { City } from "./city/world";
 import { DATA_ELEMENT_ID, type HiveData } from "./data";
 import { bindInput } from "./input";
 import { sheetHooks } from "./interact";
-import { buildBack, buildFront, holeView } from "./layout";
+import { buildBack, buildFront } from "./layout";
 import { rng } from "./math";
 import { cardAlpha, currentRoute, movingHex, phases } from "./nav";
 import { loadPrefs } from "./prefs";
@@ -90,16 +86,14 @@ export function boot(): void {
     chrome.reducedChanged();
   });
   const zh = signFont();
+  /** three.js loads as its own chunk after the sheet is up, so the first paint never waits on the city; without WebGL the flat backdrop stays. */
   let city: City | null = null;
-  void bake().then((baked) => {
-    city = {
-      layers: mountCity(cityEl, baked),
-      wins: baked.wins,
-      ledges: baked.ledges,
-      scene: createScene(),
-      glitch: createGlitch(),
-    };
-  });
+  void import("./city/world")
+    .then(({ createCity }) => {
+      city = createCity(cityEl, zh);
+      city.resize(h.W, h.H, h.DPR);
+    })
+    .catch(() => undefined);
 
   const sizeCanvas = () => {
     h.W = innerWidth;
@@ -107,6 +101,7 @@ export function boot(): void {
     h.DPR = Math.min(devicePixelRatio || 1, 2);
     cv.width = Math.round(h.W * h.DPR);
     cv.height = Math.round(h.H * h.DPR);
+    city?.resize(h.W, h.H, h.DPR);
   };
 
   /** Keeps pulled and loose hexes when the hex size and orientation survive the resize, as when a phone's address bar slides away. */
@@ -134,7 +129,7 @@ export function boot(): void {
 
   let last = performance.now();
   /**
-   * The city behind the sheet redraws every other frame, at 30 fps, while the sheet and the parallax stay at 60.
+   * The city behind the sheet steps every other frame, at 30 fps, and renders in between only while the camera moves, so pans stay at 60.
    * Under Lighthouse's software rendering every city frame counted as a long task, holding the home page near 80; on phones it halves the battery the background costs.
    */
   let cityTurn = false;
@@ -160,31 +155,15 @@ export function boot(): void {
     if (n.S < 1) {
       g.clearRect(0, 0, h.W, h.H);
       if (city) {
-        placeCity(
-          city.layers,
-          h.reduced ? h.front.home : h.frontCam,
-          h.front.home,
-          holeView(h.front, h.W, h.H),
-          h.W,
-          h.H,
-        );
         cityDt += dt;
         cityTurn = !cityTurn;
-      }
-      if (city && cityTurn) {
-        updateCity(city, {
-          dt: cityDt,
-          now,
-          life: on(h, "life"),
-          weather: on(h, "weather"),
-          glitch: on(h, "glitch"),
-          reduced: h.reduced,
-          DPR: h.DPR,
-          zh,
-          star: starAt(h.front.portrait),
-          starLayer: h.front.portrait ? "mid" : "sky",
-        });
-        cityDt = 0;
+        city.frame(
+          { dt: cityDt, life: on(h, "life"), weather: on(h, "weather"), glitch: on(h, "glitch") },
+          h.reduced ? h.front.home : h.frontCam,
+          h.front.home,
+          cityTurn,
+        );
+        if (cityTurn) cityDt = 0;
       }
       drawFront(g, h, h.frontCam, live && n.S === 0, now);
     } else {

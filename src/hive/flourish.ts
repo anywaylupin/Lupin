@@ -1,9 +1,8 @@
-import { bee } from "./city/figures";
+import { bee } from "./figures";
 import { DIRS, hexVerts, keyOf, type Point } from "./hex";
 import type { Loose } from "./layout";
 import { clamp, easeOut, hash2 } from "./math";
-import { addPoly, type Ctx } from "./paint";
-import { drawScene } from "./scenes";
+import type { Ctx } from "./paint";
 import { emptyGaps, isOpen } from "./sheet";
 import { on, type Hive } from "./state";
 import { CYAN, rgba } from "./theme";
@@ -19,24 +18,6 @@ export interface Carrier {
 
 const ARRIVE_MS = 180;
 const LEAVE_MS = 600;
-
-/** Torn-out secret hexes show their scene in place of the city, clipped to the slot. */
-export function drawEggs(g: Ctx, h: Hive, now: number): void {
-  const F = h.front;
-  if (!F.eggs.size) return;
-  const t = h.reduced ? 0.8 : now / 1000;
-  for (const s of emptyGaps(F)) {
-    const kind = F.eggs.get(s.key);
-    if (!kind) continue;
-    g.save();
-    g.beginPath();
-    addPoly(g, hexVerts(s.x, s.y, F.R * 1.004));
-    g.clip();
-    g.translate(s.x - F.R * 0.87, s.y - F.R);
-    drawScene(g, kind, F.R * 1.74, F.R * 2, t);
-    g.restore();
-  }
-}
 
 /** Rain drips run down the hole's rim: each sloping rim edge sends a drop down every couple of seconds on its own rhythm. */
 export function drawDrips(g: Ctx, h: Hive, z: number, now: number): void {

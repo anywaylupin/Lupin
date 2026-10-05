@@ -31,7 +31,7 @@ export function sceneFor(h: Hive): SceneKind | null {
   const id = L.where === "front" ? h.data.home[L.idx]?.id : h.data.home[h.nav.sec]?.id;
   const kinds: Record<string, SceneKind> = {
     about: "rooftop",
-    now: "swing",
+    now: "lanterns",
     hours: "dusk",
     projects: "hive",
     experience: "orbit",

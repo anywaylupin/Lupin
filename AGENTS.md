@@ -3,6 +3,7 @@
 Personal portfolio built as a breached hex hive over a living city.
 The site is the work sample, so code quality matters as much as the visuals.
 `reference/hive.html` is the original prototype and the source of truth for look, feel and timing; do not redesign, port.
+The city behind the sheet is the one exception: it is a three.js scene of its own and no longer follows the prototype.
 
 ## Commands
 
@@ -38,7 +39,7 @@ src/
   pages/                one static page per route, plus og/ and sitemap endpoints
   hive/                 the interactive canvas, strict TypeScript, no framework
     *.ts pure           hex, hole, layout, camera, sheet, reset, prefs, route, theme, icons
-    city/               baked layers (worker), dynamic details, weather, glitch
+    city/               three.js city: plan and swarm (pure), shapes, dome, sky, traffic, life, glitch
     overlay/            DOM over the canvas: proxies, leaf, tooltip, map, contacts, settings
     fx/                 decrypt, electric, audio
   styles/               tokens, base, overlay, settings, fallback

@@ -1,6 +1,6 @@
 /**
- * One big moment at a time: lightning, a blast, a star flare or Wukong's leap each claim the stage for their length plus a short rest.
- * Anything that finds the stage taken waits and asks again, so the city never fires two set pieces at once.
+ * One big moment at a time: lightning and the star flare each claim the stage for their length plus a short rest.
+ * Anything that finds the stage taken waits and asks again, so the sky never fires two flashes at once.
  */
 export interface Stage {
   freeAt: number;

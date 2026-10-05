@@ -2,7 +2,6 @@ import type { Cam, Rect } from "./camera";
 import { ax, keyOf, ring, type Axial, type Point } from "./hex";
 import { holeCells } from "./hole";
 import { clamp, hash2, type Rand } from "./math";
-import type { SceneKind } from "./scenes";
 
 export interface Slot extends Point {
   q: number;
@@ -61,7 +60,6 @@ export interface FrontSheet {
   removed: Set<string>;
   fx: SeatFx[];
   shake: { key: string; t0: number } | null;
-  eggs: Map<string, SceneKind>;
 }
 
 export interface BackSheet {
@@ -165,42 +163,6 @@ export function boltedAt(q: number, r: number, sx: number, sy: number, R: number
   return hash2(q * 7 + 3, r * 13 + 5) < 0.025;
 }
 
-/** Plain cells hugging the content flower, in order of preference; the first two that are free on this layout hide a scene. */
-const EGG_SPOTS: readonly Axial[] = [
-  [1, 0],
-  [-2, 1],
-  [1, -2],
-  [-2, 2],
-  [2, -2],
-];
-
-/**
- * Secrets for the curious: tearing out one of these hexes shows a scene instead of the city, Wukong napping on his cloud or a bee nest.
- * Spots skip content, the hole and the bolted corners, so every layout gets two that can actually be pulled.
- */
-function hideEggs(
-  content: ReadonlySet<string>,
-  gaps: ReadonlyMap<string, Slot>,
-  R: number,
-  home: Cam,
-  W: number,
-  H: number,
-) {
-  const kinds: SceneKind[] = ["nap", "nest"];
-  const eggs = new Map<string, SceneKind>();
-  for (const [q, r] of EGG_SPOTS) {
-    const key = keyOf(q, r);
-    const p = ax(q, r, R);
-    const sx = p.x - home.x + W / 2;
-    const sy = p.y - home.y + H / 2;
-    if (content.has(key) || gaps.has(key) || boltedAt(q, r, sx, sy, R, W, H)) continue;
-    const kind = kinds[eggs.size];
-    if (!kind) break;
-    eggs.set(key, kind);
-  }
-  return eggs;
-}
-
 /** The front sheet has no edge; it holds the content flower, the broken patch and the three spares. */
 export function buildFront(ids: readonly string[], W: number, H: number, rand: Rand): FrontSheet {
   const portrait = isPortrait(W, H);
@@ -230,7 +192,6 @@ export function buildFront(ids: readonly string[], W: number, H: number, rand: R
     removed: new Set(),
     fx: [],
     shake: null,
-    eggs: hideEggs(content, gaps, R, home, W, H),
   };
 }
 
@@ -251,25 +212,4 @@ export function buildBack(section: string, ids: readonly string[], W: number, H:
     rect.y1 = Math.max(rect.y1, p.y + R * 2);
   }
   return { home: { x: 0, y: 0, z: 1 }, rect, items, taken: new Set(items.map((p) => p.key)) };
-}
-
-/**
- * Screen centre of the part of the hole that is actually on screen at rest.
- * The city is composed around one board point shown here; with 1.5x hexes the hole's centroid can sit past the right edge, which hid half the composition.
- */
-export function holeView(F: FrontSheet, W: number, H: number): Point {
-  const hw = F.R * 0.87;
-  let x0 = W;
-  let x1 = 0;
-  let y0 = H;
-  let y1 = 0;
-  for (const g of F.hole) {
-    const sx = g.x - F.home.x + W / 2;
-    const sy = g.y - F.home.y + H / 2;
-    x0 = Math.min(x0, sx - hw);
-    x1 = Math.max(x1, sx + hw);
-    y0 = Math.min(y0, sy - F.R);
-    y1 = Math.max(y1, sy + F.R);
-  }
-  return { x: (Math.max(0, x0) + Math.min(W, x1)) / 2, y: (Math.max(0, y0) + Math.min(H, y1)) / 2 };
 }
