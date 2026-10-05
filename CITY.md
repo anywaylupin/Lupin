@@ -1,163 +1,133 @@
 # City plan
 
-The design for the city behind the sheet, fourth version.
-It replaces the earlier designs; the landmark names, the pirates and wizards, the split between undercity and high ground, and the bees carry over.
+The design for the city behind the sheet, fifth version.
+It replaces the earlier designs; the hex sheet, the bees and the split between the gods and everyone else carry over.
 The code in `src/hive/city/` still follows the first design until the phases below rebuild it.
 
 ## High concept
 
 Ten suns burned the world, and nine were shot down. The last one is owned.
-Babel, a working name, is the vertical city where the peoples of every myth washed up, packed as tight as Manhattan.
-Its last sun is a fortress called Shangri-La, a paradise lives inside it, and its light is sold by the hour.
+Kunlun is the city of the gods: the gods live inside the last sun, a dome called Shangri-La, and everyone else lives in the corrupted sprawl outside, buying its light by the hour.
 Six houses fight over who holds the sky.
-There is no day, no night and no season, only the sun's ration, and nothing in the city copies a real building.
+There is no day, no night and no season, only the sun's ration.
 
-The myth underneath: Xihe was the mother of ten suns, each carried by a three-legged crow.
-When all ten rose together the archer Hou Yi shot nine down and they fell as dead crows; Xihe begged for the last one.
+- **Kunlun 昆仑.** In Chinese myth the mountain of the gods, where Hou Yi was given the elixir of immortality; in the novel that invented Shangri-La, it hides in the Kunlun mountains.
+- **The Xian 仙.** The gods are a people, not a pantheon: an elder race that came before, the way the Isu do in Assassin's Creed. Every myth remembers them under its own names: Olympians, Aesir, Neteru, Xian. Most live inside Shangri-La; a few walk the sprawl unrecognised.
+- **Names, not people.** No deity is a single person in the city. Xihe, Aristaeus, Orpheus, Sköll and Chang'e are names carried by houses, places and machines.
+- **The myth underneath.** Xihe was the mother of ten suns, each carried by a three-legged crow. When all ten rose together the archer Hou Yi shot nine down and they fell as dead crows; Xihe begged for the last one.
 
-| Influence          | What it brings                                                                                         |
-| ------------------ | ------------------------------------------------------------------------------------------------------ |
-| Akira              | Pressure and speed, a city one spark from riot, machines bigger than streets                           |
-| Edgerunners        | Graphic punch: hot pink, yellow and red neon against graphite, blade signs and holograms in the alleys |
-| Arcane             | The class split turned vertical, and a rebellion born in the undercity                                 |
-| Chongqing, Chengdu | One building's street is the next one's tenth floor, stitched by bridges, escalators, tubes, portals   |
+| Influence   | What it brings                                                               |
+| ----------- | ---------------------------------------------------------------------------- |
+| Akira       | Pressure and speed, a city one spark from riot, machines bigger than streets |
+| Edgerunners | Hot pink, yellow and red neon against graphite, blade signs and holograms    |
+| Arcane      | The class split, and a rebellion born below                                  |
+| Isu         | Gods as an elder race of people, half remembered by every myth               |
 
 ## The houses
 
-| House        | Myth   | Who they are                                                                                                                                     | What they want                            |
-| ------------ | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------- |
-| Xihe 羲和    | China  | Mother of the suns. Owns Shangri-La, the eight loyal Sanzuwu and the ration. Gold and white.                                                     | Order, and the sun kept theirs            |
-| ShenYi 神羿  | China  | The archers of the undercity, named for Hou Yi, based in Jin, the fallen ninth crow. Red.                                                        | The last sun dead, so the sky is nobody's |
-| Aristaeus    | Greece | The beekeepers, sons of Apollo, a sun god from another sky. Their hex drone swarms guard, carry and hunt for pay but serve no house.             | Profit, and the Orpheans gone             |
-| The Orpheans | Greece | Orpheus went down to the underworld for Eurydice; they lead people up from the undercity past the Fusang wall and jam drones with music. Violet. | Everyone out of the dark                  |
-| Sköll        | Norse  | The wolf that chases the sun. Sky pirates of Rust Cove and the Night Kite who steal sun-hours and sell them below. Pink.                         | To catch the sun and eat it               |
-| The Owls     | Greece | Athena's scholars and wizards at Owlspire Academy, who keep the old stories and shield the city from the dark.                                   | To remember why the nine fell             |
+| House        | Myth   | Seat             | Who they are                                                                                                                                   | What they want                            |
+| ------------ | ------ | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| Xihe 羲和    | China  | Fusang           | Keepers of the sun for the Xian. Run the ration, the Shangri-La lottery and the eight loyal Sanzuwu. Gold and white.                           | Order, and the sun kept theirs            |
+| ShenYi 神羿  | China  | Jin              | Archers of the sprawl, named for Hou Yi. They built Chang'e, a moon of their own. Red.                                                         | The last sun dead and the gods' door open |
+| Aristaeus    | Greece | The Hive         | Beekeepers named for a son of Apollo. Their hex drone swarms guard and hunt for pay and serve no house. Amber and black.                       | Profit, and the Orpheans gone             |
+| The Orpheans | Greece | The Lyre         | Named for Orpheus, who went down to bring Eurydice back. Guides and smugglers who lead people past the wall and jam drones with music. Violet. | Everyone out of the dark                  |
+| Sköll        | Norse  | Rust Cove        | Named for the wolf that chases the sun. Sky pirates of the Night Kite who steal sun-hours and sell them below. Pink.                           | To catch the sun                          |
+| The Owls     | Greece | Owlspire Academy | Scholars and wizards in Athena's name who keep the true story of the Xian and shield the city from the dark.                                   | To remember why the nine fell             |
 
-- **Chang'e 嫦娥 of the ShenYi.** Hou Yi's wife, who drank the elixir and floated to the moon. Here she built Guanghan, a hidden artificial moon, so Babel would have night again once the sun falls. To wake it she drank its core and can never come down. Guanghan stays cloaked and only shows when the sun goes dark.
+- **Chang'e 嫦娥.** The ShenYi's artificial moon, named for the moon goddess. It is meant to give Kunlun night again once the sun falls; it hangs cloaked and only shows itself when the sun goes dark.
 - **Aristaeus and the Orpheans.** In the myth Aristaeus chased Eurydice, she died fleeing him, and the nymphs killed his bees for it. Whenever an Orphean crew shows itself, the nearest Aristaeus swarms turn red and hunt them.
-- **Threats.** Apep, the Egyptian serpent of chaos, coils up through the undercity to swallow the sun. The Tzitzimimeh, Aztec star demons, fall through a rift in the sky whenever the sun weakens.
-
-## Layout
-
-- **No grid.** Towers stand in loose clusters along crooked streets and one winding canal, and no two face the same way.
-- **Packed.** Buildings stand 6 to 16 metres apart, close enough that the gaps become streets of their own.
-- **Room for the sun.** Shangri-La stands apart in the Fusang compound, with a clear ring of street between its wall and the nearest towers.
-- **The split.** Every building is undercity at the bottom and high ground above; the line sits between a third and a half of its height, so the decks step up and down across the city.
-- **Links.** Flat bridges join decks that line up, escalators join the ones that don't, glass tubes run higher, and portals pair up rooftops.
-- **The undercity** shows only beneath the decks and in the gaps: shacks bolted to walls, pipes, blade signs, lantern strings, steam, chem puddles and graffiti.
-- **Built for crowds.** One deck, ring, petal or plate holds about a thousand people at once, so floor plates are 60 to 90 metres across.
-- **No empty space.** Gaps hold markets, holographic jellyfish, chem pools and drone fight pits.
-- **No vehicles** for now, until they have a house to belong to.
+- **Threats.** Apep, the Egyptian serpent of chaos, coils up through the sprawl to swallow the sun. The Tzitzimimeh, Aztec star demons, fall through a rift in the sky whenever the sun weakens.
 
 ## Shangri-La, the last sun
 
-One building among the others, not the centre of the city, but the one everything depends on.
-A Vegas-style LED sphere, half as big again as the last design, sunk about a fifth into its podium and glowing hard enough to light the streets around it.
-Inside is the paradise the name promises: terraces, floating gardens and golden light, where the chosen live and never age.
-Entry is by Xihe's ascension lottery, or by being smuggled in by the Orpheans.
+- **The dome.** A huge LED sphere sunk straight into the ground with no podium, the biggest thing in Kunlun and the only light the sky has. Inside is the home of the Xian: terraces, floating gardens and golden light.
+- **The ring.** A wide empty plaza around it, then a ring wall with four gates, scanner arches, turrets, a hex barrier field and Xihe banners. Heizi walks the plaza.
+- **The face.** Small, eyes and mouth only. It sits near the top and follows the pointer, and now and then slides down the ball to look at the sprawl.
+- **Shows.** A window onto the Xian inside, the nine falling crows, one huge eye, a Xihe broadcast or a ShenYi wanted poster, with a ticker carrying the owner's projects and city news.
+- **The sun state.** Full, rationed (dim and flickering) or blackout, when the city is left to its neon and Chang'e shows itself.
 
-- **Fusang 扶桑.** The compound, named for the tree the suns rested on: a raised hex plaza behind a ring wall, four gates with scanner arches and golden doors into the podium, turrets, a hex barrier field and Xihe banners.
-- **The face.** Small, eyes and mouth only. It sits near the top and follows the pointer, and now and then slides down the ball to peer into the undercity.
-- **Shows.** The ball opens a window onto the paradise inside, plays nine crows falling while one golden crow stays, turns into one huge eye, or runs a Xihe broadcast or a ShenYi wanted poster. A ticker carries the owner's projects and city news.
-- **Moods.** Happy in peace, cheering on Sun Day, worried in a blackout, angry in a ShenYi strike, hiding low from the star demons, trembling when Apep rises.
+## Outside the dome
+
+- **Corrupted sprawl.** Low crooked shanties in every direction, gutted tower husks with broken crowns, smog, embers, chem pools, one canal and holographic jellyfish drifting over the roofs.
+- **Only the story is left standing.** Every building that remains belongs to a house or a Sanzuwu.
+- **Room around power.** Shangri-La and Fusang each stand in their own clearing, so the sprawl stops at their walls.
+- **No vehicles** for now, until they have a house to belong to.
+
+## Core places
+
+| Place            | Belongs to | Design                                                                                                                                  | Everyday event                      |
+| ---------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| Shangri-La       | The Xian   | The last sun, a giant LED dome on the ground inside a ring wall                                                                         | The face, the shows, gates scanning |
+| Fusang 扶桑      | Xihe       | Black and gold tower grown like the tree the suns rested on: roots, nine branch perches for the Sanzuwu, and an empty cradle at the top | Office rings glow, Yan guards it    |
+| Jin 烬           | ShenYi     | The fallen ninth Sanzuwu, half buried, with a railbow aimed at the sun                                                                  | Fires at Shangri-La in a strike     |
+| Chang'e 嫦娥     | ShenYi     | A cloaked jade moon                                                                                                                     | Shows itself when the sun goes dark |
+| The Hive         | Aristaeus  | Honeycomb hanging under a bridge between two towers                                                                                     | Swarms leave and return             |
+| The Lyre         | Orpheans   | A spiral pit into the deep sprawl under a lyre of light                                                                                 | Crews come up and vanish            |
+| Rust Cove        | Sköll      | Hex pontoon harbour on the canal, the Night Kite overhead                                                                               | Skiffs unload stolen sun-hours      |
+| Owlspire Academy | The Owls   | Floating rock with a crooked spire, books in orbit                                                                                      | A spell lights every window         |
+
+Removed because they had no part in the story: Kaleido, Bell Crown, Ironbloom, Bamboo Veil, Steamvault, Starberth and the Wanderer, Lotus Pillar, Silverfall, Threadline, Ascender, Lantern Steps, The Crucible, and the generic towers with their bridges, tubes and portals.
 
 ## The nine Sanzuwu
 
-Each one is a dead sun on three legs: a charred dark core with ember light and gold trim, and each is a different kind of model.
+The nine dead suns, rebuilt by Xihe as three-legged machines with charred cores, ember light and gold trim, that perch on Fusang's branches.
+Eight serve Xihe; the ninth fell and became Jin.
 
-| Name   | Chinese | Kind         | Design                                                     | What it does                                 |
-| ------ | ------- | ------------ | ---------------------------------------------------------- | -------------------------------------------- |
-| Rimian | 日冕    | Flagship     | Dark disc ringed by gold corona blades, three landing legs | Circles high over Shangri-La                 |
-| Ri'er  | 日珥    | Gunship      | Crescent hull trailing an arc of flame                     | Loops between the towers                     |
-| Rishi  | 日食    | Stealth ship | Black disc with a burning rim, an eclipse                  | Fades in and out over the city               |
-| Heizi  | 黑子    | Walker       | Black core sphere with one gold eye on three long legs     | Walks the Fusang plaza                       |
-| Yan    | 炎      | Mech         | Furnace-chested enforcer on three legs with an arm cannon  | Guards the main gate, fires in a strike      |
-| Yuhui  | 余晖    | Crawler      | Low tripod tank with an afterglow searchlight              | Patrols the canal road in the undercity      |
-| Chenxi | 晨曦    | Dawn tower   | Honeycomb of mirrors on three stilts                       | Throws the rationed light into the undercity |
-| Gui    | 晷      | Tower        | Leaning gnomon blade over a dial plaza                     | Counts the sun-hours of the ration           |
-| Jin    | 烬      | Wreck        | The fallen ninth, half buried and charred                  | The ShenYi base, with their railbow on top   |
-
-## Buildings
-
-Generic buildings come from six shapes, none of them a plain block, each on its own cluttered undercity base.
-
-| Shape       | Form                                                                                  |
-| ----------- | ------------------------------------------------------------------------------------- |
-| Twist stack | Huge plates stacked round a core, each turned from the last, gardens on the overhangs |
-| Ring spine  | A thin core threading wide disc floors, each disc a park for a thousand people        |
-| Blade       | A leaf-shaped section that tapers and leans as it rises, with a light fin on its edge |
-| Hex bundle  | Hexagonal prisms of different heights packed like the hive                            |
-| Funnel      | Narrow at the deck, wide at the top, crowned with a roof garden                       |
-| Pod spine   | A dark core with capsule homes hanging from arms all the way up                       |
-
-## Landmarks
-
-| Name             | Level | Design                                                  | Everyday event                                   |
-| ---------------- | ----- | ------------------------------------------------------- | ------------------------------------------------ |
-| Aristaeus Hive   | Under | Honeycomb hanging under a bridge between two towers     | Swarms leave and return                          |
-| Kaleido          | High  | Spine carrying one giant tilted dish screen             | Ads glitch over to the owner's projects          |
-| Bell Crown       | High  | Hex bundle under a cage of ribs holding a floating ring | The ring sends a wave of light across the city   |
-| Ironbloom        | High  | Half-built lattice opening steel petals at the top      | The petals open, welders spark, the crane swings |
-| Bamboo Veil      | High  | Green-lit hex tubes with sky gardens strung between     | Fireflies drift out of the gardens               |
-| Steamvault       | High  | Twisted black data slabs with glowing vent seams        | Vents pulse and stacks blow heat plumes          |
-| Starberth        | High  | Ring spine crowned with three claw arms                 | The Wanderer cloaks, lifts off and returns       |
-| Lotus Pillar     | High  | One slender pillar holding a petal plaza over the city  | Lily pads light in ripples                       |
-| Silverfall       | Both  | Overhang pouring a curtain of light into the undercity  | The fall surges                                  |
-| Threadline       | Both  | Gate tower straddling the canal around a ring portal    | Skiffs slip through the ring and vanish          |
-| Ascender         | Both  | Two-legged arch with glass lifts in its legs            | The lifts race to the top                        |
-| Lantern Steps    | Under | Hex market terraces climbing to a deck                  | Lanterns float up between the towers             |
-| Rust Cove        | Under | Sköll's harbour of hex pontoons on the canal            | Skiffs unload stolen sun-hours                   |
-| The Crucible     | Under | Open foundry pit with chem-lit stacks                   | A pour lights the alley orange                   |
-| Owlspire Academy | Sky   | Floating rock with a crooked spire, books in orbit      | The wizards' spell lights every window           |
-| Guanghan         | Sky   | Chang'e's cloaked jade moon                             | Shows itself when the sun goes dark              |
-
-The ships keep their names: the Wanderer, Starberth's cloaking ship, and the Night Kite, the pirates' sky ship under kite sails of light.
+| Name   | Chinese | Kind         | What it does                               |
+| ------ | ------- | ------------ | ------------------------------------------ |
+| Rimian | 日冕    | Flagship     | Circles high over Shangri-La               |
+| Ri'er  | 日珥    | Gunship      | Loops low over the sprawl trailing flame   |
+| Rishi  | 日食    | Stealth ship | Fades in and out at the edge of the city   |
+| Heizi  | 黑子    | Walker       | Walks the Shangri-La plaza                 |
+| Yan    | 炎      | Mech         | Guards Fusang's gate, fires in a strike    |
+| Yuhui  | 余晖    | Crawler      | Patrols the canal road                     |
+| Chenxi | 晨曦    | Dawn tower   | Throws the ration of light into the sprawl |
+| Gui    | 晷      | Tower        | Counts the sun-hours                       |
+| Jin    | 烬      | Wreck        | The ShenYi base                            |
 
 ## Swarms
 
 - House Aristaeus flies small flat hexagon drones in five swarms of nine: scouts, workers and one guard in a hex frame each.
-- One swarm circles the hive; the others patrol their own districts instead of the whole sky.
+- One swarm circles the Hive; the others patrol their own districts.
 - **Kill mode:** when an Orphean crew shows itself, the two nearest swarms turn red and dive on them until the crew slips away.
 
 ## World state
 
-The city reads one world state with two independent axes, so new states and storylines are data, not new code.
-Nothing follows the visitor's clock or calendar.
+Two independent axes, so new states and storylines are data, not new code; nothing follows the visitor's clock or calendar.
 
-- **Sun:** full, rationed (dimmer, flickering) and blackout (the city left to its neon and Chang'e's moon). It sets the light, the sky, the window glow and Shangri-La's brightness.
+- **Sun:** full, rationed and blackout. It sets the light, the sky, the window glow, Shangri-La's brightness and whether Chang'e shows.
 - **Scenario:** peace, Sun Day, ShenYi strike, star demons and Apep rising; set by hand or on a schedule.
 
-## Events
-
-| Scenario      | Events                                                                                                                                  |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| Peace         | Swarms, Orphean sightings, each landmark's own event, Shangri-La's face and shows                                                       |
-| Sun Day       | Xihe's festival: fireworks, lantern flights, the crow show and windows into paradise                                                    |
-| ShenYi strike | The railbow on Jin fires at Shangri-La, the barrier flares, turrets and Yan fire back, fires burn in the undercity, Guanghan half shows |
-| Star demons   | A rift full of stars opens over the city and the Tzitzimimeh fall through it onto Fusang                                                |
-| Apep rising   | Crimson sky, the serpent coils through the undercity gaps, shadow fog rises, Owlspire raises its shield                                 |
+| Scenario      | Events                                                                                                                        |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Peace         | Swarms, Orphean sightings, each place's own event, Shangri-La's face and shows                                                |
+| Sun Day       | Xihe's festival: fireworks, lanterns and windows onto the Xian                                                                |
+| ShenYi strike | Jin's railbow fires at Shangri-La, the barrier flares, the turrets and Yan fire back, fires in the sprawl, Chang'e half shows |
+| Star demons   | A rift full of stars opens and the Tzitzimimeh fall through it onto the ring                                                  |
+| Apep rising   | Crimson sky, the serpent coils through the sprawl, Owlspire raises its shield                                                 |
 
 Behind every hex: a torn or glass hex asks the director for the nearest event, and the scenario decides which ones are allowed.
 
 ## Models
 
-- Every feature gets a model, from buildings and the nine Sanzuwu to ships, bees, props and signs.
+- Every feature gets a model, from Shangri-La, Fusang and the nine Sanzuwu to the house seats, ships, bees, sprawl pieces and signs.
 - Generated as `.glb` files by a script in the repo, in a stylised smooth style: bevelled edges, curved forms, physically based metal, glass and concrete.
-- One file per model, named so a hand-made model can replace it later, with instancing and lower detail versions for anything that repeats.
+- One file per model, named so a hand-made model can replace it later, with instancing and lower detail versions for anything that repeats, such as the sprawl.
 - Every model gets a preview page to rotate and approve before it goes into the site.
 
 ## Phases
 
-1. **Blockout:** the concept model, to agree the layout, the split, the lore and the mood. Done as an interactive preview.
+1. **Blockout:** the concept model, to agree the story, the layout and the mood. Done as an interactive preview.
 2. **Model generator:** the `.glb` pipeline and the first model as the quality bar.
-3. **Models:** Shangri-La and Fusang, the nine Sanzuwu, the landmarks, the building shapes, ships and bees, each approved in the preview.
+3. **Models:** Shangri-La, Fusang, the nine Sanzuwu, the house seats, the sprawl kit, ships and bees, each approved in the preview.
 4. **City:** the layout, the camera, the world state and Shangri-La's face in the site.
 5. **Events:** the director, everyday events, then the scenarios.
 6. **Polish:** low graphics, tests and visual baselines.
 
 ## Open questions
 
-1. Babel as the city's name, or Hyperborea (the Greek land of endless sun) or Kunlun (the Chinese mountain of the gods)?
-2. Does Chang'e as the moon-maker who can never come down work?
-3. Should Aristaeus sell a swarm to Xihe during a ShenYi strike, or stay out of it?
-4. Which model first as the quality bar: Shangri-La, or one of the Sanzuwu?
+1. Kunlun for the city, or another place of the gods?
+2. Xian for the elder race, or a name of their own that no single myth owns?
+3. Should one house be secretly led by a Xian living outside the dome?
+4. Should Aristaeus sell a swarm to Xihe during a ShenYi strike, or stay out of it?
+5. Which model first as the quality bar: Shangri-La or Fusang?
