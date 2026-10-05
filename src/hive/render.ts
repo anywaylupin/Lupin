@@ -1,12 +1,12 @@
 import type { Cam } from "./camera";
 import type { HiveData } from "./data";
-import { drawCarriers, drawDrips } from "./flourish";
+import { drawCarriers, drawDrips, drawGlass } from "./flourish";
 import { charge, drawMagnet, drawSeat, SEAT_MS, type Spark } from "./fx/electric";
 import { DIRS, ax, hexVerts, keyOf, visibleRange, type Point } from "./hex";
 import { addPoly, hexFill, type Ctx } from "./paint";
 import type { BackSheet } from "./layout";
 import { clamp, easeOut } from "./math";
-import { emptyGaps, heldPose, isLocked, isOpen, loosePoly, stepSnap } from "./sheet";
+import { emptyGaps, glassSlots, heldPose, isLocked, isOpen, loosePoly, stepSnap } from "./sheet";
 import { on, type Hive, type LooseDrag } from "./state";
 import { BLUE, C, CYAN, HEX, PINK, rgba } from "./theme";
 
@@ -131,7 +131,7 @@ function drawSheetBase(g: Ctx, h: Hive, cam: Cam): void {
   g.setTransform(h.DPR * cam.z, 0, 0, h.DPR * cam.z, h.DPR * o.x, h.DPR * o.y);
   g.globalCompositeOperation = "destination-out";
   g.beginPath();
-  for (const s of emptyGaps(F)) addPoly(g, hexVerts(s.x, s.y, F.R * 1.004));
+  for (const s of [...emptyGaps(F), ...glassSlots(F)]) addPoly(g, hexVerts(s.x, s.y, F.R * 1.004));
   g.fill();
   g.globalCompositeOperation = "source-over";
 }
@@ -148,7 +148,8 @@ function drawPlainHexes(g: Ctx, h: Hive, cam: Cam, live: boolean, now: number): 
     const [q0, q1] = vr.q(r);
     for (let q = q0; q <= q1; q++) {
       const key = keyOf(q, r);
-      if (F.content.has(key) || F.gaps.has(key) || F.removed.has(key) || h.pending?.key === key) continue;
+      if (F.content.has(key) || F.gaps.has(key) || F.removed.has(key) || F.glass.has(key)) continue;
+      if (h.pending?.key === key && !h.pending.glass) continue;
       const p = ax(q, r, R);
       const fl = flashAt(h, p, mw, z, live, flR);
       const st = F.shake?.key === key ? now - F.shake.t0 : 1e9;
@@ -236,6 +237,7 @@ export function drawFront(g: Ctx, h: Hive, cam: Cam, live: boolean, now: number)
   const { sec, S, CF } = h.nav;
   drawSheetBase(g, h, cam);
   drawPlainHexes(g, h, cam, live, now);
+  drawGlass(g, h, z, now);
   drawHoleEdges(g, h, z);
   drawDrips(g, h, z, now);
   for (const i of hoverLast(F.powered, h.hoverKey)) {

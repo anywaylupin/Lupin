@@ -1,7 +1,24 @@
 # City plan
 
-The design for the city behind the sheet, agreed before building.
-It replaces the first three.js city, which stays in the tree as the base until each phase below lands.
+The design for the city behind the sheet, agreed before building and now built.
+
+## Where it lives
+
+| Piece                                 | Files                                                                                     |
+| ------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Levels, plots, camera, event choice   | `city/plan.ts` (pure, unit tested)                                                        |
+| Bee flocking                          | `city/swarm.ts` (pure, unit tested)                                                       |
+| Geometry kit and materials            | `city/kit.ts`, `city/materials.ts`, `city/textures.ts`                                    |
+| Deck, shafts, cliff, undercity, water | `city/ground.ts`                                                                          |
+| Filler towers                         | `city/fillers.ts`                                                                         |
+| Landmarks                             | `city/upper.ts`, `upper2.ts`, `bamboo.ts`, `edge.ts`, `under.ts`, `academy.ts`            |
+| Lumen, its faces and worlds           | `city/dome.ts`, `faces.ts`, `cast.ts`, `diorama.ts`, `worlds.ts`, `worlds2.ts`            |
+| Ships, magic, tubes, traffic, weather | `city/ships.ts`, `magic.ts`, `tubes.ts`, `traffic.ts`, `sky.ts`, `life.ts`, `festival.ts` |
+| Billboards                            | `city/billboards.ts`                                                                      |
+| What happens behind which hex         | `city/director.ts`                                                                        |
+| Bloom, glitch, low graphics           | `city/post.ts`                                                                            |
+| Assembly and camera                   | `city/world.ts`                                                                           |
+| Frame, glass mode                     | `layout.ts`, `sheet.ts`, `interact.ts`, `flourish.ts`                                     |
 
 ## Decisions
 

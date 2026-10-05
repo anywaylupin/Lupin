@@ -12,7 +12,7 @@ import { createSettings } from "./overlay/settings";
 import { createTooltip } from "./overlay/tooltip";
 import { savePrefs } from "./prefs";
 import type { Route } from "./route";
-import { on, type Hive } from "./state";
+import { lowGraphics, on, type Hive } from "./state";
 
 /** Reduced motion swaps flips and slides for a fade this long each way. */
 const VEIL_MS = 160;
@@ -105,6 +105,7 @@ export function createChrome(h: Hive) {
         savePrefs(() => localStorage, h.prefs);
         applyEffects();
         if (name === "sound") audio.toggled();
+        if (name === "low") h.city?.setLow(lowGraphics(h));
         if (name === "volume") audio.setLevel();
       },
       reset: () => resetSheet(h, changed),
@@ -120,6 +121,7 @@ export function createChrome(h: Hive) {
     changed,
     reducedChanged: applyEffects,
     relayout: map.build,
+    settings,
     place: () => {
       sections.place();
       leaf.place();

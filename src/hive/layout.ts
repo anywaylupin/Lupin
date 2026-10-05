@@ -1,7 +1,7 @@
 import type { Cam, Rect } from "./camera";
 import { ax, keyOf, ring, type Axial, type Point } from "./hex";
 import { holeCells } from "./hole";
-import { clamp, hash2, type Rand } from "./math";
+import { clamp, type Rand } from "./math";
 
 export interface Slot extends Point {
   q: number;
@@ -58,6 +58,8 @@ export interface FrontSheet {
   loose: Loose[];
   initLoose: LooseSeed[];
   removed: Set<string>;
+  /** Plain hexes turned to glass in glass mode; they stay in the sheet but show the city through a tint. */
+  glass: Set<string>;
   fx: SeatFx[];
   shake: { key: string; t0: number } | null;
 }
@@ -109,13 +111,23 @@ export function frontHome(R: number, portrait: boolean, W: number): Cam {
   return { x: W / 2 - 2.51 * R - Math.max(48, W * 0.05), y: 0, z: 1 };
 }
 
-export function frontRect(home: Cam, W: number, H: number, R: number): Rect {
+/** How far the front sheet pans from home, in screens each way: one and a half makes the explorable area three by three screens. */
+export const AREA = 1.5;
+
+/** The explorable area around home; the camera keeps the screen inside it and a frame of fixed hexes runs along its edge. */
+export function frontRect(home: Cam, W: number, H: number): Rect {
   return {
-    x0: home.x - W / 2 - R * 2,
-    x1: home.x + W / 2 + R * 2,
-    y0: home.y - H / 2 - R * 2,
-    y1: home.y + H / 2 + R * 2,
+    x0: home.x - W * AREA,
+    x1: home.x + W * AREA,
+    y0: home.y - H * AREA,
+    y1: home.y + H * AREA,
   };
+}
+
+/** True for a cell whose body touches the edge of the area or lies past it: the fixed frame, one hex thick, and everything beyond. */
+export function framed(rect: Rect, p: Point, R: number): boolean {
+  const hw = R * 0.87;
+  return p.x < rect.x0 + hw || p.x > rect.x1 - hw || p.y < rect.y0 + R || p.y > rect.y1 - R;
 }
 
 /**
@@ -153,14 +165,14 @@ export function spawnLoose(
 }
 
 /**
- * Whether a plain hex at screen point (sx, sy) is bolted: under the contact or map corner, or one of the rare scattered ones.
+ * Whether a plain hex at its resting screen point (sx, sy) is bolted under the contact or map corner.
  * The corner boxes grow by half a radius so a hex whose body covers the buttons counts even when its centre sits outside them, as large hexes do.
+ * The prototype also bolted one hex in forty at random; that went when the frame took over as the sheet's fixed hexes.
  */
-export function boltedAt(q: number, r: number, sx: number, sy: number, R: number, W: number, H: number): boolean {
+export function boltedAt(sx: number, sy: number, R: number, W: number, H: number): boolean {
   const pad = R * 0.5;
   if (sx < 170 + pad && sy > H - 150 - pad) return true;
-  if (sx > W - 190 - pad && sy > H - 160 - pad) return true;
-  return hash2(q * 7 + 3, r * 13 + 5) < 0.025;
+  return sx > W - 190 - pad && sy > H - 160 - pad;
 }
 
 /** The front sheet has no edge; it holds the content flower, the broken patch and the three spares. */
@@ -181,7 +193,7 @@ export function buildFront(ids: readonly string[], W: number, H: number, rand: R
     R,
     portrait,
     home,
-    rect: frontRect(home, W, H, R),
+    rect: frontRect(home, W, H),
     powered,
     content,
     gaps,
@@ -190,9 +202,31 @@ export function buildFront(ids: readonly string[], W: number, H: number, rand: R
     loose: initLoose.map((h) => ({ ...h, seat: null, snap: null, ax: h.x, ay: h.y })),
     initLoose,
     removed: new Set(),
+    glass: new Set(),
     fx: [],
     shake: null,
   };
+}
+
+/**
+ * Screen centre of the part of the hole that is on screen at rest; the city aims its dome here.
+ * With 1.5x hexes the hole's centroid can sit past the right edge, so the centre is taken over the visible part only.
+ */
+export function holeView(F: FrontSheet, W: number, H: number): Point {
+  const hw = F.R * 0.87;
+  let x0 = W;
+  let x1 = 0;
+  let y0 = H;
+  let y1 = 0;
+  for (const g of F.hole) {
+    const sx = g.x - F.home.x + W / 2;
+    const sy = g.y - F.home.y + H / 2;
+    x0 = Math.min(x0, sx - hw);
+    x1 = Math.max(x1, sx + hw);
+    y0 = Math.min(y0, sy - F.R);
+    y1 = Math.max(y1, sy + F.R);
+  }
+  return { x: (Math.max(0, x0) + Math.min(W, x1)) / 2, y: (Math.max(0, y0) + Math.min(H, y1)) / 2 };
 }
 
 /** A back sheet: Back at the origin with the cards in rings around it, on the same endless field. */

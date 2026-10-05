@@ -34,6 +34,28 @@ test("switches persist across reloads and sound starts off", async ({ page }) =>
   expect(stored).toMatchObject({ v: 1, glitch: false, sound: false });
 });
 
+test("glass mode starts off and is remembered once switched on", async ({ page }) => {
+  await page.getByRole("button", { name: "Effects and sound" }).click();
+  const glass = page.getByRole("switch", { name: "Glass mode" });
+  await expect(glass).toHaveAttribute("aria-checked", "false");
+  await glass.click();
+  await expect(glass).toHaveAttribute("aria-checked", "true");
+  await page.reload();
+  await page.getByRole("button", { name: "Effects and sound" }).click();
+  await expect(page.getByRole("switch", { name: "Glass mode" })).toHaveAttribute("aria-checked", "true");
+});
+
+test("low graphics follows the device until the visitor chooses", async ({ page }) => {
+  await page.getByRole("button", { name: "Effects and sound" }).click();
+  const low = page.getByRole("switch", { name: "Low graphics" });
+  await expect(page.locator("#city canvas")).toHaveCount(1);
+  const before = await low.getAttribute("aria-checked");
+  await low.click();
+  await expect(low).not.toHaveAttribute("aria-checked", before ?? "");
+  const stored = await page.evaluate(() => JSON.parse(localStorage.getItem("breached-hive-prefs") ?? "{}"));
+  expect(stored.low).toBe(before !== "true");
+});
+
 test("a broken stored value falls back to defaults without errors", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));

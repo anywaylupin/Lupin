@@ -16,6 +16,7 @@ import {
   SNAP_MS,
   stepSnap,
   tearOut,
+  toggleGlass,
 } from "../../src/hive/sheet";
 
 const ids = ["about", "projects", "stack", "experience", "now", "hours"];
@@ -62,6 +63,53 @@ describe("plain and bolted hexes", () => {
     }
     expect(bolted).toBeGreaterThan(0);
     expect(bolted / onScreen).toBeLessThan(0.12);
+  });
+});
+
+describe("the frame", () => {
+  it("fixes every hex along the edge of the explorable area and beyond it, and nothing well inside", () => {
+    const F = sheet();
+    const { x0, x1, y0, y1 } = F.rect;
+    for (let q = -40; q < 40; q++) {
+      for (let r = -40; r < 40; r++) {
+        if (!isPlain(F, keyOf(q, r))) continue;
+        const p = ax(q, r, F.R);
+        const outside = p.x < x0 || p.x > x1 || p.y < y0 || p.y > y1;
+        const deep = p.x > x0 + F.R * 2 && p.x < x1 - F.R * 2 && p.y > y0 + F.R * 2 && p.y < y1 - F.R * 2;
+        if (outside) expect(isLocked(F, q, r, W, H)).toBe(true);
+        const sx = p.x - F.home.x + W / 2;
+        const sy = p.y - F.home.y + H / 2;
+        const corner = (sx < 260 || sx > W - 280) && sy > H - 260;
+        if (deep && !corner) expect(isLocked(F, q, r, W, H)).toBe(false);
+      }
+    }
+  });
+
+  it("spans three by three screens round home", () => {
+    const F = sheet();
+    expect(F.rect.x1 - F.rect.x0).toBe(W * 3);
+    expect(F.rect.y1 - F.rect.y0).toBe(H * 3);
+  });
+});
+
+describe("glass", () => {
+  it("turns a plain hex to glass and back, and leaves content alone", () => {
+    const F = sheet();
+    const key = keyOf(5, -3);
+    expect(toggleGlass(F, key)).toBe(true);
+    expect(F.glass.has(key)).toBe(true);
+    expect(isPlain(F, key)).toBe(false);
+    expect(toggleGlass(F, key)).toBe(false);
+    expect(isPlain(F, key)).toBe(true);
+    const content = F.powered[0]?.key ?? "";
+    expect(toggleGlass(F, content)).toBe(false);
+    expect(F.glass.has(content)).toBe(false);
+  });
+
+  it("never glazes a slot that is already open", () => {
+    const F = sheet();
+    const hole = F.hole[0]?.key ?? "";
+    expect(toggleGlass(F, hole)).toBe(false);
   });
 });
 

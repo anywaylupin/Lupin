@@ -15,6 +15,10 @@ const switches = [
   ["life", "City traffic and lights"],
   ["weather", "Rain and storms"],
 ] as const;
+const modes = [
+  ["glass", "Glass mode"],
+  ["low", "Low graphics"],
+] as const;
 ---
 
 <div class="chrome">
@@ -53,6 +57,20 @@ const switches = [
         </button>
       </div>
       {switches.map(([pref, label]) => (
+        <div class="row">
+          <span id={`l-${pref}`}>{label}</span>
+          <button
+            class="switch"
+            type="button"
+            role="switch"
+            aria-checked="false"
+            data-pref={pref}
+            aria-labelledby={`l-${pref}`}
+          ></button>
+        </div>
+      ))}
+      <div class="divider"></div>
+      {modes.map(([pref, label]) => (
         <div class="row">
           <span id={`l-${pref}`}>{label}</span>
           <button

@@ -39,7 +39,7 @@ src/
   pages/                one static page per route, plus og/ and sitemap endpoints
   hive/                 the interactive canvas, strict TypeScript, no framework
     *.ts pure           hex, hole, layout, camera, sheet, reset, prefs, route, theme, icons
-    city/               three.js city: plan and swarm (pure), shapes, dome, sky, traffic, life, glitch
+    city/               three.js city (see CITY.md): plan and swarm pure; kit, ground, fillers, landmarks, Lumen and its worlds, ships, magic, director, post
     overlay/            DOM over the canvas: proxies, leaf, tooltip, map, contacts, settings
     fx/                 decrypt, electric, audio
   styles/               tokens, base, overlay, settings, fallback

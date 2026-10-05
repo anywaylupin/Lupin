@@ -40,7 +40,7 @@ export function fireworks(glow: Texture) {
   const points = new Points(
     geo,
     new PointsMaterial({
-      size: 18,
+      size: 40,
       map: glow,
       vertexColors: true,
       transparent: true,
@@ -61,7 +61,7 @@ export function fireworks(glow: Texture) {
         const u = rand() * 2 - 1;
         const a = rand() * Math.PI * 2;
         const r = Math.sqrt(1 - u * u);
-        const sp = 70 + rand() * 18;
+        const sp = 150 + rand() * 40;
         vel.set([Math.cos(a) * r * sp, u * sp, Math.sin(a) * r * sp], k * 3);
       }
       const colour = [PINK, CYAN, AMBER, GOLD][Math.floor(rand() * 4)] ?? GOLD;
@@ -80,8 +80,8 @@ export function fireworks(glow: Texture) {
             continue;
           }
           if (b.t < RISE) {
-            const y = b.at.y - 180 * (1 - b.t / RISE);
-            p.setXYZ(i, b.at.x, y - (k % 8) * 4, b.at.z);
+            const y = b.at.y - 380 * (1 - b.t / RISE);
+            p.setXYZ(i, b.at.x, y - (k % 8) * 9, b.at.z);
             const f = k % 8 === 0 ? 1 : 0.3 * (1 - (k % 8) / 8);
             c.setXYZ(i, GOLD.r * f, GOLD.g * f, GOLD.b * f);
             continue;
@@ -91,7 +91,7 @@ export function fireworks(glow: Texture) {
           p.setXYZ(
             i,
             b.at.x + (b.vel[k * 3] ?? 0) * drag,
-            b.at.y + (b.vel[k * 3 + 1] ?? 0) * drag - 14 * s * s,
+            b.at.y + (b.vel[k * 3 + 1] ?? 0) * drag - 30 * s * s,
             b.at.z + (b.vel[k * 3 + 2] ?? 0) * drag,
           );
           const f = Math.max(0, 1 - s / 2.6) * (0.75 + 0.25 * Math.sin(s * 30 + k));
@@ -122,7 +122,7 @@ export function dragon() {
     meshes: [mesh],
     busy: () => flight !== null,
     fly: (a: Vec3, b: Vec3, rand: Rand) => {
-      flight = { a, b, t: 0, dur: 11 + rand() * 4, amp: 26 + rand() * 16 };
+      flight = { a, b, t: 0, dur: 12 + rand() * 4, amp: 60 + rand() * 40 };
     },
     update: (dt: number) => {
       if (!flight) return;
@@ -136,7 +136,7 @@ export function dragon() {
       for (let i = 0; i < n; i++) {
         const u = head - i * 0.007;
         const p = serpent(flight.a, flight.b, u, flight.amp);
-        const s = i === 0 ? 10 : 8 * (1 - i / (n * 1.25));
+        const s = i === 0 ? 24 : 19 * (1 - i / (n * 1.25));
         dummy.position.set(p.x, p.y, p.z);
         dummy.scale.setScalar(u < 0 || u > 1.2 ? 0 : s);
         dummy.updateMatrix();

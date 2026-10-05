@@ -6,9 +6,13 @@ export const PREF_VERSION = 1;
 export const EFFECTS = ["glitch", "decrypt", "electric", "life", "weather", "sound"] as const;
 export type Effect = (typeof EFFECTS)[number];
 
-export type Prefs = Record<Effect, boolean> & { volume: number };
+/**
+ * `glass` is glass mode, which turns clicked hexes to glass instead of tearing them out.
+ * `low` is the low graphics switch; null means nobody chose, and the city decides from the device.
+ */
+export type Prefs = Record<Effect, boolean> & { volume: number; glass: boolean; low: boolean | null };
 
-/** Sound is off until asked for; every visual effect starts on. */
+/** Sound is off until asked for; every visual effect starts on, glass mode starts off and low graphics is left to the device. */
 export const DEFAULT_PREFS: Readonly<Prefs> = {
   glitch: true,
   decrypt: true,
@@ -17,6 +21,8 @@ export const DEFAULT_PREFS: Readonly<Prefs> = {
   weather: true,
   sound: false,
   volume: 0.3,
+  glass: false,
+  low: null,
 };
 
 function isRecord(v: unknown): v is Record<string, unknown> {
@@ -41,6 +47,9 @@ export function parsePrefs(raw: string | null | undefined): Prefs {
     const v = parsed[name];
     if (typeof v === "boolean") out[name] = v;
   }
+  if (typeof parsed["glass"] === "boolean") out.glass = parsed["glass"];
+  const low = parsed["low"];
+  if (typeof low === "boolean" || low === null) out.low = low;
   const volume = parsed["volume"];
   if (typeof volume === "number" && Number.isFinite(volume)) out.volume = clamp(volume, 0, 1);
   return out;

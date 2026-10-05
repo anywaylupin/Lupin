@@ -1,16 +1,18 @@
 import { restOf, stepZoom } from "./camera";
 import { byId, createChrome } from "./chrome";
+import type { Ad } from "./city/billboards";
 import type { City } from "./city/world";
 import { DATA_ELEMENT_ID, type HiveData } from "./data";
 import { bindInput } from "./input";
 import { sheetHooks } from "./interact";
-import { buildBack, buildFront } from "./layout";
+import { buildBack, buildFront, holeView } from "./layout";
 import { rng } from "./math";
 import { cardAlpha, currentRoute, movingHex, phases } from "./nav";
 import { loadPrefs } from "./prefs";
 import { drawBack, drawFront, drawMoving } from "./render";
 import { HOME_ROUTE, parseRoute } from "./route";
-import { activeCam, createNav, on, onBack, type Hive } from "./state";
+import { emptyGaps, glassSlots } from "./sheet";
+import { activeCam, createNav, lowGraphics, on, onBack, type Hive } from "./state";
 import { C } from "./theme";
 
 /** The JSON is written by our own build from schema-checked content, so it is trusted as is. */
@@ -37,11 +39,32 @@ function layoutSheets(h: Pick<Hive, "data" | "W" | "H">) {
   return { front, backs };
 }
 
-/** Canvas font family for the city signs; the fonts API hashes family names, so it is read from the CSS variable. */
-function signFont(): string {
-  return (
-    getComputedStyle(document.documentElement).getPropertyValue("--font-zh").trim() || '"Noto Sans SC", sans-serif'
-  );
+/** Canvas font families for the city's signs; the fonts API hashes family names, so they are read from the CSS variables. */
+function cssFont(name: string, fallback: string): string {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+}
+
+/** The owner's projects as billboard adverts, from the projects section's cards. */
+function adverts(data: HiveData): Ad[] {
+  const colours = ["255,110,200", "120,220,255", "255,200,90", "160,255,170"];
+  const cards = data.home.find((c) => c.id === "projects")?.cards ?? [];
+  return cards.map((c, i) => ({
+    title: c.title,
+    line: c.text ?? "",
+    colour: colours[i % colours.length] ?? "255,255,255",
+    mark: "project",
+  }));
+}
+
+/** Screen points, as normalised device coordinates, of every slot where the city shows through the front sheet. */
+function openSpots(h: Hive) {
+  const c = h.frontCam;
+  return [...emptyGaps(h.front), ...glassSlots(h.front)]
+    .map((s) => ({
+      x: (((s.x - c.x) * c.z + h.W / 2) / h.W) * 2 - 1,
+      y: 1 - (((s.y - c.y) * c.z + h.H / 2) / h.H) * 2,
+    }))
+    .filter((p) => Math.abs(p.x) < 1 && Math.abs(p.y) < 1);
 }
 
 function createHive(data: HiveData, reduced: boolean): Hive {
@@ -68,6 +91,8 @@ function createHive(data: HiveData, reduced: boolean): Hive {
     zoom: null,
     dt: 0,
     carriers: [],
+    autoLow: false,
+    city: null,
   };
 }
 
@@ -85,13 +110,22 @@ export function boot(): void {
     h.reduced = e.matches;
     chrome.reducedChanged();
   });
-  const zh = signFont();
+  const zh = cssFont("--font-zh", '"Noto Sans SC", sans-serif');
+  const mono = cssFont("--font-mono", "monospace");
   /** three.js loads as its own chunk after the sheet is up, so the first paint never waits on the city; without WebGL the flat backdrop stays. */
   let city: City | null = null;
   void import("./city/world")
     .then(({ createCity }) => {
-      city = createCity(cityEl, zh);
-      city.resize(h.W, h.H, h.DPR);
+      const c = createCity(cityEl, { zh, mono, ads: adverts(h.data), open: () => openSpots(h) });
+      city = c;
+      h.autoLow = c.soft;
+      c.setLow(lowGraphics(h));
+      c.resize(h.W, h.H, h.DPR, holeView(h.front, h.W, h.H));
+      chrome.settings.apply();
+      h.city = {
+        reveal: (x, y) => c.reveal({ x: (x / h.W) * 2 - 1, y: 1 - (y / h.H) * 2 }),
+        setLow: c.setLow,
+      };
     })
     .catch(() => undefined);
 
@@ -101,7 +135,6 @@ export function boot(): void {
     h.DPR = Math.min(devicePixelRatio || 1, 2);
     cv.width = Math.round(h.W * h.DPR);
     cv.height = Math.round(h.H * h.DPR);
-    city?.resize(h.W, h.H, h.DPR);
   };
 
   /** Keeps pulled and loose hexes when the hex size and orientation survive the resize, as when a phone's address bar slides away. */
@@ -118,6 +151,7 @@ export function boot(): void {
     h.pending = null;
     h.zoom = null;
     Object.assign(h.frontCam, h.front.home);
+    city?.resize(h.W, h.H, h.DPR, holeView(h.front, h.W, h.H));
     chrome.relayout();
     nav.applyInstant(route);
   };
@@ -162,6 +196,7 @@ export function boot(): void {
           h.reduced ? h.front.home : h.frontCam,
           h.front.home,
           cityTurn,
+          h.pointer.x > -999 ? { x: (h.pointer.x / h.W) * 2 - 1, y: 1 - (h.pointer.y / h.H) * 2 } : null,
         );
         if (cityTurn) cityDt = 0;
       }

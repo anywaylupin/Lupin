@@ -2,9 +2,9 @@ import { bee } from "./figures";
 import { DIRS, hexVerts, keyOf, type Point } from "./hex";
 import type { Loose } from "./layout";
 import { clamp, easeOut, hash2 } from "./math";
-import type { Ctx } from "./paint";
-import { emptyGaps, isOpen } from "./sheet";
-import { on, type Hive } from "./state";
+import { addPoly, type Ctx } from "./paint";
+import { emptyGaps, glassSlots, isOpen } from "./sheet";
+import { lowGraphics, on, type Hive } from "./state";
 import { CYAN, rgba } from "./theme";
 
 /** A bee carrying one hex home during Reset: it joins as the hex lifts, rides above it, and flies off once it lands. */
@@ -18,6 +18,60 @@ export interface Carrier {
 
 const ARRIVE_MS = 180;
 const LEAVE_MS = 600;
+
+/**
+ * Glass hexes: a faint cyan tint with a bright rim, a streak of light that sweeps across each pane on its own rhythm, and raindrops sliding down while it rains.
+ * Low graphics keeps only the tint and the rim.
+ */
+export function drawGlass(g: Ctx, h: Hive, z: number, now: number): void {
+  const F = h.front;
+  if (!F.glass.size) return;
+  const t = h.reduced ? 0 : now / 1000;
+  const rich = !lowGraphics(h);
+  const rain = on(h, "weather");
+  for (const s of glassSlots(F)) {
+    const v = hexVerts(s.x, s.y, F.R * 0.98);
+    g.save();
+    g.beginPath();
+    addPoly(g, v);
+    g.fillStyle = rgba(CYAN, 0.07);
+    g.fill();
+    g.strokeStyle = "rgba(210,240,255,0.55)";
+    g.lineWidth = 1.6 / z;
+    g.stroke();
+    if (rich) {
+      g.clip();
+      const seed = hash2(s.q * 13, s.r * 7);
+      const k = ((t * 0.2 + seed) % 1.6) - 0.3;
+      const x = s.x - F.R + k * F.R * 2.4;
+      const sweep = g.createLinearGradient(x - F.R * 0.3, s.y - F.R, x + F.R * 0.3, s.y + F.R);
+      sweep.addColorStop(0, "rgba(255,255,255,0)");
+      sweep.addColorStop(0.5, "rgba(230,248,255,0.16)");
+      sweep.addColorStop(1, "rgba(255,255,255,0)");
+      g.fillStyle = sweep;
+      g.fillRect(s.x - F.R, s.y - F.R, F.R * 2, F.R * 2);
+      g.strokeStyle = "rgba(255,255,255,0.18)";
+      g.lineWidth = 2 / z;
+      g.beginPath();
+      g.moveTo(s.x - F.R * 0.55, s.y - F.R * 0.35);
+      g.lineTo(s.x - F.R * 0.2, s.y - F.R * 0.7);
+      g.stroke();
+      if (rain) {
+        g.fillStyle = "rgba(200,235,255,0.5)";
+        for (let i = 0; i < 7; i++) {
+          const period = 2 + hash2(i, seed * 100) * 3;
+          const fall = ((t + hash2(seed * 50, i) * period) % period) / period;
+          const dx = (hash2(i, s.q + s.r * 31) - 0.5) * F.R * 1.4;
+          const dy = -F.R + fall * F.R * 2;
+          g.beginPath();
+          g.ellipse(s.x + dx, s.y + dy, 1.6 / z, (2.4 + fall * 3) / z, 0, 0, Math.PI * 2);
+          g.fill();
+        }
+      }
+    }
+    g.restore();
+  }
+}
 
 /** Rain drips run down the hole's rim: each sloping rim edge sends a drop down every couple of seconds on its own rhythm. */
 export function drawDrips(g: Ctx, h: Hive, z: number, now: number): void {

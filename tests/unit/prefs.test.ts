@@ -27,6 +27,17 @@ describe("prefs parsing", () => {
     expect(p).not.toHaveProperty("extra");
   });
 
+  it("starts with glass mode off and low graphics left to the device", () => {
+    expect(DEFAULT_PREFS.glass).toBe(false);
+    expect(DEFAULT_PREFS.low).toBeNull();
+  });
+
+  it("keeps a chosen glass mode and low graphics, and drops junk for either", () => {
+    expect(parsePrefs('{"glass": true, "low": false}')).toEqual({ ...DEFAULT_PREFS, glass: true, low: false });
+    expect(parsePrefs('{"glass": "yes", "low": 1}')).toEqual(DEFAULT_PREFS);
+    expect(parsePrefs('{"low": null}').low).toBeNull();
+  });
+
   it("clamps the volume and rejects non-finite numbers", () => {
     expect(parsePrefs('{"volume": 4}').volume).toBe(1);
     expect(parsePrefs('{"volume": -1}').volume).toBe(0);

@@ -14,15 +14,17 @@ export interface Swarm {
   next: number;
 }
 
-export const BEE_SPEED = 46;
+export const BEE_SPEED = 90;
+/** Bees push apart inside this many units, about two bee lengths at the size the city draws them. */
+const PERSONAL = 24;
 
 /** Swarms of seven bees start around their first targets; the seeded spread keeps them from overlapping on load. */
 export function createBees(targets: readonly Vec3[], rand: Rand): Bee[] {
   return targets.flatMap((t, swarm) =>
     Array.from({ length: 7 }, () => ({
-      x: t.x + (rand() - 0.5) * 30,
-      y: t.y + (rand() - 0.5) * 20,
-      z: t.z + (rand() - 0.5) * 30,
+      x: t.x + (rand() - 0.5) * 80,
+      y: t.y + (rand() - 0.5) * 50,
+      z: t.z + (rand() - 0.5) * 80,
       vx: 0,
       vy: 0,
       vz: 0,
@@ -61,10 +63,10 @@ export function stepBees(
       const dy = b.y - o.y;
       const dz = b.z - o.z;
       const d2 = dx * dx + dy * dy + dz * dz;
-      if (d2 < 64 && d2 > 0) {
-        ax += (dx / d2) * 600;
-        ay += (dy / d2) * 600;
-        az += (dz / d2) * 600;
+      if (d2 < PERSONAL * PERSONAL && d2 > 0) {
+        ax += (dx / d2) * 6000;
+        ay += (dy / d2) * 6000;
+        az += (dz / d2) * 6000;
       }
     }
     const t = swarms[b.swarm]?.target ?? b;

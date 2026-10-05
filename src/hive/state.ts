@@ -55,8 +55,12 @@ export interface LooseDrag {
   lastX: number;
 }
 
-/** A press on a plain hex that has not yet moved far enough to tear the hex out. */
+/**
+ * A press on a plain hex that has not yet moved far enough to tear the hex out.
+ * In glass mode the press turns the hex to glass on release instead, and moving turns it into a pan.
+ */
 export interface Pending {
+  glass: boolean;
   key: string;
   q: number;
   r: number;
@@ -87,6 +91,16 @@ export interface Hive {
   zoom: ZoomAnim | null;
   dt: number;
   carriers: Carrier[];
+  /** Low graphics as the device suggests it, used while the visitor has not chosen; true on software rendering. */
+  autoLow: boolean;
+  /** The city once it has loaded; the sheet tells it where hexes open and when graphics change. */
+  city: CityLink | null;
+}
+
+export interface CityLink {
+  /** A hex opened at this screen point, by tearing or glass; the city stages something there. */
+  reveal: (x: number, y: number) => void;
+  setLow: (low: boolean) => void;
 }
 
 export function createNav(): Nav {
@@ -100,6 +114,11 @@ export function on(h: Hive, name: Effect): boolean {
 
 export function onBack(h: Hive): boolean {
   return h.nav.sec >= 0 && h.nav.S >= 1;
+}
+
+/** Low graphics as the visitor chose it, or as the device suggests when they have not. */
+export function lowGraphics(h: Hive): boolean {
+  return h.prefs.low ?? h.autoLow;
 }
 
 export function activeCam(h: Hive): Cam {

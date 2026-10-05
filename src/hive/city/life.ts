@@ -22,16 +22,13 @@ import { createBees, stepBees, type Swarm } from "./swarm";
 
 const dummy = new Object3D();
 /** Bees are drawn about twice the size of a street car, so a swarm still reads as bees through a single hex. */
-const BEE_SIZE = 1.8;
-
-/** Where a set piece should happen: a world point that projects into the screen cell that has waited longest, at a depth in the given range. */
-export type Spot = (near: number, far: number) => Vec3;
+const BEE_SIZE = 4;
 
 /**
  * Three swarms of cyber bees roaming the screen: amber bodies with a dark band, wings beating fast and glowing faintly.
  */
-function bees(spot: Spot, rand: Rand) {
-  const swarms: Swarm[] = [0, 1, 2].map(() => ({ target: spot(120, 330), next: 3 + rand() * 4 }));
+function bees(roam: () => Vec3, rand: Rand) {
+  const swarms: Swarm[] = [0, 1, 2].map(() => ({ target: roam(), next: 3 + rand() * 4 }));
   const list = createBees(
     swarms.map((s) => s.target),
     rand,
@@ -77,7 +74,7 @@ function bees(spot: Spot, rand: Rand) {
   return {
     meshes,
     update: (dt: number, t: number) => {
-      stepBees(list, swarms, dt, () => spot(120, 330), rand);
+      stepBees(list, swarms, dt, roam, rand);
       pose(t);
     },
   };
@@ -92,14 +89,14 @@ interface Lantern extends Vec3 {
 /** Sky lanterns released in a batch from a rooftop, climbing and swaying for about nine seconds before they burn out, each in its own warm halo. */
 function lanterns(glow: Texture) {
   const max = 48;
-  const mesh = new InstancedMesh(new BoxGeometry(5, 6.5, 5), new MeshBasicMaterial({ color: AMBER }), max);
+  const mesh = new InstancedMesh(new BoxGeometry(10, 13, 10), new MeshBasicMaterial({ color: AMBER }), max);
   mesh.frustumCulled = false;
   const haloGeo = new BufferGeometry();
   haloGeo.setAttribute("position", new Float32BufferAttribute(new Float32Array(max * 3), 3));
   const halo = new Points(
     haloGeo,
     new PointsMaterial({
-      size: 34,
+      size: 70,
       map: glow,
       color: AMBER,
       transparent: true,
@@ -115,9 +112,9 @@ function lanterns(glow: Texture) {
     release: (at: Vec3, rand: Rand) => {
       for (let i = 0; i < 14 && live.length < max; i++) {
         live.push({
-          x: at.x + (rand() - 0.5) * 90,
-          y: at.y - 50 + rand() * 30,
-          z: at.z + (rand() - 0.5) * 90,
+          x: at.x + (rand() - 0.5) * 180,
+          y: at.y - 60 + rand() * 60,
+          z: at.z + (rand() - 0.5) * 180,
           t: -rand() * 2,
           life: 8 + rand() * 3,
           drift: rand() * 6,
@@ -138,8 +135,8 @@ function lanterns(glow: Texture) {
         } else {
           const fade = clamp((l.life - l.t) / 1.5, 0, 1) * clamp(l.t / 0.5, 0, 1);
           dummy.position.set(
-            l.x + Math.sin(l.t * 0.7 + l.drift) * 6,
-            l.y + l.t * 11,
+            l.x + Math.sin(l.t * 0.7 + l.drift) * 14,
+            l.y + l.t * 26,
             l.z + Math.cos(l.t * 0.5 + l.drift) * 4,
           );
           dummy.scale.setScalar(fade);
@@ -158,42 +155,33 @@ function lanterns(glow: Texture) {
 export interface Life {
   group: Group;
   update: (dt: number, t: number) => void;
+  lanterns: (at: Vec3) => void;
+  fireworks: (at: Vec3) => void;
+  /** The neon dragon swims from `a` to `b`; false while it is still on an earlier flight. */
+  dragon: (a: Vec3, b: Vec3) => boolean;
 }
 
 /**
- * Builds the living city: bees always roaming, and every one and a half to three seconds a set piece in the screen cell that has waited longest.
- * Fireworks, lantern releases and the dragon take turns, so a single torn hex anywhere on the screen sees one within a minute or so.
- * `at` gives the world point behind a screen point, in normalised device coordinates, at a depth; the dragon flies between two of them off either edge.
+ * The shows that can happen anywhere: bees always roaming, and lantern releases, fireworks and the dragon whenever the city stages them.
+ * `roam` picks where a bee swarm heads next.
  */
-export function createLife(
-  glow: Texture,
-  spot: Spot,
-  at: (x: number, y: number, dist: number) => Vec3,
-  rand: Rand,
-): Life {
-  const b = bees(spot, rand);
+export function createLife(glow: Texture, roam: () => Vec3, rand: Rand): Life {
+  const b = bees(roam, rand);
   const l = lanterns(glow);
   const f = fireworks(glow);
   const d = dragon();
   const group = new Group();
   group.add(...b.meshes, ...l.meshes, ...f.meshes, ...d.meshes);
-  let next = 1.5;
-  let turn = 0;
   return {
     group,
+    lanterns: (at) => l.release(at, rand),
+    fireworks: (at) => f.launch(at, rand),
+    dragon: (a, z) => {
+      if (d.busy()) return false;
+      d.fly(a, z, rand);
+      return true;
+    },
     update: (dt, t) => {
-      next -= dt;
-      if (next <= 0) {
-        next = 1.5 + rand() * 1.5;
-        const kind = turn++ % 5;
-        if (kind === 4 && !d.busy()) {
-          const side = rand() < 0.5 ? -1 : 1;
-          const dist = 260 + rand() * 400;
-          const y = (rand() - 0.5) * 1.3;
-          d.fly(at(-1.3 * side, y, dist), at(1.3 * side, y + (rand() - 0.5) * 0.6, dist), rand);
-        } else if (kind % 2 === 0) f.launch(spot(350, 900), rand);
-        else l.release(spot(200, 600), rand);
-      }
       b.update(dt, t);
       l.update(dt);
       f.update(dt);

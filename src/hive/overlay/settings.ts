@@ -1,5 +1,5 @@
 import { EFFECTS, type Effect } from "../prefs";
-import type { Hive } from "../state";
+import { lowGraphics, type Hive } from "../state";
 import type { Tip } from "./hexbtn";
 
 export interface SettingsEls {
@@ -11,14 +11,22 @@ export interface SettingsEls {
   reset: HTMLButtonElement;
 }
 
+/** Every switch in the panel: the effects, glass mode and low graphics. */
+export type Switch = Effect | "glass" | "low";
+
 export interface SettingsActions {
-  changed: (name: Effect | "volume") => void;
+  changed: (name: Switch | "volume") => void;
   reset: () => void;
   reveal: (el: Element, ms: number) => void;
 }
 
-function isEffect(v: string | undefined): v is Effect {
-  return EFFECTS.some((e) => e === v);
+function isSwitch(v: string | undefined): v is Switch {
+  return v === "glass" || v === "low" || EFFECTS.some((e) => e === v);
+}
+
+function switchOn(h: Hive, name: Switch): boolean {
+  if (name === "low") return lowGraphics(h);
+  return h.prefs[name];
 }
 
 /** The settings hex unfolds into a panel in place, without rotating; closing folds it back the same way. */
@@ -31,7 +39,7 @@ export function createSettings(h: Hive, els: SettingsEls, tip: Tip, actions: Set
   const apply = () => {
     for (const sw of switches) {
       const name = sw.dataset["pref"];
-      if (isEffect(name)) sw.setAttribute("aria-checked", String(h.prefs[name]));
+      if (isSwitch(name)) sw.setAttribute("aria-checked", String(switchOn(h, name)));
     }
     volume.value = String(h.prefs.volume);
     volume.style.setProperty("--p", `${h.prefs.volume * 100}%`);
@@ -70,8 +78,9 @@ export function createSettings(h: Hive, els: SettingsEls, tip: Tip, actions: Set
   for (const sw of switches) {
     sw.addEventListener("click", () => {
       const name = sw.dataset["pref"];
-      if (!isEffect(name)) return;
-      h.prefs[name] = !h.prefs[name];
+      if (!isSwitch(name)) return;
+      if (name === "low") h.prefs.low = !lowGraphics(h);
+      else h.prefs[name] = !h.prefs[name];
       apply();
       actions.changed(name);
     });
