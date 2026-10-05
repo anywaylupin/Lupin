@@ -43,7 +43,7 @@ There is no day, no night and no season, only the sun's ration.
 - **The dome.** A huge LED sphere sunk straight into the ground with no podium, the biggest thing in Kunlun and the only light the sky has. Inside is the home of the Xian: terraces, floating gardens and golden light.
 - **The ring.** A wide empty plaza around it, then a ring wall with four gates, scanner arches, turrets, a hex barrier field and Xihe banners. Heizi walks the plaza.
 - **The face.** Small, eyes and mouth only. It sits near the top and follows the pointer, and now and then slides down the ball to look at the sprawl.
-- **Shows.** A window onto the Xian inside, the nine falling crows, one huge eye, a Xihe broadcast or a ShenYi wanted poster, with a ticker carrying the owner's projects and city news.
+- **Shows.** A window onto the Xian inside, the nine falling crows, one huge eye, a Xihe broadcast or a ShenYi wanted poster, with a ticker of Xihe news.
 - **The sun state.** Full, rationed (dim and flickering) or blackout, when the city is left to its neon and Chang'e shows itself.
 
 ## Outside the dome
