@@ -1,194 +1,102 @@
 # City plan
 
-The design for the city behind the sheet, agreed before building and now built.
+The design for the city behind the sheet, second version.
+It replaces the first design entirely; only the names, the pirates and wizards, the two levels and the bees carry over.
+The code in `src/hive/city/` still follows the first design until the phases below rebuild it.
 
-## Where it lives
+## Direction
 
-| Piece                                 | Files                                                                                     |
-| ------------------------------------- | ----------------------------------------------------------------------------------------- |
-| Levels, plots, camera, event choice   | `city/plan.ts` (pure, unit tested)                                                        |
-| Bee flocking                          | `city/swarm.ts` (pure, unit tested)                                                       |
-| Geometry kit and materials            | `city/kit.ts`, `city/materials.ts`, `city/textures.ts`                                    |
-| Deck, shafts, cliff, undercity, water | `city/ground.ts`                                                                          |
-| Filler towers                         | `city/fillers.ts`                                                                         |
-| Landmarks                             | `city/upper.ts`, `upper2.ts`, `bamboo.ts`, `edge.ts`, `under.ts`, `academy.ts`            |
-| Lumen, its faces and worlds           | `city/dome.ts`, `faces.ts`, `cast.ts`, `diorama.ts`, `worlds.ts`, `worlds2.ts`            |
-| Ships, magic, tubes, traffic, weather | `city/ships.ts`, `magic.ts`, `tubes.ts`, `traffic.ts`, `sky.ts`, `life.ts`, `festival.ts` |
-| Billboards                            | `city/billboards.ts`                                                                      |
-| What happens behind which hex         | `city/director.ts`                                                                        |
-| Bloom, glitch, low graphics           | `city/post.ts`                                                                            |
-| Assembly and camera                   | `city/world.ts`                                                                           |
-| Frame, glass mode                     | `layout.ts`, `sheet.ts`, `interact.ts`, `flourish.ts`                                     |
+A sleek sci-fi megacity at blue hour, split in two: a polished upper city on a raised plateau and a dense, glowing undercity in the canyon around it.
+Fewer buildings, all of similar height, spaced so each one can be seen from every side.
 
-## Decisions
+| Influence   | What it brings                                                                                           |
+| ----------- | -------------------------------------------------------------------------------------------------------- |
+| Akira       | Scale and speed: a ring road of red light trails, huge plazas, Lumen as the stadium landmark             |
+| Edgerunners | Graphic punch: hot pink and yellow neon used sparingly against graphite, loud holograms and ads          |
+| Arcane      | The class split: a clean high ground over a chem-lit undercity, linked by lifts, bridges and a waterfall |
+| Hongyadong  | Lantern Steps: stacked timber terraces glowing gold down a cliff face, after the Chongqing landmark      |
 
-1. The camera sits a little high: the upper city on its high ground fills the top of the screen, and the undercity below it is visible through gaps, shafts and broken ground.
-2. The sheet pans over an area larger than the screen, about three by three screens.
-3. Fixed hexes form a frame one hex thick around the edge of that area, and everything beyond it is fixed too; every hex inside the frame can be pulled.
-4. The pre-broken hole stays, and at rest the dome fills it.
-5. Content hexes stay exactly as they are now and sit over filler; every other hex reveals a place of its own.
-6. Glass is a mode switched on in the settings panel: while it is on, a plain hex turns to glass instead of tearing out.
-7. The dome is a full sphere with an LED skin that shows a face, and it opens to show a different world inside.
-8. Dome faces are original characters, never existing ones.
-9. Every landmark has a name.
-10. Pirates and wizards join the city as places, events, ships and sky effects, all original designs.
-11. Every building is generated in code; no models, no Blender, no asset files beyond canvas textures drawn at runtime.
-12. Bloom is on by default, with a low graphics switch in the settings panel for weak devices.
-13. Billboards show the owner's projects and the city's own easter eggs, switching with a glitch.
+Palette: graphite, white, brushed silver and smoked glass, with cyan and amber as the light accents and pink kept for signs.
+Lit windows come in floor bands, never random dots.
 
-## The two levels
+## Layout
 
-The city is built in two levels with their own character, so a hex high on the screen and a hex low on the screen show different worlds.
+- **Plateau.** Round high ground with Lumen at its centre and the upper landmarks in a ring round it, each on its own plaza with clear space around.
+- **Canyon.** The undercity surrounds the plateau below the cliff: canals, Lantern Steps, Rust Cove and The Crucible. Three edge landmarks climb from the canyon floor past the cliff top.
+- **Heights.** Upper landmarks stand within about 15% of each other, so no tower hides another. Only Lumen, which is wider, and Owlspire, which floats, break the line.
+- **Fillers.** Only a thin, low, hazy ring far out, for depth. Nothing between the landmarks.
+- **Camera.** A little high, so the ground shows. Panning the hex sheet orbits the camera round Lumen, so every face of every building comes into view; panning down drops the camera into the canyon.
 
-**The upper city** stands on high ground: temple terraces, glass towers crowned with pagoda roofs, lotus ponds, sky bridges and Lumen, the dome.
-It is clean, bright and crowded with screens.
+## Lumen
 
-**The undercity** runs below the high ground: canals, a hidden harbour, pipes, foundries, night markets lit by lanterns and subway lines that run through the base of the towers.
-It is dark, wet and busy, and the pirates live here.
+Modelled on the Las Vegas Sphere: a full sphere sunk about a fifth into its plaza, a glowing seam where it meets the ground, and an LED skin that wraps the whole ball.
+It turns slowly to face the viewer.
 
-The ground between them is never a flat plane with roads on it.
-Streets are hard to see: they sit deep in canyons and fog, and the upper city's plazas hide them from above.
-Shafts, collapsed plazas, elevator wells and the waterfall gorge are the places where the undercity shows through.
+- **The face.** A chubby, funny face that fills the sphere the way the Sphere's emoji does: puffy pink cheeks, small bright eyes, a wide grin. It blinks, puffs its cheeks, sticks out its tongue, yawns and dozes off at night.
+- **The programme.** The face alternates with whole-ball shows every 20 to 40 seconds: the giant eye, a planet, an advert for one of the owner's projects, a city message. Shows change with a wipe, not a glitch.
+- **Moods.** The face follows the world state: it grins in peace, cheers at festivals, sweats at aliens, trembles at the dark force, frowns in civil war and wears snow in winter.
 
 ## Landmarks
 
-A landmark is one building with its own design, made by its own function in code, standing on its own plot and owning one event.
-Filler buildings fill the far background and repeat; landmarks never repeat.
-Most landmarks are very tall, and they stand close enough to crowd each other while each keeps its own silhouette.
+| Name             | Level     | New design                                              | Everyday event                                   |
+| ---------------- | --------- | ------------------------------------------------------- | ------------------------------------------------ |
+| Lumen            | Centre    | LED sphere sunk into the plateau                        | Changes show; reacts to the city                 |
+| Kaleido          | Upper     | Rounded slab wrapped by two curved screens              | Ad takeover lands on one of the owner's projects |
+| Bell Crown       | Upper     | Graphite tower crowned with stacked metal temple roofs  | The bell rings a ring of light across the sky    |
+| Ironbloom        | Upper     | Half built: solid base, white steel lattice, crane      | The crane hoists a beam while welders spark      |
+| Bamboo Veil      | Upper     | Tower of green vertical fins and sky gardens            | Fireflies pour out of the gardens                |
+| Steamvault       | Upper     | Windowless ribbed data stack with vents                 | Vents blast a column of steam                    |
+| Starberth        | Upper     | Tower with a round rooftop landing cradle               | The Wanderer lands and lifts off                 |
+| Lotus Pillar     | Upper rim | One-pillar shrine rising from a lotus pond              | Pads light in a ripple, petals lift              |
+| Silverfall       | Edge      | Terraced tower pouring a waterfall into the canyon      | The falls surge and a neon rainbow forms         |
+| Threadline       | Edge      | Tower the maglev ring runs straight through             | An express bursts through, floors light in turn  |
+| Ascender         | Edge      | Slender tower with glass lifts from canyon to sky       | The lifts race to the top                        |
+| Lantern Steps    | Under     | Hongyadong-style stacked terraces on the cliff          | A flight of sky lanterns rises past the plateau  |
+| Rust Cove        | Under     | Pirate harbour under pipe arches on the canal           | The galleon fires a salute                       |
+| The Crucible     | Under     | Foundry of furnaces and chimneys, chem green and orange | A pour of molten metal lights the canyon         |
+| Owlspire Academy | Sky       | Floating rock with a crooked spire, books in orbit      | A spell lights every window and showers sparks   |
 
-| Name             | Landmark         | Level | What it is                                                                         | Its event                                                    |
-| ---------------- | ---------------- | ----- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| Lumen            | The dome         | Upper | A full sphere with an LED skin, wider than any tower                               | Changes face; opens to show a world inside                   |
-| Lotus Pillar     | Shrine           | Upper | A small temple on a single pillar, rising from a lotus pond on a raised terrace    | Lotus pads light up in a ripple and petals lift into the air |
-| Silverfall       | Waterfall tower  | Both  | Terraces that pour water down a gorge into the undercity                           | The flow surges, mist rolls up and a rainbow of neon forms   |
-| Threadline       | Rail tower       | Both  | A tower with a subway line running straight through its middle floors              | A train bursts through, lighting each floor as it passes     |
-| Ascender         | Elevator spine   | Both  | Glass elevator tubes climbing the outside of a tower from the undercity to the top | Cars race each other up and down                             |
-| Kaleido          | Screen tower     | Upper | One giant animated billboard wrapping two faces                                    | Takes over with a full glitch and a project reveal           |
-| Ironbloom        | Unfinished tower | Upper | A bare steel frame with a crane on top                                             | The crane hoists a beam while welders spit sparks            |
-| Bell Crown       | Temple megatower | Upper | A skyscraper crowned with stacked temple roofs                                     | The crown's bell rings with a ring of light                  |
-| Bamboo Veil      | Hanging garden   | Upper | A tower wrapped in bamboo and vines, with trees on every setback                   | Fireflies swarm out at dusk                                  |
-| Steamvault       | Data tower       | Upper | A windowless stack with heat vents                                                 | Vents blast steam and the stack flickers                     |
-| Starberth        | Spaceship dock   | Upper | A rooftop cradle with landing lights                                               | The spaceship lands, refuels and lifts off                   |
-| Owlspire Academy | Wizard academy   | Sky   | A crooked stone tower floating free of the ground, ringed by orbiting books        | A spell lights every window and sends sparks up              |
-| Lantern Steps    | Night market     | Under | Stacked terraces of stalls under strings of lanterns                               | A lantern release climbs up past the high ground             |
-| Rust Cove        | Pirate harbour   | Under | A hidden canal harbour inside a cave of pipes, with a moored ship                  | The ship fires a salute and the cave flashes                 |
-| The Crucible     | Foundry          | Under | Furnaces and chimneys feeding the towers above                                     | A pour of molten metal lights the whole cavern orange        |
+The ships keep their names: the Wanderer, a spaceship that cloaks, and the Night Kite, the pirates' sky galleon.
 
-The ships have names too: the spaceship is the Wanderer and the pirates' sky galleon is the Night Kite.
+## World state
 
-## The dome
+The city reads one world state with three independent axes, so new times, seasons and storylines are data, not new code.
+Each axis changes the sky, the light, the particles, which events may run, and Lumen's mood.
 
-Lumen is a full sphere standing on a ring of supports in the upper city, with an LED skin like a stadium screen.
-It stands behind the pre-broken hole, so at rest the hole frames it on every screen size: the city is composed around the hole, not around the centre of the screen.
+- **Time:** day, blue hour and night, later dawn and dusk; it can follow the visitor's clock.
+- **Season:** spring petals, summer fireflies and fireworks, autumn leaves and amber gardens, winter snow on every roof; it can follow the calendar.
+- **Scenario:** peace, festival, alien invasion, dark force and civil war; set by hand or on a schedule, such as an invasion one week a year.
 
-**Faces.**
-One face rig draws every character: eyes, lids, brows, mouth and colours, so a new character is a set of parameters.
-Faces blink, follow the pointer or the hex torn most recently, and react to the city: surprise at lightning, delight at fireworks, sleep when the city is still.
-Between faces the skin plays short pixel animations, then glitches into the next face.
+## Events
 
-Starting cast, all original:
+| Scenario       | Events                                                                                                                                                                           |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Peace          | Light-trail bike race on the ring road, maglev express, drone light show, broom race round Owlspire, Night Kite smuggling run, the Wanderer cloaking, every landmark's own event |
+| Festival       | Fireworks over the plateau, lantern flights from Lantern Steps, a countdown shared by Kaleido and Lumen, a dragon of drones round Lumen, parade boats on the canal               |
+| Alien invasion | A mothership parts the clouds, tractor beams lift cars, rooftop turrets on Starberth and Ironbloom fire, the Wanderer decloaks to fight, Lumen sweats and flashes warnings       |
+| Dark force     | The sky turns crimson, shadow fog climbs out of the undercity, Owlspire raises a shield dome, wizards duel on the rooftops, lights go out district by district                   |
+| Civil war      | Barricades glow on the bridges, fires and smoke in the canyon, searchlights from Bell Crown, pirates raid the lifts, enforcer flyers sweep the cliff                             |
 
-| Face    | Look                                                  |
-| ------- | ----------------------------------------------------- |
-| Moji    | A round yellow face with expressive eyes, the default |
-| Oni     | A red horned mask with tusks and burning eyes         |
-| Mochi   | A soft white cat with a tiny mouth                    |
-| Pip     | A small round creature with big ears and cheek sparks |
-| Bolt    | A boxy robot with scanline eyes                       |
-| Captain | A skull in a pirate hat, one eye behind a patch       |
-| Sage    | An old owl in a pointed hat and round glasses         |
-| Ember   | A small dragon with a flickering flame for a crest    |
+Behind every hex: a torn or glass hex asks the director for the nearest event, and the scenario decides which ones are allowed.
 
-**Worlds inside.**
-Since the hole always shows the dome, it opens on its own every minute or so: the face closes its eyes and the skin clears from the centre out, showing a world inside.
-Each opening picks a world at random, never the same one twice in a row, and the skin closes again after about half a minute.
+## Models
 
-| World          | What plays inside                                                   |
-| -------------- | ------------------------------------------------------------------- |
-| Forest falls   | A mossy valley with a waterfall, birds and drifting pollen          |
-| Desert         | Dunes under a huge moon, a caravan crossing, a sandstorm rolling in |
-| Concert        | A stage with lasers, a crowd of lights and a bass pulse             |
-| Reef           | Coral, koi and a whale passing overhead                             |
-| Tundra         | Snow, an aurora and a lone lighthouse                               |
-| Pirate cove    | A galleon riding a storm, lightning on the sails                    |
-| Great library  | Endless shelves, floating candles and books flying between them     |
-| Volcano        | A lava lake, ash and a slow eruption                                |
-| Blossom garden | Cherry trees, a red bridge and petals in the wind                   |
-| Deep space     | A planet rising over a station window, with a meteor shower         |
-
-## Pirates and wizards
-
-Both are original designs that nod to their genres; nothing is taken from existing books, films or games.
-
-**Pirates.**
-The pirate harbour lives in the undercity.
-The Night Kite, a sky galleon with neon sails, sometimes crosses the upper city, and the Wanderer chases it off.
-Billboards show wanted posters for its captain, and the captain is one of the dome's faces.
-
-**Wizards.**
-Owlspire Academy floats above the upper city, with books orbiting its tower.
-Broom riders race between the towers as an event.
-At night the stars sometimes join into constellations that draw an animal, a ship or a hex, then scatter.
-A glowing spirit animal sometimes runs across the rooftops and vanishes.
-Floating candles drift over the night market.
-
-## Sky and movement
-
-- **Spaceship:** the Wanderer hovers and drifts over the city, cloaks at random with a shimmer and a fade, and reappears somewhere else; it docks at Starberth as an event.
-- **Tubes:** glass tubes in three kinds: road tubes carrying capsules between towers, line tubes for maglev loops through the upper city, and elevator tubes climbing towers from the undercity to the top.
-- **Weather:** rain, lightning that strikes the tallest landmarks, and fog that pools in the undercity.
-- **Bees:** the swarms stay, and carry hexes home on Reset as they do now.
-- **Searchlights** sweep from the tallest towers.
-
-## The sheet
-
-**Area and frame.**
-The sheet pans over about three by three screens.
-A frame one hex thick sits at the edge of that area, and every hex beyond the frame is fixed.
-The bolted hexes over the corner buttons stay bolted.
-The pre-broken hole stays where it is, with Lumen behind it.
-Content hexes keep their current slots, look and behaviour.
-
-**Places.**
-Each cell inside the frame is cast into the city from its centre at rest.
-Content cells are placed over filler, so the content never hides anything that matters.
-Every other cell is given one place: a landmark, a corner of a landmark, a window into the undercity, or a stretch of sky where events happen.
-Panning shifts the city a little against the sheet, so places are composed with room around them rather than to the pixel.
-
-**Glass hexes.**
-Glass mode is a switch in the settings panel, saved with the other preferences and off by default.
-While it is on, clicking or tapping a plain hex turns it to glass instead of tearing it out, and clicking a glass hex turns it back; dragging still pans.
-Content hexes never turn to glass.
-Glass shows the city through a faint tint with a bright edge, a light streak that sweeps across it, and raindrops running down it when it rains.
-Switching the mode off keeps the glass already made; Reset clears all glass along with the torn hexes.
-
-## Billboards
-
-Billboards are canvas textures drawn at runtime that switch every few seconds with a glitch: torn slices, colour splits and a frame of noise.
-
-- **Projects:** Juka, Ora, Upstream and QR pay, each as an advert with its name and one line.
-- **Easter eggs:** a wanted poster for the Night Kite's captain, enrolment open at Owlspire Academy, a lost bee reward, the dome's face of the week, a spaceship sightings hotline, a reward for whoever finds every place.
-
-Kaleido plays the same set at a much larger size, with a full takeover glitch as its event.
-
-## Graphics
-
-**Bloom** runs on the full quality setting.
-
-**Low graphics** is a new switch in the settings panel, saved with the other preferences.
-It turns bloom off, renders at device pixel ratio 1, thins particles and filler, and drops the glass hex effects to a plain tint.
-It switches itself on for software rendering, which is what Lighthouse and the headless tests use, and the visitor can switch it either way.
-
-Everything stays procedural: geometry built in code, textures drawn on canvases at runtime.
+- Generated as `.glb` files by a script in the repo, in a stylised smooth style: bevelled edges, curved forms, physically based metal, glass and concrete.
+- One file per landmark plus a small kit for fillers, vehicles and props, each named after its landmark so a hand-made model can replace it later.
+- Every model gets a preview page to rotate and approve before it goes into the site.
 
 ## Phases
 
-1. **Sheet:** the larger area, the frame, cell to place mapping and glass mode.
-2. **Ground and camera:** the high camera framing Lumen in the hole, the two levels, the openings into the undercity and the fog.
-3. **Dome:** the sphere, the face rig with the starting cast, and the worlds inside.
-4. **Landmarks:** one at a time, each with its event, upper city first.
-5. **Movement:** tubes, the spaceship, the sky galleon, broom riders and constellations.
-6. **Billboards:** projects and easter eggs with the glitch.
-7. **Graphics:** bloom, the low graphics switch, tests and new visual baselines.
+1. **Blockout:** the concept model, to agree positions, heights and mood. Done as an interactive preview.
+2. **Model generator:** the `.glb` pipeline and the first landmark as the quality bar.
+3. **Models:** the remaining landmarks, Lumen, ships and the filler kit, each approved in the preview.
+4. **City:** plateau and canyon, the orbiting camera, the world state and Lumen's programme in the site.
+5. **Events:** the director, everyday events, then the scenarios.
+6. **Polish:** low graphics, tests and visual baselines.
 
-Each phase ends with format, lint, type checks, unit tests and a commit.
+## Open questions
+
+1. Is the round plateau with the canyon round it the right shape, or should the high ground be a long cliff on one side?
+2. Should time and season follow the visitor's real clock and calendar by default?
+3. Do Lumen's worlds inside the sphere stay, as one of its shows, or go?
+4. Which landmark should be modelled first as the quality bar for the rest?
