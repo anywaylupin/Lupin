@@ -522,7 +522,7 @@ In the year 4,000, ShenYi raided Shangri-La for the first time.
 
 They came up through Tanggu (汤谷), the heat rift under the dome, past Jiuying (九婴), the nine-headed beast coiled there, on routes the pipe kings sold them.
 
-That is still the way in: through Tanggu, past Jiuying, on routes the pipe kings sell, and through doors that Ascended servants open from the inside.
+That is still the way in: through Tanggu, past Jiuying, on routes the pipe kings sell, and through doors that Kuafu servants, and later the Ascended, open from the inside.
 
 ShenYi took what they could carry, and they did not keep it.
 
