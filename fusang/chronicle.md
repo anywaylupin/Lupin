@@ -30,7 +30,7 @@ The world has no name yet.
 
 This chronicle does not give it one.
 
-What it keeps from that age is a way of counting: every year written here is counted from the hour the star died.
+What it keeps from that age is a way of counting: this chronicle counts every year from the hour the star died.
 
 ## Years 0 to 200: Riluo, the Sunset
 
@@ -46,13 +46,13 @@ Everything that ran on them went quiet in the same breath, the stations and the 
 
 Nothing that came afterwards on Fusang was as large as that silence.
 
-Every war in this chronicle is fought in the quiet it left.
+Every war in this chronicle happens in the quiet it left.
 
 The star did not vanish.
 
 It shrank into a remnant, cold and dim, and Fusang calls it Xukai.
 
-The world still circles it, faithfully, as if it had not noticed that the fire went out.
+The world still circles it, as if it had not noticed that the fire went out.
 
 Ten thousand years later Xukai still hangs in the sky like a coin on a closed eye, and gives almost nothing back.
 
@@ -74,7 +74,7 @@ The others still talk to one another across the distance, and some of them are a
 
 Their stories come later.
 
-What fell on Fusang, Fusang calls Yunjin (陨金), fallen gold.
+What fell, Fusang calls Yunjin (陨金), fallen gold.
 
 It came in three parts, and the whole history of the continent is the history of who held which.
 
@@ -90,15 +90,17 @@ The Yang is the seed's counterpart.
 
 In any normal process it is inert, and it is poison.
 
-It answers to one thing only, the raw and unfiltered light of a Yin seed, and when Yin and Yang meet they consume each other, and leave behind a burnt husk and a new, weaker Yin.
+It answers to one thing only, the raw and unfiltered light of a Yin seed.
 
-No one on Fusang would understand that for nearly three thousand years.
+When Yin and Yang meet they consume each other, and leave behind a burnt husk and a new, weaker Yin.
+
+No one on Fusang would see it happen until Shejiu, nearly three thousand years later.
 
 ### Hanye, the Cold Night
 
 Ten small suns lay burning in a world that had lost its own.
 
-The years that followed are called Hanye (寒夜), the Cold Night, and they belonged to whoever could reach a seed and keep it.
+Fusang calls the years that followed Hanye (寒夜), the Cold Night, and they belonged to whoever could reach a seed and keep it.
 
 Ten armies and corporations reached them.
 
@@ -142,7 +144,7 @@ Whatever lay outside it stayed outside.
 
 Ten carriages carried the ten seeds.
 
-Bing's carriage went inside the dome, up to the crown of Kunlun.
+The carriage of Bing (丙) went inside the dome, up to the crown of Kunlun.
 
 The other nine rose high above Fusang and stopped there, far apart from one another, each in its fixed place, and poured their power down into Shangri-La.
 
@@ -152,7 +154,9 @@ Yao, which had refused to join Xihe, now offered to run it.
 
 It sold Xihe its administration, and the price it asked was a place inside.
 
-Xihe agreed, and Yao became Xihe's directorate, and Yao's elite moved through the gates into the lower tiers of the dome.
+Xihe agreed.
+
+Yao became its directorate, and Yao's elite moved through the gates into the lower tiers of the dome.
 
 Higher up were the Xian (仙), the families who lived under the seeds.
 
@@ -188,13 +192,11 @@ Everything Shangri-La was made of lay outside the dome.
 
 The Kuafu went out and mined it under nine burning suns, and they died by the millions, and the dome went on shining.
 
-Nine suns burned the people beneath them, and poured their power into a city those people could not enter.
-
 Some of what they dug out was Yang.
 
 It killed the miners who touched it.
 
-In Xihe's laboratories, where the light was filtered like everything else inside, the Yang did nothing at all.
+In Xihe's laboratories, where the dome filtered the light like everything else inside, the Yang did nothing at all.
 
 Xihe judged it worthless and had it dumped in the Kuafu slag fields, under the open sky, where the raw light of nine suns lay on it every hour of every day.
 
@@ -260,7 +262,7 @@ But if nine flew, and one sun stayed lit, and the tenth arrow stayed in Yao's ha
 
 So on the eve of the shot, Yao stole the tenth arrow.
 
-It hid the arrow outside the dome, in a secret Yao hideout in the deep ice.
+It hid the arrow outside the dome, in a hideout of its own in the deep ice, one that no one else knew of.
 
 A beast lived there, a young one Yao had been raising for itself, and its name was Zaoya (凿牙).
 
@@ -286,7 +288,11 @@ Fusang calls it Shejiu (射九), the Shooting of the Nine.
 
 He drew the Red Bow and loosed.
 
-He drew again, and loosed again, nine times, faster than Xihe could understand what it was seeing, and with every shot the bow cracked a little further.
+He drew again, and loosed again, nine times, faster than Xihe could understand what it was seeing.
+
+With every shot the bow cracked a little further.
+
+Fusang remembers Shejiu as a single moment, and it was one: nine shots, one breath.
 
 He believed the arrows would bring the carriages down and nothing more.
 
@@ -300,13 +306,13 @@ For the first time since the carriages rose, night fell on the slag fields.
 
 The carriages broke where they hung, and nine burnt husks fell out of the sky.
 
-From each of the nine reactions a new seed was born, smaller and weaker than the sun it replaced, and it came down with the wreckage.
+The nine carriages are still there, broken, high above Fusang.
+
+From each of the nine reactions a new seed was born, smaller and weaker than the sun it replaced, and it came down with the husks.
 
 The Scorching ended, exactly as he had wanted.
 
 Then Fusang began to freeze.
-
-Fusang remembers Shejiu as a single moment, and it was one: nine shots, one breath.
 
 ## Year 2,800: The fall of the houses
 
@@ -314,7 +320,9 @@ Nine houses woke under an empty sky.
 
 Their power had hung above Fusang in carriages, and now it lay in pieces on the ground.
 
-They kept their names and lost what the names had meant, and so they became the Nine Names, and went under Bing.
+They kept their names and lost what the names had meant.
+
+So they became the Nine Names, and went under Bing.
 
 Today they hold one shared seat in government and vote as one bloc, never one by one: nine old voices that have learned to sound like one.
 
@@ -364,7 +372,9 @@ His followers did not lie down in the ice beside him.
 
 They took a name, ShenYi (神羿), and they took his bow.
 
-The Red Bow was cracked beyond repair by the nine shots and would never fire again, so they kept it as what it had become, a relic of the Archer.
+The nine shots had cracked the Red Bow beyond repair, and it would never fire again.
+
+So they kept it as what it had become, a relic of the Archer.
 
 The freeze was chaos, and in the chaos ShenYi went looking for what had come down from the carriages.
 
@@ -384,9 +394,9 @@ The cold and the radiation of the Ice hide it further.
 
 They named it after the moon goddess: Chang'e (嫦娥).
 
-The power of the nine seeds also lifts Chang'e, and to any instrument its signature reads like something in the air.
+The power of the nine seeds also lifts Chang'e, and its signature reads like something in the air.
 
-Yao heard the name and knew the truth, because Yao had funded Sheri and knew what had really come down from the sky.
+Yao heard the name and understood it, because Yao had funded Sheri and knew what had really come down from the sky.
 
 So Yao told Xihe that Chang'e was something in orbit.
 
@@ -394,9 +404,9 @@ The lie fitted the name, and it fitted the readings, and it held.
 
 From then on two lies held up the sky over Fusang: that the fall had left only husks, and that the moon was overhead.
 
-Only the head of Yao knows the truth, and each head passes it to the next.
+Only the head of Yao knows that Chang'e is on the ground, and each head passes the secret to the next.
 
-Chang'e does not stay where it was built.
+Chang'e does not stay where ShenYi built it.
 
 It crawls across the land, and every few decades it moves.
 
@@ -446,9 +456,9 @@ Xihe gathered up what was left of them and taught it to walk.
 
 Shangri-La needed workers.
 
-So Xihe did something it had never done before: it let some of the light out.
+So Xihe let some of the last seed's light out of the dome.
 
-It extended the seed's light over a ring of land around the dome, by day, and let the Kuafu live there.
+It spread that light over a ring of land around the dome, by day, and let the Kuafu live there.
 
 Fusang calls the ring Guanghuan (光环), the Halo.
 
@@ -456,7 +466,7 @@ The name sounds like a blessing, and for part of every day it nearly is one.
 
 Day in Guanghuan is a work shift.
 
-The light comes out, and the mines and refineries of the lit belt run, and the Kuafu work them.
+The light comes out, and the Kuafu work the mines and refineries of the lit belt.
 
 At night Xihe pulls the light back.
 
@@ -470,7 +480,7 @@ Outside, it is lent for the length of a shift and taken back at nightfall.
 
 ## Years 3,300 to 4,000: The night builders
 
-The Kuafu learned to survive the night, because nobody else was going to do it for them.
+No one was coming to keep the Kuafu warm, so they learned to survive the night themselves.
 
 They stole heat pipes from the dome and built over them, stacking home on home above the warmth, and those stacks became the Kang (炕) towers.
 
@@ -500,7 +510,7 @@ Out of those wars rose the pipe kings, the Guanwang (管王): syndicates that ru
 
 Xihe pays them by day and ShenYi pays them at night, and they have never seen a reason to refuse either.
 
-The pipes all ran from the dome, so in the end every war in the Ring was fought over the dome's leftovers.
+The pipes all ran from the dome, so in the end every war in the Ring was a war over the dome's leftovers.
 
 The Ring did not get warmer.
 
@@ -518,7 +528,7 @@ ShenYi took what they could carry, and they did not keep it.
 
 They carried it out to the Ring and shared it.
 
-ShenYi want to free the Kuafu and bring down Xihe and Yao.
+They wanted then what they want now: the Kuafu free, and Xihe and Yao brought down.
 
 To the Kuafu, ShenYi became the only people who had ever brought them warmth.
 
@@ -544,7 +554,7 @@ One beast went the other way.
 
 Fengxi (封豨), the armoured tunnelling boar, serves ShenYi and digs their supply routes.
 
-No one has ever tamed two of them.
+Two beasts still answer to no one.
 
 Dafeng (大风) is a bird the size of a storm that rides the night winds.
 
@@ -580,11 +590,9 @@ Inside the dome, the last sun had shone the whole time.
 
 ## Year 5,230: Huanluan, the Rising of the Ring
 
-Thirty years after the Black Month, the Ring rose.
+Thirty years after the Black Month, the Ring rose: Huanluan (环乱), the Rising of the Ring.
 
 The Kuafu came down off their platforms and out of their towers and stormed the gates of the dome.
-
-Fusang calls it Huanluan (环乱), the Rising of the Ring.
 
 It lasted one night.
 
@@ -610,7 +618,9 @@ The ministry already held the law.
 
 Now it held hope as well.
 
-The Xian still look down on Yao as a lesser people, and Yao looks down on the Kuafu, and the Ascended learn quickly where that leaves them.
+The Xian still look down on Yao as a lesser people, and Yao looks down on the Kuafu.
+
+The Ascended learn quickly where that leaves them.
 
 Each layer of Fusang has someone beneath it, and each layer holds on to that someone with both hands.
 
@@ -648,7 +658,7 @@ And they carry ShenYi's supplies.
 
 What reaches Chang'e comes through Fengxi's tunnels or on an Icewalker's back.
 
-The Icewalkers traded the night bell for the open cold, and the Ring for a life no dome had ever promised them.
+The Icewalkers traded the night bell for the open cold, and the shift for the hunt.
 
 ## About year 6,500: The first fading
 
@@ -670,11 +680,11 @@ ShenYi smuggled the first Yutu up to the crown of Kunlun and drew from the seed.
 
 For one hour, the last sun dimmed.
 
-Fusang calls that hour Shanguang (闪光), the Flicker.
+That hour is Shanguang (闪光), the Flicker.
 
-Nobody inside the dome knows what happened.
+The Xian looked up at their one sun and watched it falter, and an hour later it was whole again.
 
-The Xian looked up at their one sun and watched it falter, and an hour later it was whole again, and no one could say why.
+Nobody inside the dome has ever learned why.
 
 Since then every faction on Fusang has studied the seed, convinced it is dying.
 
@@ -710,7 +720,7 @@ Xihe keeps the fear alive on purpose.
 
 It tells the Kuafu that their labour is what keeps the seed burning, so that every shift in the mines feels like keeping the sun alive.
 
-Inside Xihe, even the charging of the Sanzuwu is rationed and argued over, because the public still believes the seed is dying.
+Xihe rations even the charging of the Sanzuwu and argues over it, because the public still believes the seed is dying.
 
 ## Year 9,000: The Daily Hunt
 
@@ -719,8 +729,6 @@ By the year 9,000, hunting ShenYi had become a daily institution.
 Yao runs it, as it runs the law and the lottery.
 
 There are patrols and bounties, and there are executions, shown on the dome.
-
-Yayu does the tracking, and the patrols follow.
 
 The hunt catches ShenYi one by one.
 
@@ -748,7 +756,7 @@ Ten thousand years after the star died, Xihe found a ShenYi hideout.
 
 It was the first time Xihe had ever found one.
 
-Fusang calls the year Yiwan (一万), the Ten Thousandth, and it dates everything after it from Yiwan.
+Fusang calls the year Yiwan (一万), the Ten Thousandth.
 
 Xihe learned that Chang'e is on the ground, and it found clues to where.
 
@@ -770,11 +778,15 @@ Now they walk the Ice and the Ring on three legs, burning the hiding places of t
 
 ShenYi hold almost no power: no whole seed, no arrow, a broken bow and a fading moon.
 
-What they have is fighters, and the skill to hide, and that skill has kept them alive for seven thousand years.
+What they have is fighters and the skill to hide.
+
+That skill has kept them alive for seven thousand years.
 
 Even now, Xihe has not moved against Yao.
 
-Xihe presses Yao at every turn, and Yao would turn on Xihe if it ever could, and still Xihe tolerates it.
+Xihe presses Yao at every turn, and Yao would turn on Xihe if it ever could.
+
+Still, Xihe tolerates Yao.
 
 Only Yao knows where the tenth arrow is.
 
@@ -786,11 +798,13 @@ Woken and unsteered, Zaoya goes for the seed.
 
 Its bite would consume the seed and leave a husk and one more weak seed, and Shangri-La would lose its eternal sun.
 
-Somewhere in the deep ice it sleeps, and whether the sweep of Yiwan has passed near it, and how near, this chronicle does not say.
+Somewhere in the deep ice it sleeps.
+
+Whether the sweep of Yiwan has passed near it, and how near, this chronicle does not say.
 
 The hiding is over.
 
-The chronicle ends here, in the smoke.
+The old count ends here, in the smoke.
 
 The story begins here.
 
@@ -812,15 +826,17 @@ It lives in Zaoya's teeth, asleep in the cold.
 
 Zaoya is Yao's, raised since the Archer's time.
 
-Xihe has seen it and thinks it is just another wild beast.
+Xihe has looked straight at it and seen only a beast.
 
-The hunts were never meant to win.
+Yao's hunts were never meant to win.
 
-A living ShenYi keeps Yao needed, so Yao's hunts take the expendable and miss the core.
+Yao needs ShenYi alive, so it has only ever taken the ones it could spare.
 
-Chang'e was never in the sky.
+Chang'e was never in orbit.
 
-The head of Yao has always known, and has passed the truth from head to head, and it was Yao who told Xihe to look up.
+The head of Yao has always known, and has passed the truth from head to head.
+
+It was Yao who told Xihe to look up.
 
 The nine suns the Archer put out did not simply die.
 
