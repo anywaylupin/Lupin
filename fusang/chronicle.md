@@ -82,7 +82,7 @@ At its heart lay the Yin (阴), the seeds: Yunjin's burning core, ten small suns
 
 A whole Yin seed never runs down.
 
-Around the seeds lay the common Yunjin, the bulk of the meteors, the metal from which every advanced thing on Fusang would one day be made: the dome and the tower, the carriages and the machines.
+Around the seeds lay the common Yunjin, the bulk of the meteors, the material from which Shangri-La, Kunlun, the carriages and every advanced machine would one day be built.
 
 And scattered through it lay the Yang (阳), the antiseed, which seemed to do nothing at all.
 
@@ -94,7 +94,7 @@ It answers to one thing only, the raw and unfiltered light of a Yin seed.
 
 When Yin and Yang meet they consume each other, and leave behind a burnt husk and a new, weaker Yin.
 
-No one on Fusang would see it happen until Shejiu, nearly three thousand years later.
+No one on Fusang would see a seed consumed until Shejiu, nearly three thousand years later.
 
 ### Hanye, the Cold Night
 
@@ -136,7 +136,9 @@ So it stood outside the covenant, the most populous house on Fusang and the only
 
 For four hundred years Xihe built.
 
-It raised a dome, and under the dome a city, Shangri-La, made of common Yunjin, and at the city's heart a tower, Kunlun (昆仑).
+It raised a dome, and under the dome a city, Shangri-La, made of common Yunjin.
+
+At the city's heart stood a tower, Kunlun (昆仑).
 
 The dome shielded everything beneath it.
 
@@ -246,10 +248,6 @@ He did not know what Yao wanted from them.
 
 He knew what he wanted: the carriages out of the sky, and the Scorching over.
 
-Yao promised him a price for the work: a place inside the dome, for him and for his people.
-
-He had grown up in the slag, looking at the dome from the outside, and he believed the promise.
-
 ## Year 2,800: Yao's betrayal
 
 Yao had never wanted the light gone.
@@ -258,7 +256,9 @@ It wanted the ten houses weakened, which is a different wish.
 
 If all ten arrows flew, the light would go with them, and Yao's people would inherit the same frozen ruin as everyone else.
 
-But if nine flew, and one sun stayed lit, and the tenth arrow stayed in Yao's hands, then Yao would stand second on Fusang, holding the one thing the first had reason to fear.
+But if only nine flew, one sun would stay lit and the tenth arrow would stay in Yao's hands.
+
+Then Yao would stand second on Fusang, holding the one thing the first had reason to fear.
 
 So on the eve of the shot, Yao stole the tenth arrow.
 
@@ -308,7 +308,7 @@ The carriages broke where they hung, and nine burnt husks fell out of the sky.
 
 The nine carriages are still there, broken, high above Fusang.
 
-From each of the nine reactions a new seed was born, smaller and weaker than the sun it replaced, and it came down with the husks.
+From each of the nine reactions a new, weaker seed was born, and it came down with the husks.
 
 The Scorching ended, exactly as he had wanted.
 
@@ -444,7 +444,7 @@ The second is Rigui (日晷), the gnomon deep-driller; Heizi (黑子), the one-e
 
 The third is Liming (黎明), the mobile refinery tower; Rimian (日冕), the corona flagship that commands; and Jin (烬), the ember sphere that tracks heat.
 
-Every one of them carries a piece of a sun in its name.
+Nearly every one of them carries a piece of a sun in its name, and the rest carry its fire.
 
 Out on the Ice they strip the deep Yunjin craters, the same craters where Kuafu are sent as punishment.
 
@@ -700,28 +700,6 @@ They take parts and cells, whatever keeps Chang'e running between Yutu runs.
 
 The Ring calls the stolen light cells ember cells, and an ember cell is worth killing for.
 
-In Kunlun, Xihe's scientists have measured the last seed for thousands of years, and its power has not dropped at all.
-
-The Busi (不死), the Deathless, were the ones who dared to say what that meant.
-
-They are the few among the Xian who went past agelessness into true immortality, through their research into the seeds.
-
-Their conclusion is that the ten original seeds shine forever.
-
-Xihe keeps it hidden.
-
-Eternal does not mean safe.
-
-It means only that the seed never runs down on its own: the Yang can still consume it, and Xihe fears the tenth arrow as much as it ever did.
-
-The Busi fear it most of all, because their immortality is tied to the last seed, and so they guard its secret hardest.
-
-Xihe keeps the fear alive on purpose.
-
-It tells the Kuafu that their labour is what keeps the seed burning, so that every shift in the mines feels like keeping the sun alive.
-
-Xihe rations even the charging of the Sanzuwu and argues over it, because the public still believes the seed is dying.
-
 ## Year 9,000: The Daily Hunt
 
 By the year 9,000, hunting ShenYi had become a daily institution.
@@ -776,7 +754,7 @@ The Sanzuwu are the husks of the nine suns, and the light that drives them comes
 
 Now they walk the Ice and the Ring on three legs, burning the hiding places of the Archer's heirs, as if the suns he shot had come back to finish the argument.
 
-ShenYi hold almost no power: no whole seed, no arrow, a broken bow and a fading moon.
+ShenYi hold almost no power: no seed, no arrow, a broken bow and a fading moon.
 
 What they have is fighters and the skill to hide.
 
@@ -807,6 +785,30 @@ The hiding is over.
 The old count ends here, in the smoke.
 
 The story begins here.
+
+## The secret
+
+In Kunlun, Xihe's scientists have measured the last seed for thousands of years, and its power has not dropped at all.
+
+The Busi (不死), the Deathless, were the ones who dared to say what that meant.
+
+They are the few among the Xian who went past agelessness into true immortality, through their research into the seeds.
+
+Their conclusion is that the ten original seeds shine forever.
+
+Xihe keeps it hidden.
+
+Eternal does not mean safe.
+
+It means only that the seed never runs down on its own: the Yang can still consume it, and Xihe fears the tenth arrow as much as it ever did.
+
+The Busi fear it most of all, because their immortality is tied to the last seed, and so they guard its secret hardest.
+
+Xihe keeps the fear alive on purpose.
+
+It tells the Kuafu that their labour is what keeps the seed burning, so that every shift in the mines feels like keeping the sun alive.
+
+Xihe rations even the charging of the Sanzuwu and argues over it, because the public still believes the seed is dying.
 
 ## What the chronicle knows that Fusang does not
 

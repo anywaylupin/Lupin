@@ -33,9 +33,9 @@ Never show these, because each would add story:
 - The last seed dimming, which only a Yutu (玉兔) run has caused.
 - Zaoya or Yao's hideout in view, because either would say where the hideout lies, which the bible leaves open.
 - Zaoya awake or moving at all, though the bible lets it wake and roam now and then, because where it wakes would place the hideout.
-- A machine, hunt or fire near Yao's hideout, because the bible leaves open how close the Yiwan sweep came.
+- Anything that marks a place as Yao's hideout, because the bible leaves open where it lies and how close the Yiwan sweep came.
 - Xihe moving against Yao: no Sanzuwu, Yayu or fire aimed at the dome's lower tiers, where Yao's elite live, or at Yao's hideout, because even after Yiwan Xihe has not moved against Yao.
-- A machine or fire near Chang'e, or Chang'e in plain sight.
+- A machine or fire near Chang'e, or any visible trace of Chang'e, whose cloak hides it from eye and radar.
 - Yang glowing, because it stays inert until raw Yin light reaches it.
 - Earlier eras, and anything after Yiwan.
 
@@ -43,13 +43,18 @@ Never show these, because each would add story:
 
 ### The planet
 
-- Xukai is a cold, dim remnant that gives almost nothing back: a faint disc low on the horizon, never the key light.
+As in the continent's tables below, the middle column is canon and the last is a suggestion you may improve; every row here is runtime, drawn in the far layer from shaders and pure data.
+
+| Element                      | Canon                                                                                                  | Suggestion                                                                                                                       |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| Globe, runtime               | An Earth-like planet in another galaxy, not yet named, that still circles its dead star.               | A still sphere with the Dayside toward Xukai, carrying no label.                                                                 |
+| Xukai, runtime               | The star, dead for 10,000 years and now a cold, dim remnant.                                           | A faint disc low on the horizon that gives almost nothing back, never the key light.                                             |
+| Sky and afterglow, runtime   | The sky of a planet whose star is now a cold, dim remnant.                                             | A sunset world: a deep indigo sky over a thin, cold band of afterglow around Xukai.                                              |
+| Nightside, runtime           | The hemisphere that took no meteors when the star died, and froze.                                     | Dark, unlit ice past the terminator, seen only from high zoom.                                                                   |
+| Rest of the Dayside, runtime | The other Dayside continents, each with its own share of seeds and its own civilisation, still untold. | Unlit haze or cloud, beyond the limb or out of frame, so it neither shows nor denies them and never reads as empty ocean or ice. |
+
 - On Fusang, only the last seed and what people made give light: the dome, the Ring's leaks and windows, the Sanzuwu and the fires.
-- It reads as a sunset world, a deep indigo sky over a thin, cold band of afterglow around Xukai.
-- The Dayside faced the star when it died and took every meteor; the Nightside received nothing and froze.
-- Model only Fusang.
-- Keep the rest of the Dayside unresolved, under unlit haze or cloud, beyond the limb or out of frame, so it neither shows nor denies the other continents and never reads as empty ocean or ice.
-- Keep the other continents as empty slots in the geography data so they can come later.
+- Model only Fusang, and keep the other continents as empty slots in the geography data so they can come later.
 
 ### The continent at Yiwan
 
@@ -72,31 +77,32 @@ Rows marked runtime come from shaders and pure data, not `.glb` files.
 
 #### Guanghuan, the Ring
 
-| File                       | Canon                                                                                  | Suggestion                                            |
-| -------------------------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| `kang-tower.glb`           | Kang (炕) towers: stacked homes over heat pipes stolen from the dome.                  | Patched stacks with warm vents at the base.           |
-| `heat-pipe.glb`            | Stolen pipes carrying the dome's heat under the towers.                                | Patched segments running out from the dome as spokes. |
-| `raised-platform.glb`      | Homes and streets held off the killing ice on crude Yunjin lift, ten thousand of them. | Welded scrap decks with a flickering underglow.       |
-| `mine.glb`, `refinery.glb` | The mines and refineries of the lit belt, worked on the day shift.                     | Headframes over pits; tanks with furnace light.       |
-| `night-bell.glb`           | The warning before Xihe pulls the light back.                                          | Bell frames on high platforms.                        |
-| Ember cells, runtime       | Light cells stolen by ShenYi, worth killing for.                                       | Tiny warm points among the platforms at night.        |
+| File                       | Canon                                                                                  | Suggestion                                                                                                                                             |
+| -------------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `kang-tower.glb`           | Kang (炕) towers: stacked homes over heat pipes stolen from the dome.                  | Patched stacks with warm vents at the base.                                                                                                            |
+| `heat-pipe.glb`            | Stolen pipes carrying the dome's heat under the towers.                                | Patched segments running out from the dome as spokes.                                                                                                  |
+| `raised-platform.glb`      | Homes and streets held off the killing ice on crude Yunjin lift, ten thousand of them. | Welded scrap decks with a flickering underglow.                                                                                                        |
+| `mine.glb`, `refinery.glb` | The mines and refineries of the lit belt, worked on the day shift.                     | Headframes over pits; tanks with furnace light.                                                                                                        |
+| `night-bell.glb`           | The warning before Xihe pulls the light back.                                          | Bell frames on high platforms, each with a `bell` node pivoted at its yoke that swings while the bell phase runs, so the warning reads with sound off. |
+| Ember cells, runtime       | Light cells stolen by ShenYi, worth killing for.                                       | Tiny warm points among the platforms at night.                                                                                                         |
 
 #### The Ice and the sea
 
-| File                             | Canon                                                                                                                                                 | Suggestion                                                                                                     |
-| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `shenyi-hideout.glb`             | ShenYi's hidden bases, burnt one after another in Yiwan.                                                                                              | Low structures past the light's edge, intact, burning and burnt.                                               |
-| `ruin-jia.glb` to `ruin-gui.glb` | The ruins of the nine houses that lost their seeds: Jia, Yi, Ding, Wu, Ji, Geng, Xin, Ren and Gui, and none for Bing.                                 | Nine compounds half buried in ice, varied in silhouette.                                                       |
-| Craters, runtime                 | The deep Yunjin craters the Sanzuwu strip, where Kuafu are sent as punishment.                                                                        | Terraced pits with dark gold seams.                                                                            |
-| Frozen sea, runtime              | Xiushe lives under its ice.                                                                                                                           | Dark, translucent ice with pressure ridges.                                                                    |
-| `xiushe.glb`                     | Xiushe (修蛇): a wild serpent under the frozen sea.                                                                                                   | A long shape moving dimly under the ice.                                                                       |
-| `dafeng.glb`                     | Dafeng (大风): a wild, storm-sized bird riding the night winds.                                                                                       | Seen only at night, its wings blotting out lights.                                                             |
-| `zaoya.glb`                      | Zaoya (凿牙): Yao's enormous beast, which sleeps for years in the deep ice, giving off no heat or signal; the tenth arrow's Yang is its chisel teeth. | Built and approved in the preview page, never placed in the scene until the owner answers open thread 1.       |
-| `yao-hideout.glb`                | The secret Yao hideout in the deep ice where Zaoya sleeps.                                                                                            | Built and approved in the preview page, never placed in the scene until the owner answers open thread 1.       |
-| `fengxi.glb`                     | Fengxi (封豨): an armoured tunnelling boar digging ShenYi's supply routes.                                                                            | Rarely seen; its tunnels show as faint ridges.                                                                 |
-| `icewalker.glb`                  | The Bingmin (冰民), Icewalkers who mine Yunjin, hunt beasts and carry ShenYi supplies.                                                                | Caravans as distant files of faceless walkers under loads.                                                     |
-| `yayu.glb`                       | Yayu (猰貐): a chrome hunting hound that tracks ShenYi for Xihe.                                                                                      | Packs of a few near the fires.                                                                                 |
-| Chang'e (嫦娥), runtime          | ShenYi's lifted dome far out in the Ice, invisible to eye and radar, casting illusions.                                                               | No mesh: a proxy that bends the horizon so it does not line up, as the cloak's illusion, with no heat shimmer. |
+| File                                           | Canon                                                                                                                                                 | Suggestion                                                                                                                         |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `shenyi-hideout.glb`                           | ShenYi's hidden bases, burnt one after another in Yiwan.                                                                                              | Low structures past the light's edge, intact, burning and burnt.                                                                   |
+| `ruin-jia.glb` to `ruin-gui.glb`               | The ruins of the nine houses that lost their seeds: Jia, Yi, Ding, Wu, Ji, Geng, Xin, Ren and Gui, and none for Bing.                                 | Nine compounds half buried in ice, varied in silhouette.                                                                           |
+| Craters, runtime                               | The deep Yunjin craters the Sanzuwu strip, where Kuafu are sent as punishment.                                                                        | Terraced pits with dark gold seams.                                                                                                |
+| Frozen sea, runtime                            | Xiushe lives under its ice.                                                                                                                           | Dark, translucent ice with pressure ridges.                                                                                        |
+| `xiushe.glb`                                   | Xiushe (修蛇): a wild serpent under the frozen sea.                                                                                                   | A long shape moving dimly under the ice.                                                                                           |
+| `dafeng.glb`                                   | Dafeng (大风): a wild, storm-sized bird riding the night winds.                                                                                       | Seen only at night, its wings blotting out lights.                                                                                 |
+| `zaoya.glb`                                    | Zaoya (凿牙): Yao's enormous beast, which sleeps for years in the deep ice, giving off no heat or signal; the tenth arrow's Yang is its chisel teeth. | Built and approved in the preview page, never placed in the scene until the owner answers open thread 1.                           |
+| `yao-hideout.glb`                              | The secret Yao hideout in the deep ice where Zaoya sleeps.                                                                                            | Built and approved in the preview page, never placed in the scene until the owner answers open thread 1.                           |
+| Fengxi's tunnels and Icewalker routes, runtime | ShenYi's supply routes to Chang'e, dug by Fengxi and walked by Icewalker couriers.                                                                    | Faint ridges and tracks in the terrain data that fade out long before Chang'e.                                                     |
+| `fengxi.glb`                                   | Fengxi (封豨): an armoured tunnelling boar digging ShenYi's supply routes.                                                                            | Rarely seen, surfacing along its tunnel ridges.                                                                                    |
+| `icewalker.glb`                                | The Bingmin (冰民), Icewalkers who mine Yunjin, hunt beasts and carry ShenYi supplies.                                                                | Caravans as distant files of faceless walkers under loads.                                                                         |
+| `yayu.glb`                                     | Yayu (猰貐): a chrome hunting hound that tracks ShenYi for Xihe.                                                                                      | A single plated hound near the fires.                                                                                              |
+| Chang'e (嫦娥), runtime                        | ShenYi's lifted dome far out in the Ice, invisible to eye and radar, casting illusions.                                                               | No mesh and no visible effect in any graphics mode: a position in data only, used to keep machines, fires and visible traces away. |
 
 The bible calls the beasts cyborgs: suggest heavy plating on Yayu and Jiuying, which serve Xihe, and ask about the rest.
 
@@ -133,7 +139,9 @@ The dome's own light never leaves, and the shift's light never reaches the Ice.
 - The bible does not say how Xihe extends the light, so show the effect, never a device: a warm wash spreading from the dome to the edge of the lit belt.
 - Let the ice follow the light's edge, sparing heat pipes and tower bases longest.
 - At night only windows, vents, lift glow, ember cells, the Sanzuwu and the fires light the Ring.
+- Swing the bells through each bell phase whether or not sound is on, because sound is off by default.
 - Synthesise the bell as a new `bell()` on the object `createAudio` returns in `fx/audio.ts`, playing only when `prefs().sound` is on, the audio context is unlocked by a gesture and the tab is visible.
+- Keep that gate on sound, unlock and visibility, and the edge that marks the start of each bell phase, in pure functions so Vitest can test them without a DOM.
 - Expose `bell()` from `createChrome` as `gesture` is, and let `main.ts` pass it to the city, which calls it once as each bell phase begins.
 - Suggest a cycle of a few minutes as one constant.
 
@@ -144,17 +152,16 @@ Xihe runs the campaign itself, without Yao: the Sanzuwu find and burn one ShenYi
 - Write a pure schedule that moves each hideout through hidden, found, burning and smouldering, with two or three smoke columns up at a time.
 - Light the columns from below with ember-red fire, tall enough for the whole Ring to see.
 - Show the Ring watching through light, not figures: windows and platform edges facing the smoke stay lit.
-- Keep the war and scouting machines of the two active triads in the field near the fires, with Yayu packs on the edges, and keep their exploitation machines at work in the craters.
+- Keep the war and scouting machines of the two active triads in the field near the fires, with Yayu on the edges, and keep their exploitation machines at work in the craters.
 
 ### Rare events through `reveal()`
 
 Opening a hex calls `reveal()`, and the director stages the nearest show behind it; give it a new cast of short, canon-safe moments:
 
 - A Sanzuwu at work, drawn only from the two triads in the field per the home-triad value: with the suggested triad two home, Yuhui cutting in a crater, Liming flaring, Rishi stalking past dark against the smoke, Jin sweeping for heat, or Yan setting a hideout alight.
-- A Yayu pack breaking into a run, or an Icewalker caravan cresting a ridge.
+- Yayu breaking into a run, or an Icewalker caravan cresting a ridge.
 - Jiuying lifting a few heads out of Tanggu, or a platform's lift stuttering.
 - Dafeng crossing at night, or Xiushe cracking the sea ice from below.
-- Rare: the horizon wavering where Chang'e stands.
 
 Keep the stage lock in `events.ts` so that one large moment runs at a time.
 
@@ -164,11 +171,12 @@ Canon fixes the essentials: Fusang is the Asia of its planet, the dome stands ov
 
 Everything below is a suggestion; keep it in one pure data module so the owner can move things.
 
-- Fusang is the eastern continent of the Dayside, near its eastern rim, so Xukai hangs low in the west and the Nightside begins past the frozen sea.
+- Fusang lies on the Dayside, placed wherever the frame needs, with Xukai low in the west; the rest of the Dayside stays unresolved under haze, as the planet section above requires.
 - The dome sits over Tanggu in the east, with a strip of Ice between the Ring and the sea.
-- Guanghuan is two to three dome radii deep: towers and platforms crowd the inner band along the heat pipes, and the lit belt fills the outer band.
+- Guanghuan is two to three dome radii deep: towers and platforms crowd the inner band along the heat pipes, and the mines and refineries fill the outer band, the whole Ring lying inside the lit belt.
 - Past the light's edge come the burning hideouts, then the nine ruins far apart, then the craters.
-- Yao's hideout and the sleeping Zaoya have a position in data only and no mesh in the scene; ask the owner before placing or showing either.
+- Yao's hideout and the sleeping Zaoya have no position and no mesh until the owner answers open thread 1: hold them as one unset, optional position in the geography data, and ask for it in phase 0.
+- Until then nothing in the scene may depend on where the hideout lies.
 - Chang'e stands in the far western interior; Fengxi's tunnels and the Icewalker routes reach it, but every visible trace of them fades out long before it.
 - At rest the camera looks west across the Ring and the dome toward the Ice, the nine wrecks overhead and Xukai low on the horizon.
 - Distances serve the frame, not realism: enlarge the dome, the Ring and the machines so they read from every height.
@@ -178,7 +186,7 @@ Everything below is a suggestion; keep it in one pure data module so the owner c
 - Stylised, smooth and sleek sci-fi with cyberpunk grit, after Akira, Cyberpunk: Edgerunners and Arcane.
 - Smooth means bevelled forms and strong silhouettes; grit means wear, patched plating, cables, vents, scorch and smoke, most of it in the Ring.
 - Common Yunjin is one dark, smooth metal with a gold undertone, rough scrap in Kuafu hands.
-- The Sanzuwu are rings, discs and spheres on three legs; the beasts are animal mass, plated metal and glowing seams.
+- The Sanzuwu are rings, discs and spheres on three legs; the beasts are animal mass and plated metal, with glowing seams on Xihe's beasts only; Zaoya carries no glow anywhere, and its teeth stay dark.
 - Keep the palette dark and frozen, broken by the gold-white of the seed, the warm leaks of the Ring, and the ember red of the Sanzuwu and the fires.
 - Light the scene with emissive materials and a few real lights at the seed and the fires, with bloom in full graphics.
 - Avoid photorealism, photographic textures and readable text, and keep the seed the brightest point at rest.
@@ -188,28 +196,34 @@ Everything below is a suggestion; keep it in one pure data module so the owner c
 
 - Generate every model as a `.glb` from a TypeScript script in this repository: no Blender, no downloads, no outside services.
 - Write one file per model, named after it, such as `kunlun.glb`, so a hand-made model can replace it later with no code change.
-- Keep one deterministic builder per model, a registry of them all, and a `pnpm models` script that regenerates all or one by name.
+- Keep every model in one directory under `src/`, such as `src/hive/city/models/`, and never in `public/`, because everything there ships to `dist`.
+- Keep one deterministic builder per model and a `pnpm models` script that regenerates all or one by name.
+- Split the registry in two: a pure metadata module with each model's name, budget, approval, generated or hand-made mark and load priority, and a builder map that only the generator and the preview page import.
+- The runtime imports only the metadata and the generated list of approved `?url` imports, so no builder reaches the three.js client chunk.
 - Export with three's `GLTFExporter`.
 - Plain Node cannot load `src/` modules: Node 22's type stripping does not resolve this repository's extensionless relative imports, and no TypeScript runner is installed.
-- Either bundle the builders through Vite under `pnpm dev` and drive them from a Playwright script in the Chromium the build installs, or ask the owner to approve a runner such as tsx; never import Vite or esbuild directly, because they are only transitive dependencies.
+- `GLTFExporter` also reads its output through `FileReader`, which Node lacks, so a Node runner such as tsx would need a shim as well, and either would need the owner's approval.
+- Instead, bundle the builders through Vite under `pnpm dev` and drive them from a Playwright script in the Chromium the build installs; never import Vite or esbuild directly, because they are only transitive dependencies.
 - Use vertex colour rather than textures, commit the outputs, and mark `*.glb` as binary in `.gitattributes`.
-- Mark each model as generated or hand-made, and never let the generator overwrite a hand-made file.
+- Never let the generator overwrite a model the metadata marks as hand-made.
 
 Every model follows one contract, which a pure `checkModel()` validates:
 
 - Metres, y up, front toward positive z, origin at the ground contact point.
 - Child nodes `lod0`, `lod1` and `lod2`, each complete, for anything repeated or distant.
 - Material names from a fixed list of slots, such as `yunjin`, `husk`, `scrap` and `glow-ember`, which the runtime swaps for shared materials and merges per slot.
-- Moving parts as named nodes pivoted at their joints, such as `leg-1` or `head-9`, animated in code.
-- Triangle budgets in the registry, starting near 20,000 for a hero `lod0`, 5,000 for a repeated one, and a quarter of that per step down.
+- Moving parts as named nodes pivoted at their joints, such as `leg-1`, `head-9` or `bell`, animated in code.
+- Triangle budgets in the registry's metadata, starting near 20,000 for a hero `lod0`, 5,000 for a repeated one and 500 for a platform, and a quarter of that per step down.
 
 Draw anything repeated as one `InstancedMesh` per level and slot, binned by distance in a pure function; instance the nearest few thousand platforms and draw the rest as lights.
+
+Cap the instances of each repeated model per graphics level, so that each level's budget times the instances binned at that level, summed, fits that graphics level's caps under Loading and performance.
 
 Build a preview page that loads each model with `GLTFLoader`, lets the owner rotate it with `OrbitControls` under day and night lighting, switches levels and wireframe, and shows triangles, size and the contract check.
 
 It runs only under `pnpm dev` and never reaches `dist`: register its route through an Astro integration's `injectRoute` only when `command` is `dev`, and keep it out of `src/pages` and `public/`.
 
-The owner approves models there, you record approval in the registry, and the site loads only approved models, with grey proxies for the rest.
+The owner approves models there, you record approval in the registry's metadata, and the site loads only approved models, with grey proxies for the rest.
 
 Every `.glb` imported with `?url` anywhere in the runtime graph is emitted into `dist`, so have the runtime import only approved models, for example from a generated list of `?url` imports.
 
@@ -223,13 +237,14 @@ Every `.glb` imported with `?url` anywhere in the runtime graph is emitted into 
 - The world draws no text, so drop every other option, including the font families `zh` and `mono`, and the code in `main.ts` that builds them.
 - Keep `#city` and its scanline overlay, the `CityLink` in `state.ts`, the step on every other frame, and skipping renders when nothing moved.
 - Keep `events.ts` as it is, and `post.ts` apart from the two-layer change under the camera.
-- Keep `Parts` and `holder` from `kit.ts`, and rewrite the rest to the new slot list, with no window, billboard, roof, pagoda, tile or neon code.
-- Keep `merged()` from `materials.ts`, and rewrite the rest for the new slots without the facade texture.
+- From `kit.ts` keep `holder` and the core of `Parts`: its collector, `at()`, `add()`, `box()`, `block()`, `cyl()`, `strut()` and the line helpers.
+- Remove `facadeUv`, the `WIN` import and the facade UVs it feeds in `box()` and `cyl()`, `screen()` and `screens`, and rewrite the rest of `kit.ts` to the new slot list, with no window, billboard, roof, pagoda, tile or neon code.
+- Keep `merged()` from `materials.ts`, adapting its UV and `TINTED` rules to the new slot list, and rewrite the rest for the new slots without the facade texture.
 - Keep the `Landmark` interface in `landmark.ts`, and drop `Kit` with its `Boards` import.
 - Keep `director.ts` with a new `Cast`, and give it the crown point in place of `DOME`.
 - Keep `emitter.ts`, and move a glow texture builder into a kept file before deleting `textures.ts`.
 - Keep only `VIEW.fov`, the wider phone lens, and `Ndc`, `Vec3`, `Candidate`, `chooseFor` and `COOLDOWN` from `plan.ts`; the new camera module replaces `VIEW.eye`, `VIEW.pitch` and `PAN`.
-- Delete everything else in `src/hive/city/` and `plan.ts`, and rebuild the scene inside `world.ts`.
+- Delete everything else in `src/hive/city/` and `plan.ts`, and rebuild the scene behind `world.ts`, which stays the entry point, in new modules of about 300 lines or fewer.
 
 ### The camera from continent to planet
 
@@ -249,49 +264,60 @@ Today `place()` maps sheet pan to a flat move and sheet zoom to a short dolly, b
 ### Low graphics, reduced motion and software GL
 
 - Keep `lowGraphics(h)` and `setLow`: full graphics gets the composer with bloom, every level, full instance counts, particle smoke, shimmer and the ice creep shader.
-- Low graphics renders directly with `lod1` and below, half the repeated instances, card smoke, no shimmer and no horizon bend, so Chang'e leaves no trace.
+- Low graphics renders directly with `lod1` and below, half the repeated instances, card smoke and no shimmer.
 - On software GL keep `softwareGl()`, one frame in `SOFT_EVERY`, pixel ratio 0.5 and low graphics by default; headless Chromium usually renders through SwiftShader, so the baselines will likely show the low path.
 - Under reduced motion the clocks freeze and the camera stays home, so render one still state: suggest late in the day shift, two smoke columns up.
+- Start the day-shift and campaign clocks at that still state, so a clock frozen from load renders it, and add no field to `CityFrame`.
 - Let `life` drive the day shift, the campaign, machines, beasts and director, and `weather` drive wind, smoke and shimmer.
+- The settings switches for `life` and `weather` in `src/components/HiveChrome.astro` still describe the first design: propose labels for what each flag now drives, such as "Day shift and machines" and "Wind and smoke", and ask the owner, because this is UI copy and the settings baseline will change.
 
 ### Loading and performance
 
 - Load models after the sheet is interactive, the dome, Kunlun and the tenth carriage first, and keep the proxy of any model that fails.
 - Fetch and parse one model per idle callback after `load`, because parsing them all at once adds long tasks that raise Total Blocking Time.
+- Use `requestIdleCallback` where it exists and fall back to `setTimeout` where it does not, as in Safari, or an unguarded call throws and those visitors keep grey proxies forever.
 - Make every model swap and every proxy fallback mark the frame dirty, as `drawn = false` does today, or a still frame under reduced motion keeps its proxies forever.
-- Set a readiness flag on `#city` only after the frame that follows the last rest-view model resolving, loaded or failed, and make `settle()` in the visual spec wait for it.
+- Set a readiness flag on `#city` once the last rest-view model has resolved, loaded or failed, and then either a city frame has rendered or the city is not being drawn, and make `settle()` in the visual spec wait for it.
+- The city is not drawn while a back sheet covers it: on a section or leaf route `main.ts` never calls `city.frame()`, so a flag that waits only for the next city frame would never appear there.
 - Keep the Lighthouse performance score at 0.9 or more and the other three categories at 1, as `lighthouserc.json` asserts.
-- Lighthouse runs only in CI, so to measure it ask the owner either to push a branch or to approve `pnpm dlx @lhci/cli autorun --config=lighthouserc.json` after `pnpm build`.
-- Until then, report Total Blocking Time measured with Playwright tracing on the four URLs in `lighthouserc.json`, under software GL.
+- Lighthouse runs only in CI, on pull requests and pushes to `main`, so to measure it ask the owner either to open a pull request from a pushed branch or to approve `pnpm dlx @lhci/cli autorun --config=lighthouserc.json` after `pnpm build`.
+- Until then, report Total Blocking Time on the four URLs in `lighthouserc.json` under software GL, with 4x CPU throttling through CDP `Emulation.setCPUThrottlingRate`.
+- Collect long tasks with Chromium's `browser.startTracing` or a `PerformanceObserver` for `longtask` entries, not Playwright's trace viewer, and sum each task's time over 50 ms between first contentful paint and load settling.
 - Keep the console free of errors and warnings, because `tests/e2e/smoke.spec.ts` fails on either and best practices drops on errors.
-- Catch model load failures without logging, fetch only files the registry lists, and normalise attributes before merging as `merged()` does.
+- Catch model load failures without logging, fetch only files the registry's metadata lists, and normalise attributes before merging as `merged()` does.
 - Start from 150 draw calls and 1.5 million triangles in full graphics, 60 and 400,000 in low, and 8 MB of models, then measure.
-- In dev, read draw calls and triangles from `renderer.info.render` after the rest frame.
+- In dev, set `renderer.info.autoReset` to false, call `renderer.info.reset()` before the far pass, and read draw calls and triangles from `renderer.info.render` right after the near pass, before the post passes.
 - Keep Draco, meshopt and KTX2 out unless the owner agrees to serve their decoders.
 
 ## Engineering rules
 
 - Follow `AGENTS.md`: files under about 300 lines, strict TypeScript with no `any`, comments only on declarations.
-- Keep the geography, roster, day shift, campaign, camera mapping, crown projection, level choice, registry and `checkModel()` in pure modules that take a `Rand` and a clock instead of calling `Math.random()` or `performance.now()`.
+- Keep the geography, roster, day shift, campaign, camera mapping, crown projection, level choice, registry metadata and `checkModel()` in pure modules that take a `Rand` and a clock instead of calling `Math.random()` or `performance.now()`.
 - Add no dependency without asking the owner first; expect only three's own addons: `GLTFLoader`, `GLTFExporter`, `OrbitControls`, `BufferGeometryUtils`, and the composer passes already in use.
 - Run `pnpm format`, `pnpm lint`, `pnpm check` and `pnpm test` before every commit, and `pnpm test:e2e` after each phase that changes the scene.
 - At the end of each phase that changes the scene, regenerate the baselines with `pnpm test:visual:update`, or ask the owner to run it when Docker is missing.
-- Until the baselines are regenerated, every command means format, lint, check, test and every e2e spec except `visual.spec.ts`.
+- Every command means `pnpm format`, `pnpm lint`, `pnpm check`, `pnpm test` and `pnpm test:e2e`; leave out `visual.spec.ts` only until the baselines for the current phase are regenerated.
 - Commit after each finished piece of work, and never push.
 - Update the `city/` line in `AGENTS.md` when you delete the first design and again for the final module list, add `pnpm models` to its Commands block, and add the generator and the preview page to its Layout.
 - Leave `CITY.md` and the `fusang/` documents alone.
-- Trim `SIGN_GLYPHS` in `astro.config.ts` to the two glyphs of the Juka title, 橘卡, and update its comment; ask the owner before the world draws any glyph.
+- Once the world draws no text, nothing draws with the Noto Sans SC entry in `astro.config.ts` or the `--font-zh` Font tag in `src/layouts/Shell.astro`, so ask the owner whether to remove both, with `SIGN_GLYPHS`.
+- If the owner keeps the font, trim `SIGN_GLYPHS` to the CJK glyphs that `src/content/` still renders outside the city and update its comment; ask the owner before the world draws any glyph.
 
 ## Tests
 
 - Rewrite `tests/unit/city.test.ts` around the new pure modules, keeping the `chooseFor` and stage lock tests and the existing `holeView` tests, renamed for the new world.
 - Test that the crown projection lands Kunlun's crown on `holeView` at 390x844 and 1440x900.
 - Test the canon: nine Sanzuwu in three triads with one triad home, nine ruins without Bing, nine wrecks, no visible Chang'e, Zaoya or Yao's hideout, a seed that never dims, and every proper name the world uses appears in `CITY.md`.
-- Test the day shift, the campaign and the camera: light gone at night, the shift's light never reaching the Ice, no fire near Yao's hideout or Chang'e, Zaoya never moving, and altitude falling as zoom rises.
+- Test that Yao's hideout and Zaoya have no scene node, and that their position stays unset until the owner answers open thread 1.
+- Test every item in the never-show list: no machine, hunt or fire near Chang'e, or near Yao's hideout once the owner sets its position; no Sanzuwu, Yayu or fire aimed at the dome's lower tiers; Zaoya never moving; and no Yang material with emission.
+- Test the day shift, the campaign and the camera: light gone at night, the shift's light never reaching the Ice, and altitude falling as zoom rises.
+- Test the ice: its cover rises over the lit belt through pull back and night and clears behind the spreading light, with heat pipes and tower bases the last to freeze.
+- Test the far layer: Xukai is never the key light, the seed is the brightest point at rest, and the globe draws nothing for the other continents.
 - Test the cast: no reveal stages a machine from the home triad, and the director never casts one outside Kunlun's crown.
-- Test the bell: it rings once per cycle in the bell phase and never when the sound preference is off.
-- Run `checkModel()` on every model, sum registry budgets times instance counts against each cap, assert that the scene loads only approved ones, and keep `settings.spec.ts` finding one `#city canvas`.
-- After `pnpm build`, check that `dist` holds no preview page and no unapproved `.glb`.
+- Test the bell through its pure functions: it rings once per cycle in the bell phase and never when the sound preference is off.
+- Vitest runs in Node with no DOM, so add no DOM test environment without asking; to test the bell's wiring, stub `AudioContext` in a Playwright init script.
+- Run `checkModel()` on every model, sum each level's budget times the instances binned at that level against each cap, per graphics level, assert that the scene loads only approved models, and keep `settings.spec.ts` finding one `#city canvas`.
+- Check that `dist` holds no preview page and no unapproved `.glb` in a Playwright spec under `tests/e2e`, reading `dist` with `node:fs`, because only the e2e web server runs `pnpm build` first and CI runs `pnpm test` before any build.
 - Regenerate the Linux baselines with `pnpm test:visual:update`, which needs Docker; without it, ask the owner to run it.
 
 ## Phased plan
@@ -310,7 +336,7 @@ Stop and wait for the owner's approval before writing code.
 
 Write the pure modules and their tests, delete the first design, stand the continent up as terrain with grey proxies, and update the `city/` line in `AGENTS.md`.
 
-- Done when every command passes, the hole frames Kunlun's crown at both sizes, and no name from the first design is left in `src/hive/city/`, `src/hive/main.ts`, `tests/unit/city.test.ts`, `src/styles/overlay.css` or `astro.config.ts`.
+- Done when every command passes, the hole frames Kunlun's crown at both sizes, and no name from the first design is left in `src/hive/city/`, `src/hive/main.ts`, `src/components/HiveChrome.astro`, `tests/unit/city.test.ts`, `src/styles/overlay.css` or `astro.config.ts`.
 - The hex sheet's own figures in `figures.ts`, `flourish.ts`, `scenes.ts` and `interact.ts` are not part of the city and stay.
 
 ### Phase 2: the generator and the first model
@@ -332,7 +358,8 @@ Build the dome, Shangri-La, Kunlun, the tenth carriage and the wrecks; then the 
 Assemble both layers, instancing, the camera curve, the framing, and the low, software and reduced motion paths.
 
 - Done when the rest view matches the plan at both sizes, zoom runs from the Ring to orbit without depth fighting, budgets hold, and Lighthouse stays at 0.9 or more.
-- The low path must render `lod1` and below with half the instances, no shimmer and no horizon bend; software GL must default to low at pixel ratio 0.5; and reduced motion must render the one suggested still state with the camera at home.
+- At `ZOOM_MIN` the planet curves away and the Dayside, the Nightside and Xukai show, with no label and no light or hint of another continent.
+- The low path must render `lod1` and below with half the instances and no shimmer; software GL must default to low at pixel ratio 0.5; and reduced motion must render the one suggested still state with the camera at home.
 
 ### Phase 5: the day shift and Yiwan
 
@@ -349,7 +376,7 @@ Tune the palette and composition against the sheet, measure, regenerate the base
 ## Out of scope
 
 - Other continents, and any light or hint of them on the globe.
-- Characters: no named person and no figure close enough to read as one.
+- People: no named person and no figure close enough to read as one.
 - The interiors of Shangri-La and Chang'e.
 - Story beyond Yiwan, and answers to the bible's open threads.
 
@@ -358,9 +385,12 @@ Tune the palette and composition against the sheet, measure, regenerate the base
 - Which triad is home in Yiwan, and whether Rishi and Ri'er fly.
 - Whether the planet turns; suggest a still globe with the Dayside toward Xukai.
 - How much of the Dayside the orbital view may show while the other continents are unmodelled.
-- Where Yao's hideout and the sleeping Zaoya lie, which is open thread 1, and whether either may ever be placed or shown.
+- Where Yao's hideout and the sleeping Zaoya lie and how close the Yiwan sweep came, which is open thread 1, and whether either may ever be placed or shown.
 - Whether Zaoya may ever be shown awake and roaming, as the bible allows, once its hideout is placed.
+- Whether Chang'e's cloak should ever show as a visible illusion; until the owner says so, Chang'e has no visible effect.
 - Whether the nine ruins should reflect anything of their houses.
 - How much metal Fengxi, Dafeng, Xiushe and Zaoya carry, and whether anything of the slag fields is left to model.
+- Whether Yayu is one hound or a breed that may run in packs.
+- The new labels for the `life` and `weather` switches, and whether to remove the Noto Sans SC font.
 - Whether the zoom limits may change, and whether any dependency, runner or decoder may be added.
 - Anything else that would add a fact rather than a shape.
